@@ -9,5 +9,5 @@ public class MdmVer2Application {
 	public static void main(String[] args) {
 		SpringApplication.run(MdmVer2Application.class, args);
 	}
-
+	//test
 }

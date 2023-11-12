@@ -41,7 +41,8 @@ dependencies {
 	implementation 'com.oracle.database.security:osdt_core'
 	implementation 'com.oracle.database.security:osdt_cert'
 
-
+	//Swagger
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 }
 
 tasks.named('test') {

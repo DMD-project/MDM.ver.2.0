@@ -1,8 +1,6 @@
-package ddwu.project.mdm_ver2.model;
+package ddwu.project.mdm_ver2.domain;
 
 import java.security.Timestamp;
-
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 

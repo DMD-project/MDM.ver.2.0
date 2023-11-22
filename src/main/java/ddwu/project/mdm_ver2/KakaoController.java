@@ -20,7 +20,7 @@ public class KakaoController {
     public String login(@RequestParam String code, HttpSession session) {
 
         System.out.println(code);
-//
+
         System.out.println("in KakaoController login");
 
         String access_token = ks.getAccessToken(code);

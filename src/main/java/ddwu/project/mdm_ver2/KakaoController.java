@@ -17,7 +17,6 @@ public class KakaoController {
 
     @ResponseBody
     @GetMapping("/kakao")
-//    @RequestMapping("/kakao")
     public String login(@RequestParam String code, HttpSession session) {
 
         System.out.println(code);

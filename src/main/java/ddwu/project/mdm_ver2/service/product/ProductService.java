@@ -17,8 +17,12 @@ public class ProductService implements ProductFacade {
     @PersistenceContext
     private EntityManager em;
 
-    @Autowired
     private ProductDao prodDao;
+
+    @Autowired
+    public ProductService(ProductDao prodDao) {
+        this.prodDao = prodDao;
+    }
 
     public void setProdDao(ProductDao prodDao) {
         this.prodDao = prodDao;

@@ -1,6 +1,9 @@
 package ddwu.project.mdm_ver2.domain;
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,16 +16,8 @@ import lombok.NoArgsConstructor;
 public class Product implements Serializable {
 
     @Id
-    @SequenceGenerator(
-            name = "prod_seq_generator",
-            sequenceName = "prod_seq",
-            initialValue = 1,
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "prod_seq_generator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
 
     @Column(name = "cateID")
@@ -43,8 +38,7 @@ public class Product implements Serializable {
     @Column(name = "prodIMGUrl")
     private String prodIMGUrl;
 
-    public Product(int id, int cateID, String name, int brandID, int price, String content, String prodIMGUrl) {
-        this.id = id;
+    public Product(int cateID, String name, int brandID, int price, String content, String prodIMGUrl) {
         this.cateID = cateID;
         this.name = name;
         this.brandID = brandID;
@@ -53,18 +47,11 @@ public class Product implements Serializable {
         this.prodIMGUrl = prodIMGUrl;
     }
 
-    public Product(int id, int cateID, String name, int brandID, int price, String content) {
-        this.id = id;
+    public Product( int cateID, String name, int brandID, int price, String content) {
         this.cateID = cateID;
         this.name = name;
         this.brandID = brandID;
         this.price = price;
         this.content = content;
-    }
-
-    @Override
-    public String toString() {
-        return "Product [id=" + id + ", cateID=" + cateID + ", name=" + name + ", brandID=" + brandID + ", price="
-                + price + ", content=" + content + ", prodIMGUrl=" + prodIMGUrl + "]";
     }
 }

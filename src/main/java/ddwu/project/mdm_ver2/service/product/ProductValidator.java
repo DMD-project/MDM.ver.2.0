@@ -6,20 +6,18 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 
-import ddwu.project.mdm_ver2.contorller.product.ProductForm;
 import ddwu.project.mdm_ver2.domain.Product;
 @Component
-public class ProductFormValidator  implements Validator {
+public class ProductValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
-        return ProductForm.class.isAssignableFrom(clazz);
+        return Product.class.isAssignableFrom(clazz);
     }
     @Override
     public void validate(Object target, Errors errors) {
-        System.out.println("product form validator");
+        System.out.println("product validator");
 
-        ProductForm prodForm = (ProductForm)target;
-        Product product = prodForm.getProduct();
+        Product product = (Product)target;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "product.name", "required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "product.price", "required");

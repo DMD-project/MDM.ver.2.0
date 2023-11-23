@@ -19,4 +19,9 @@ public class Category {
 
     @Column(name = "cateName")
     private String name;
+
+    public Category(String cateCode, String name) {
+        this.cateCode = cateCode;
+        this.name = name;
+    }
 }

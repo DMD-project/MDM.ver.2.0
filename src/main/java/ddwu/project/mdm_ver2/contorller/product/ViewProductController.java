@@ -22,7 +22,7 @@ public class ViewProductController {
         this.facade = facade;
     }
 
-    @Operation(summary = "상품 보기")
+    @Operation(summary = "상품 개별 보기")
     @RequestMapping(method = RequestMethod.GET)
     public Product viewProd(@RequestParam("prodId") int prodId,
                            ModelMap model) throws Exception {
@@ -30,4 +30,8 @@ public class ViewProductController {
         Product product = this.facade.getProduct(prodId);
         return this.facade.getProduct(prodId);
     }
+
+    //상품 전체보기
+
+    //상품 카테고리로 보기 페이지 처리까지?
 }

@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ProductDao extends JpaRepository<Product, Integer> {
     List<Product> findByNameContaining(String name);
-    List<Product> findByCateID(int cateID);
+    List<Product> findByCateID(String cateID);
     List<Product> findAll();
 }

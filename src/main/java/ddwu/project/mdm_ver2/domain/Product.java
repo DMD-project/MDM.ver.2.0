@@ -9,8 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
 @SuppressWarnings("serial")
 @Table(name = "product")
 public class Product implements Serializable {
@@ -21,10 +21,10 @@ public class Product implements Serializable {
     private int id;
 
     @Column(name = "cateID")
-    private int cateID;
+    private String cateID;
 
     @Column(name = "brandID")
-    private int brandID;
+    private String brandID;
 
     @Column(name = "PRODNAME")
     private String name;
@@ -38,7 +38,7 @@ public class Product implements Serializable {
     @Column(name = "prodIMGUrl")
     private String prodIMGUrl;
 
-    public Product(int cateID, String name, int brandID, int price, String content, String prodIMGUrl) {
+    public Product(String cateID, String name, String brandID, int price, String content, String prodIMGUrl) {
         this.cateID = cateID;
         this.name = name;
         this.brandID = brandID;
@@ -47,7 +47,7 @@ public class Product implements Serializable {
         this.prodIMGUrl = prodIMGUrl;
     }
 
-    public Product( int cateID, String name, int brandID, int price, String content) {
+    public Product( String cateID, String name, String brandID, int price, String content) {
         this.cateID = cateID;
         this.name = name;
         this.brandID = brandID;

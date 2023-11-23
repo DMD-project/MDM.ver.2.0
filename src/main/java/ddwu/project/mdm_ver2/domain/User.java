@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.domain;
 
 import java.security.Timestamp;
+
 import org.springframework.data.annotation.CreatedDate;
 
 
@@ -14,8 +15,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @Table(name = "user_master")
 public class User {

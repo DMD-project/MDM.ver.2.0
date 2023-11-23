@@ -23,7 +23,7 @@ public class AddProductController {
 
     @Operation(summary = "상품 추가")
     @RequestMapping(method = RequestMethod.POST)
-    public Product submit(@RequestBody Product product, BindingResult result) throws Exception {
+    public Product add(@RequestBody Product product, BindingResult result) throws Exception {
 
         facade.addProduct(product);     //save
         return product;

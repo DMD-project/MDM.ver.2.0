@@ -65,7 +65,7 @@ public class ProductService implements ProductFacade {
 
 
     @Override
-    public List<Product> getProductListByCategory(int cateCode) {
+    public List<Product> getProductListByCategory(String cateCode) {
         return prodDao.findByCateID(cateCode);
     }
 

@@ -10,7 +10,7 @@ public interface ProductFacade {
 
     void updateProduct(Product product);
 
-    List<Product> getProductListByCategory(int cateCode);
+    List<Product> getProductListByCategory(String cateCode);
 
     List<Product> searchProductList(String keywords);
 

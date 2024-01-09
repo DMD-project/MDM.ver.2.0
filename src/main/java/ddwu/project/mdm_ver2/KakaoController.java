@@ -15,6 +15,12 @@ public class KakaoController {
     @Autowired
     KakaoService ks;
 
+    @GetMapping("/")
+    public String test() {
+        return "test";
+    }
+
+
     @ResponseBody
     @GetMapping("/kakao")
     public String login(@RequestParam String code, HttpSession session) {

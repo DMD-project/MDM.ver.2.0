@@ -8,13 +8,14 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "category")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(name = "cateCode")
+    @Column(name = "cateCode", unique = true)
     private String cateCode;
 
     @Column(name = "cateName")

@@ -5,8 +5,9 @@ import ddwu.project.mdm_ver2.repository.BrandRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BrandService {
@@ -17,17 +18,20 @@ public class BrandService {
     }
 
     @PostConstruct
-    public void initializeBrands() {
-        List<Brand> brandCodes = new ArrayList<>();
-        brandCodes.add(new Brand("B8000", "참나무"));
-        brandCodes.add(new Brand("B8001", "아이닉"));
-        brandCodes.add(new Brand("B8002", "마틸라"));
-        brandCodes.add(new Brand("B8003", "최고심"));
-        brandCodes.add(new Brand("B8004", "mash!"));
-        brandCodes.add(new Brand("B8005", "우드공장"));
-        brandCodes.add(new Brand("B8006", "apple"));
-        brandCodes.add(new Brand("B8007", "LG"));
-        brandCodes.add(new Brand("B8008", "삼성"));
+    public void initBrands() {
+        List<Brand> brandCodes = Stream.of(
+                        new Brand("B8000", "참나무"),
+                        new Brand("B8001", "아이닉"),
+                        new Brand("B8002", "마틸라"),
+                        new Brand("B8003", "최고심"),
+                        new Brand("B8004", "mash!"),
+                        new Brand("B8005", "우드공장"),
+                        new Brand("B8006", "apple"),
+                        new Brand("B8007", "LG"),
+                        new Brand("B8008", "삼성")
+                )
+                .filter(brand -> !brandRepository.existsByBrandCode(brand.getBrandCode()))
+                .collect(Collectors.toList());
 
         brandRepository.saveAll(brandCodes);
     }

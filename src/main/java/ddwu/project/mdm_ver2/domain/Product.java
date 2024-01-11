@@ -1,10 +1,9 @@
 package ddwu.project.mdm_ver2.domain;
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,15 +17,17 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private int id;
+    private Long id;
 
-    @Column(name = "cateID")
-    private String cateID;
+    @ManyToOne
+    @JoinColumn(name = "cateId", referencedColumnName = "id")
+    private Category category;
 
-    @Column(name = "brandID")
-    private String brandID;
+    @ManyToOne
+    @JoinColumn(name = "brandId", referencedColumnName = "id")
+    private Brand brand;
 
-    @Column(name = "PRODNAME")
+    @Column(name = "prodname")
     private String name;
 
     @Column(name = "price")
@@ -38,19 +39,21 @@ public class Product implements Serializable {
     @Column(name = "prodIMGUrl")
     private String prodIMGUrl;
 
-    public Product(String cateID, String name, String brandID, int price, String content, String prodIMGUrl) {
-        this.cateID = cateID;
+    @Builder
+    public Product(Category category, Brand brand, String name,  int price, String content, String prodIMGUrl) {
+        this.category = category;
+        this.brand = brand;
         this.name = name;
-        this.brandID = brandID;
         this.price = price;
         this.content = content;
         this.prodIMGUrl = prodIMGUrl;
     }
 
-    public Product( String cateID, String name, String brandID, int price, String content) {
-        this.cateID = cateID;
+
+    public Product(Category category, Brand brand,String name,  int price, String content) {
+        this.category = category;
+        this.brand = brand;
         this.name = name;
-        this.brandID = brandID;
         this.price = price;
         this.content = content;
     }

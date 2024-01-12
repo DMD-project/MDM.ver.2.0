@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/product")  // 모든 매핑에 "/product"를 추가
+@RequestMapping("/product")
 public class ProductController { //상품은 관리자만 담당
 
     private final ProductService productService;
@@ -34,8 +34,8 @@ public class ProductController { //상품은 관리자만 담당
 
     //상품 수정
     @PutMapping("/{id}")
-    public Product updateProduct(@RequestBody Product product, @PathVariable("id") Long id) {
-        return productService.updateProduct(id, product);
+    public Product updateProduct(@RequestBody ProductRequest request, @PathVariable("id") Long id) {
+        return productService.updateProduct(id, request);
     }
 
     //상품 삭제

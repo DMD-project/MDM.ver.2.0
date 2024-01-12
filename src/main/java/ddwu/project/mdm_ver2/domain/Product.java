@@ -23,10 +23,6 @@ public class Product implements Serializable {
     @JoinColumn(name = "cateId", referencedColumnName = "id")
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "brandId", referencedColumnName = "id")
-    private Brand brand;
-
     @Column(name = "prodname")
     private String name;
 
@@ -40,9 +36,8 @@ public class Product implements Serializable {
     private String prodIMGUrl;
 
     @Builder
-    public Product(Category category, Brand brand, String name,  int price, String content, String prodIMGUrl) {
+    public Product(Category category, String name,  int price, String content, String prodIMGUrl) {
         this.category = category;
-        this.brand = brand;
         this.name = name;
         this.price = price;
         this.content = content;
@@ -50,9 +45,8 @@ public class Product implements Serializable {
     }
 
 
-    public Product(Category category, Brand brand,String name,  int price, String content) {
+    public Product(Category category,String name,  int price, String content) {
         this.category = category;
-        this.brand = brand;
         this.name = name;
         this.price = price;
         this.content = content;

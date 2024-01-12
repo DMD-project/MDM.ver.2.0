@@ -1,11 +1,9 @@
 package ddwu.project.mdm_ver2.service;
 
-import ddwu.project.mdm_ver2.domain.Brand;
 import ddwu.project.mdm_ver2.domain.Category;
 import ddwu.project.mdm_ver2.domain.Product;
 import ddwu.project.mdm_ver2.dto.ProductRequest;
 import ddwu.project.mdm_ver2.exception.ResourceNotFoundException;
-import ddwu.project.mdm_ver2.repository.BrandRepository;
 import ddwu.project.mdm_ver2.repository.CategoryRepository;
 import ddwu.project.mdm_ver2.repository.ProductRepository;
 import jakarta.transaction.Transactional;
@@ -20,7 +18,6 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final BrandRepository brandRepository;
 
     //상품 조회
     @Transactional
@@ -39,11 +36,9 @@ public class ProductService {
     public Product addProduct(ProductRequest request) {
 
         Category category = categoryRepository.findByCateCode(request.getCategory());
-        Brand brand = brandRepository.findByBrandCode(request.getBrand());
 
         Product product = Product.builder()
                 .category(category)
-                .brand(brand)
                 .name(request.getName())
                 .price(request.getPrice())
                 .content(request.getContent())
@@ -54,10 +49,14 @@ public class ProductService {
     }
     //상품 수정
     @Transactional
-    public Product updateProduct(Long id, Product updatedProduct) {
-        Product product = productRepository.findById(id).orElse(null);
+    public Product updateProduct(Long id, ProductRequest updatedProduct) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
 
         if (product != null) {
+            Category category = categoryRepository.findByCateCode(updatedProduct.getCategory());
+
+            product.setCategory(category);
             product.setName(updatedProduct.getName());
             product.setPrice(updatedProduct.getPrice());
             product.setContent(updatedProduct.getContent());

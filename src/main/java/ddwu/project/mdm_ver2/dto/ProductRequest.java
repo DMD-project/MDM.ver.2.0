@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductRequest {
     private String category;  // 상품 카테고리
-    private String brand;     // 상품 브랜드
     private String name;      // 상품 이름
     private int price;        // 상품 가격
     private String content;   // 상품 내용

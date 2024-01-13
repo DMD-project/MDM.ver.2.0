@@ -6,6 +6,7 @@ import ddwu.project.mdm_ver2.dto.ProductRequest;
 import ddwu.project.mdm_ver2.exception.ResourceNotFoundException;
 import ddwu.project.mdm_ver2.repository.CategoryRepository;
 import ddwu.project.mdm_ver2.repository.ProductRepository;
+import io.micrometer.common.util.StringUtils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,25 @@ public class ProductService {
     @Transactional
     public List<Product> findAllProduct() {
         return productRepository.findAll();
+    }
+
+    // 상품 정렬
+    @Transactional
+    public List<Product> SortProduct(String sort) {
+        switch (sort) {
+            case "lowprice":
+                return productRepository.findAllByOrderByPriceAsc();
+            case "highprice":
+                return productRepository.findAllByOrderByPriceDesc();
+            case "newest":
+                return productRepository.findAllByOrderByIdDesc();
+            default:
+                return productRepository.findAll();
+        }
+    }
+
+    private List<Product> categorySort(String category, List<Product> defaultList, List<Product> categoryList) {
+        return StringUtils.isNotBlank(category) ? categoryList : defaultList;
     }
 
     //상품 개별 조회
@@ -47,6 +67,7 @@ public class ProductService {
 
         return productRepository.save(product);
     }
+
     //상품 수정
     @Transactional
     public Product updateProduct(Long id, ProductRequest updatedProduct) {

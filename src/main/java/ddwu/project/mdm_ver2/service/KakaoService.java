@@ -1,8 +1,11 @@
-package ddwu.project.mdm_ver2;
+package ddwu.project.mdm_ver2.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import ddwu.project.mdm_ver2.domain.User;
+import ddwu.project.mdm_ver2.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -12,6 +15,13 @@ import java.util.HashMap;
 
 @Service
 public class KakaoService {
+
+    private UserRepository userRepository;
+
+    @Autowired
+    public KakaoService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public String getAccessToken(String code) {
 
@@ -106,35 +116,37 @@ public class KakaoService {
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
 
-            int id = element.getAsJsonObject().get("id").getAsInt();
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-            String profileIMG = properties.getAsJsonObject().get("profile_image").getAsString();
+            JsonObject kakaoAccount = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
-            userInfo.put("userID", id);
-            userInfo.put("profileIMG", profileIMG);
+            long userCode = element.getAsJsonObject().get("id").getAsLong();
+            String kakaoEmail = kakaoAccount.getAsJsonObject().get("email").getAsString();
+            String kakaoProfileImg = properties.getAsJsonObject().get("profile_image").getAsString();
 
-            /*
-            response body: {
-                "id":3160989952,
-                "connected_at":"2023-11-13T08:15:41Z",
-                "properties":{
-                    "profile_image":"http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg",
-                    "thumbnail_image":"http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_110x110.jpg"},
-                    "kakao_account":{
-                        "profile_image_needs_agreement":false,
-                        "profile":{
-                            "thumbnail_image_url":"http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_110x110.jpg",
-                            "profile_image_url":"http://k.kakaocdn.net/dn/dpk9l1/btqmGhA2lKL/Oz0wDuJn1YV2DIn92f6DVK/img_640x640.jpg",
-                            "is_default_image":true}}}
-            */
+            userInfo.put("userCode", userCode);
+            userInfo.put("kakaoEmail", kakaoEmail);
+            userInfo.put("kakaoProfileImg", kakaoProfileImg);
 
-            System.out.println("id: " + id);
-            System.out.println("profileIMG: " + profileIMG);
+            System.out.println("userCode: " + userCode);
+            System.out.println("kakaoEmail: " + kakaoEmail);
+            System.out.println("kakaoProfileImg: " + kakaoProfileImg);
 
             br.close();
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        boolean userExist = userRepository.existsByUserCode((long) userInfo.get("userCode"));
+
+        if(!userExist) {
+            System.out.println("user is not exist\nsaving ...");
+            userInfo.put("newUser", true);
+            User user = new User((long) userInfo.get("userCode"), userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
+            User saveUserInfo = userRepository.saveAndFlush(user);
+        } else {
+            System.out.println("user is already exist !");
+            userInfo.put("newUser", false);
         }
 
         return userInfo;

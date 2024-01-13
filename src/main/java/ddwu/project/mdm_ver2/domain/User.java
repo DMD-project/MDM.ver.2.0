@@ -21,21 +21,18 @@ import lombok.NoArgsConstructor;
 @Table(name = "user_master")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_code")
-    private Long userCode;
+    private long userCode;
 
-    @Column(name = "kakao_id")
-    private Long kakaoId;
+    @Column(name = "user_nickname")
+    private String userNickname;
+
+    @Column(name = "kakao_email")
+    private String kakaoEmail;
 
     @Column(name = "kakao_profile_img")
     private String kakaoProfileImg;
 
-    @Column(name = "kakao_nickname")
-    private String kakaoNickname;
-
-    @Column(name = "kakao_email")
-    private String kakaoEmail;
     @Column(name = "user_role")
     private String userRole;
 
@@ -44,13 +41,12 @@ public class User {
     private Timestamp createTime;
 
     @Builder
-    public User(Long kakaoId, String kakaoProfileImg, String kakaoNickname,
-                String kakaoEmail, String userRole) {
+    public User(long userCode, String kakaoEmail, String kakaoProfileImg) {
 
-        this.kakaoId = kakaoId;
-        this.kakaoProfileImg = kakaoProfileImg;
-        this.kakaoNickname = kakaoNickname;
+        this.userCode = userCode;
+//        this.userNickname = userNickname;
         this.kakaoEmail = kakaoEmail;
-        this.userRole = userRole;
+        this.kakaoProfileImg = kakaoProfileImg;
+//        this.userRole = userRole;
     }
 }

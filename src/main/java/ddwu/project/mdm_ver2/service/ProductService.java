@@ -28,7 +28,11 @@ public class ProductService {
 
     // 상품 정렬
     @Transactional
-    public List<Product> SortProduct(String sort) {
+    public List<Product> SortProduct(String sort, String cateCode) {
+        if (cateCode != null && !cateCode.isEmpty()) {
+            return sortProductsByCategory(sort, cateCode);
+        }
+
         switch (sort) {
             case "lowprice":
                 return productRepository.findAllByOrderByPriceAsc();
@@ -40,6 +44,30 @@ public class ProductService {
                 return productRepository.findAll();
         }
     }
+
+    // 카테고리 분류 후 상품 정렬
+    @Transactional
+    public List<Product> sortProductsByCategory(String sort, String cateCode) {
+        List<Product> productList;
+
+        switch (sort) {
+            case "lowprice":
+                productList = productRepository.findAllByCategoryCateCodeOrderByPriceAsc(cateCode);
+                break;
+            case "highprice":
+                productList = productRepository.findAllByCategoryCateCodeOrderByPriceDesc(cateCode);
+                break;
+            case "newest":
+                productList = productRepository.findAllByCategoryCateCodeOrderByIdDesc(cateCode);
+                break;
+            default:
+                productList = productRepository.findAllByCategoryCateCode(cateCode);
+                break;
+        }
+
+        return productList;
+    }
+
 
     private List<Product> categorySort(String category, List<Product> defaultList, List<Product> categoryList) {
         return StringUtils.isNotBlank(category) ? categoryList : defaultList;

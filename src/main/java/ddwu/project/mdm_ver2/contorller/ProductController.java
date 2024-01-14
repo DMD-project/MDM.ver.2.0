@@ -21,11 +21,12 @@ public class ProductController { //상품은 관리자만 담당
         return productService.findAllProduct();
     }
 
-    // 상품 정렬- 가격순(lowprice,highprice), 등록순(newest)
+    // 상품 조회 / 상품 정렬 - 가격순(lowprice,highprice), 등록순(newest)
     @GetMapping("/sort")
-    public List<Product> getSortList(
-            @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
-        return productService.SortProduct(sortBy);
+    public List<Product> getSortedList(
+            @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy,
+            @RequestParam(name = "cateCode", required = false, defaultValue = "") String cateCode) {
+        return productService.SortProduct(sortBy, cateCode);
     }
 
     //상품 개별 조회

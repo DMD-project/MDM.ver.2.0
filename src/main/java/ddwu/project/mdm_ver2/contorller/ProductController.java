@@ -52,4 +52,11 @@ public class ProductController { //상품은 관리자만 담당
     public void deleteBag(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
     }
+
+    // 상품 개수 조회
+    @GetMapping("/count")
+    public long getProductCount(
+            @RequestParam(name = "cateCode", required = false, defaultValue = "") String cateCode) {
+        return cateCode.isEmpty() ? productService.getProductCount() : productService.getProductCountByCategory(cateCode);
+    }
 }

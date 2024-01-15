@@ -12,7 +12,7 @@
     <p>
     <div>
         <img src="${kakaoProfileImg}" width="100px" height="100px" />
-        <form method="post" action="/kakaojoin">
+        <form method="post" action="/kakaoJoin">
             <input name="email" value="${kakaoEmail}" readonly />
             <input name="userNickname" />
             <input type="submit" value="회원가입" />

@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import ddwu.project.mdm_ver2.domain.User;
 import ddwu.project.mdm_ver2.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -14,14 +14,10 @@ import java.net.URL;
 import java.util.HashMap;
 
 @Service
+@AllArgsConstructor
 public class KakaoService {
 
     private UserRepository userRepository;
-
-    @Autowired
-    public KakaoService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public String getAccessToken(String code) {
 
@@ -143,12 +139,23 @@ public class KakaoService {
             System.out.println("user is not exist\nsaving ...");
             userInfo.put("newUser", true);
             User user = new User((long) userInfo.get("userCode"), userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
-            User saveUserInfo = userRepository.saveAndFlush(user);
+            userRepository.saveAndFlush(user);
+
         } else {
             System.out.println("user is already exist !");
             userInfo.put("newUser", false);
         }
 
         return userInfo;
+    }
+
+    public void setUserNickname(long userCode, String nickname) {
+        User user = userRepository.findByUserCode(userCode);
+        user.setUserNickname(nickname);
+        userRepository.saveAndFlush(user);
+    }
+
+    public void deleteUser(long userCode) {
+        userRepository.deleteByUserCode(userCode);
     }
 }

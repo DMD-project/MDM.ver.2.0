@@ -9,7 +9,14 @@
 <body>
     <h4> Hi m2dm
     <div>
-        ${nickname}
+    ${session.nickname}
+        <c:if test="${empty nickname}">
+            로그인
+        </c:if>
+        <c:if test="${!empty nickname}">
+            로그아웃
+            <a href="<c:url value="/deleteKakao"></c:url>">회원탈퇴</a>
+        </c:if>
     </div>
 </body>
 </html>

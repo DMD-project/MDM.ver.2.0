@@ -49,4 +49,8 @@ public class User {
         this.kakaoProfileImg = kakaoProfileImg;
 //        this.userRole = userRole;
     }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
 }

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
-@Controller
-//@RestController
+//@Controller
+@RestController
 @AllArgsConstructor
 public class KakaoController {
 
@@ -79,7 +79,8 @@ public class KakaoController {
 //       session.invalidate();
     }
 
-    @GetMapping("/deleteKakao")
+//    @GetMapping("/deleteKakao")
+    @DeleteMapping("/deleteKakao")
     public String deleteUser(HttpSession session) {
         ks.deleteUser((Long) session.getAttribute("userCode"));
         session.invalidate();

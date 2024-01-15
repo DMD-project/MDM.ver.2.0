@@ -125,4 +125,14 @@ public class ProductService {
 
         productRepository.delete(product);
     }
+
+    //상품 개수 - 전체
+    public long getProductCount() {
+        return productRepository.count();
+    }
+
+    //상품 개수 - 카테고리 분류
+    public long getProductCountByCategory(String cateCode) {
+        return productRepository.countByCategoryCateCode(cateCode);
+    }
 }

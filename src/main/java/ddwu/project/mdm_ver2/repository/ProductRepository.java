@@ -15,4 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByCategoryCateCodeOrderByIdDesc(String cateCode);
     List<Product> findAllByCategoryCateCode(String cateCode);
 
+
+    long countByCategoryCateCode(String cateCode); //상품 개수 - 카테고리 분류
+
 }

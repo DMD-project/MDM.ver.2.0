@@ -18,4 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     long countByCategoryCateCode(String cateCode); //상품 개수 - 카테고리 분류
 
+    List<Product> findByNameContainingIgnoreCase(String keyword); // 상품 이름으로 검색
+
 }

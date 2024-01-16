@@ -7,6 +7,8 @@ import ddwu.project.mdm_ver2.domain.User;
 import ddwu.project.mdm_ver2.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import java.io.*;
 import java.net.HttpURLConnection;

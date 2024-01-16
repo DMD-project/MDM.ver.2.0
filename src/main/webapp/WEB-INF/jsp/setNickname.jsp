@@ -33,6 +33,14 @@
             }
         </style>
 </head>
+
+<script type="text/javascript">
+	function check() {
+	    var userNickname = document.getElementById('userNickname').value;
+    	location.href='/kakaoJoin/check/'+userNickname;
+    }
+</script>
+
 <body>
     <div>
         <img src="../images/logo.png" class="logo" />
@@ -47,8 +55,7 @@
             <br/>
             <span class="bold">닉네임</span>
             <br/>
-            <input name="userNickname" />
-            <br/>
+            <input name="userNickname" id="userNickname"/>  <button type="button" onclick="check()">중복확인</button>
             <span class="gray">*최대 8자까지 입력 가능</span>
             <br/>
             <input type="submit" class="button" value="가입하기" />

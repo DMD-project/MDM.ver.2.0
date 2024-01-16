@@ -59,4 +59,11 @@ public class ProductController { //상품은 관리자만 담당
             @RequestParam(name = "cateCode", required = false, defaultValue = "") String cateCode) {
         return cateCode.isEmpty() ? productService.getProductCount() : productService.getProductCountByCategory(cateCode);
     }
+
+    // 상품 검색
+    @GetMapping("/search")
+    public List<Product> searchProduct(@RequestParam(name = "keyword") String keyword) {
+        return productService.searchProduct(keyword);
+    }
+
 }

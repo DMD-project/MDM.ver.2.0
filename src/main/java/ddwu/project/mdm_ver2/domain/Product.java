@@ -23,7 +23,7 @@ public class Product implements Serializable {
     @JoinColumn(name = "cateId", referencedColumnName = "id")
     private Category category;
 
-    @Column(name = "prodname")
+    @Column(name = "prodName")
     private String name;
 
     @Column(name = "price")

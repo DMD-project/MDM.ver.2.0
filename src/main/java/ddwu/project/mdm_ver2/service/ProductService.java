@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -135,4 +136,15 @@ public class ProductService {
     public long getProductCountByCategory(String cateCode) {
         return productRepository.countByCategoryCateCode(cateCode);
     }
+
+    // 상품 검색
+    @Transactional
+    public List<Product> searchProduct(String keyword) {
+        if (StringUtils.isBlank(keyword)) {
+            return Collections.emptyList();
+        }
+
+        return productRepository.findByNameContainingIgnoreCase(keyword);
+    }
+
 }

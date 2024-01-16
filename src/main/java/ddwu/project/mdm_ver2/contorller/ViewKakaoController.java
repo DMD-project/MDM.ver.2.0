@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.contorller;
 
 import ddwu.project.mdm_ver2.domain.User;
 import ddwu.project.mdm_ver2.service.KakaoService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +25,7 @@ public class ViewKakaoController {
     }
 
     @GetMapping("/kakao")
-    public String login(@RequestParam String code, Model model) {
+    public String login(@RequestParam String code, Model model, HttpSession session) {
 
         System.out.println(code);
 
@@ -40,7 +41,8 @@ public class ViewKakaoController {
 
             if(!userExist) {
                 System.out.println("user is not exist\nsaving ...");
-                ks.addUser(new User((long) userInfo.get("userCode"), userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString()));
+                session.setAttribute("newUser", new User((long) userInfo.get("userCode"), userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString()));
+//                ks.addUser();
                 model.addAttribute("kakaoEmail", userInfo.get("kakaoEmail").toString());
                 return "setNickname"; //Figma(join)
 

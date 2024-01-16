@@ -142,19 +142,17 @@ public class KakaoService {
         return userRepository.saveAndFlush(user);
     }
 
-    public User addUser(User user) {
-        return userRepository.saveAndFlush(user);
+    public boolean checkNicknameDup(String nickname) {
+        return userRepository.existsByUserNickname(nickname);
     }
 
-    public User getUser(String kakaoEmail) {
-        return userRepository.findByKakaoEmail(kakaoEmail);
+    public User addUser(User user) {
+        return userRepository.saveAndFlush(user);
     }
 
     public boolean existUser(long userCode) {
         return userRepository.existsByUserCode(userCode);
     }
-
-
 
     public void deleteUser(long userCode) {
         userRepository.deleteByUserCode(userCode);

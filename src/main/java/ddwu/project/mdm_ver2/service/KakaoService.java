@@ -133,27 +133,28 @@ public class KakaoService {
             e.printStackTrace();
         }
 
-        boolean userExist = userRepository.existsByUserCode((long) userInfo.get("userCode"));
-
-        if(!userExist) {
-            System.out.println("user is not exist\nsaving ...");
-            userInfo.put("newUser", true);
-            User user = new User((long) userInfo.get("userCode"), userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
-            userRepository.saveAndFlush(user);
-
-        } else {
-            System.out.println("user is already exist !");
-            userInfo.put("newUser", false);
-        }
-
         return userInfo;
     }
 
-    public void setUserNickname(long userCode, String nickname) {
-        User user = userRepository.findByUserCode(userCode);
+    public User setUserNickname(String kakaoEmail, String nickname) {
+        User user = userRepository.findByKakaoEmail(kakaoEmail);
         user.setUserNickname(nickname);
-        userRepository.saveAndFlush(user);
+        return userRepository.saveAndFlush(user);
     }
+
+    public User addUser(User user) {
+        return userRepository.saveAndFlush(user);
+    }
+
+    public User getUser(String kakaoEmail) {
+        return userRepository.findByKakaoEmail(kakaoEmail);
+    }
+
+    public boolean existUser(long userCode) {
+        return userRepository.existsByUserCode(userCode);
+    }
+
+
 
     public void deleteUser(long userCode) {
         userRepository.deleteByUserCode(userCode);

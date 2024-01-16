@@ -5,8 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//@Controller
-@RestController
+@Controller
+//@RestController
 @AllArgsConstructor
 public class HomeController {
 
@@ -15,6 +15,6 @@ public class HomeController {
 
         System.out.println("in HomeController");
 
-        return "test";
+        return "test"; //Figma(Main)
     }
 }

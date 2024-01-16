@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUserCode(long userCode);
 
-    User findByUserCode(long userCode);
+    User findByKakaoEmail(String kakaoEmail);
 
     @Transactional
     void deleteByUserCode(long userCode);

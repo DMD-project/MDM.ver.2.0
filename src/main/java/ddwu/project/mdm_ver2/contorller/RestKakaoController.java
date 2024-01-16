@@ -5,7 +5,11 @@ import ddwu.project.mdm_ver2.service.KakaoService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 //@Controller
 @RestController
@@ -22,14 +26,17 @@ public class RestKakaoController {
         System.out.println("KakaoController>submit: " +nickname);
 
         User newUser = (User) session.getAttribute("newUser");
+
         newUser.setUserNickname(nickname);
 //        System.out.println(ks.checkNicknameDup(nickname));
         return ks.addUser(newUser);
     }
 
-    @GetMapping("/kakaoJoin/{nickname}")
-    public boolean checkNickname(@PathVariable String nickname) {
+    @GetMapping("/kakaoJoin/check/{userNickname}") // 중복확인 버튼 클릭
+    public boolean checkNickname(@PathVariable(value="userNickname", required=true) String nickname, Model model) {
+        System.out.println(nickname);
         System.out.println(ks.checkNicknameDup(nickname)); // 중복 -> true, 중복X -> false
+        model.addAttribute("nicknameDup", ks.checkNicknameDup(nickname));
         return ks.checkNicknameDup(nickname);
     }
 
@@ -37,7 +44,7 @@ public class RestKakaoController {
 //       session.invalidate();
     }
 
-    @DeleteMapping("/kakao/{id}")
+    @DeleteMapping("/kakao/{userCode}")
     public void deleteUser(@RequestParam(value="userCode", required=true) long userCode) {
         ks.deleteUser(userCode);
     }

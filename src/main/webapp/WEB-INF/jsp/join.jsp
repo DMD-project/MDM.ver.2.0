@@ -4,7 +4,7 @@
 <!doctype html>
 <html lang="ko">
 <head>
-    <title>Kakao Login Test - Set Nickname</title>
+    <title>join</title>
      <style>
             body {
                 background-color: #F9F1E7;

@@ -10,4 +10,5 @@ public class MdmVer2Application {
 		SpringApplication.run(MdmVer2Application.class, args);
 	}
 	//test
+	//test2
 }

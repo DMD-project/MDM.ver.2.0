@@ -4,34 +4,44 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>Kakao Login Test</title>
+    <title>login</title>
+
     <style>
         body {
-            background-color: #F9F1E7;
-            text-align: center;
-        }
-        .gray {
-            color: gray;
-        }
+                background-color: #F9F1E7;
+                text-align: center;
+            }
         .logo {
-             max-width: 10%;
-             height: auto;
+                width: 80px;
+                height: 80px;
+
+                padding-top: 100px;
+                padding-bottom: 20px;
+        }
+        .context {
+                color: #C2C2C2;
+                font-size: 15px;
         }
         .kakao {
-             max-width: 30%;
-             height: auto;
+                max-width: 25%;
+                height: auto;
+
+                padding-top: 10px;
+                padding-bottom: 10px;
         }
     </style>
+
 </head>
 <body>
-    <div>
-        <img src="../images/logo.png" class="logo" />
-        <br/>
-        <span class="gray">SNS 계정으로 간편 로그인</span>
-        <br/>
-        <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=bbb0d5e603062dd02da05a9fe89b0c1e&redirect_uri=http://localhost:8080/kakao">
-            <img src="../images/kakao_sync_large_wide.png" class="kakao" />
-        </a>
-    </div>
+
+<img src="../images/logo.png" class="logo" />
+<br/>
+<span class="context">SNS 계정으로 간편 로그인</span>
+</br>
+<a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=bbb0d5e603062dd02da05a9fe89b0c1e&redirect_uri=http://localhost:8080/kakao">
+    <img src="../images/kakao_sync_large_wide.png" class="kakao" />
+</a>
+
+
 </body>
 </html>

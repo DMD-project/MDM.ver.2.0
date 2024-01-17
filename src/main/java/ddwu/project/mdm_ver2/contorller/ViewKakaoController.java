@@ -21,7 +21,7 @@ public class ViewKakaoController {
 
     @GetMapping("/login")
     public String reqLogin() {
-        return "login"; //Figma(login)
+        return "kakaoLogin"; //Figma(login)
     }
 
     @GetMapping("/kakao")

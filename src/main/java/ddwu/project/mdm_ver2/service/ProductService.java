@@ -10,6 +10,7 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.Collections;
 import java.util.List;
@@ -85,6 +86,10 @@ public class ProductService {
     public Product addProduct(ProductRequest request) {
 
         Category category = categoryRepository.findByCateCode(request.getCategory());
+
+        if (category == null) {
+            throw new NotFoundException("카테고리를 찾을 수 없습니다: " + request.getCategory());
+        }
 
         Product product = Product.builder()
                 .category(category)

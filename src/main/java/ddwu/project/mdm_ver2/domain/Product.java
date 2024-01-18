@@ -19,7 +19,7 @@ public class Product implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "cateId", referencedColumnName = "id")
     private Category category;
 
@@ -43,7 +43,6 @@ public class Product implements Serializable {
         this.content = content;
         this.prodIMGUrl = prodIMGUrl;
     }
-
 
     public Product(Category category,String name,  int price, String content) {
         this.category = category;

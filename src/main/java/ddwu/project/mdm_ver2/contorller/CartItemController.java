@@ -3,6 +3,7 @@ package ddwu.project.mdm_ver2.contorller;
 import ddwu.project.mdm_ver2.domain.CartItem;
 import ddwu.project.mdm_ver2.domain.Product;
 import ddwu.project.mdm_ver2.domain.User;
+import ddwu.project.mdm_ver2.repository.CartItemRepository;
 import ddwu.project.mdm_ver2.repository.ProductRepository;
 import ddwu.project.mdm_ver2.repository.UserRepository;
 import ddwu.project.mdm_ver2.service.CartItemService;
@@ -11,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/cartItem")
@@ -18,7 +21,7 @@ public class CartItemController {
     private final CartItemService cartItemService;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
-
+    private final CartItemRepository cartItemRepository;
 
     // 장바구니품목 추가
     @Transactional
@@ -30,22 +33,33 @@ public class CartItemController {
         cartItemService.addItemToCart(user, product, count);
     }
 
-//    // 장바구니품목 제거
-//    @DeleteMapping("/{cartItemId}")
-//    public void deleteCartItem(@PathVariable("cartItemId") long cartItemId) {
-//        cartItemService.deleteCartItem(cartItemId);
-//    }
-//
-//    // 장바구니품목 수량
-//    @GetMapping("/qty/{cartItemId}")
-//    public Integer getCartQty(@PathVariable("cartItemId") long cartItemId) {
-//        return cartItemService.getCartItemQty(cartItemId);
-//    }
-//
-//    // 장바구니품목 수량 증가/감소
-//    @PutMapping("/{cartItemId}/{qty}")
-//    public CartItem updateItemQuantity(@PathVariable("cartItemId") long cartItemId, @PathVariable("qty") Integer qty) {
-//        return cartItemService.updateCartItemQty(cartItemId, qty);
-//    }
+    // 장바구니품목 증가(1개씩)
+    @Transactional
+    @PutMapping("/increase/{cartItemId}")
+    public CartItem increaseItem(@PathVariable("cartItemId") long cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new NotFoundException("장바구니 품목을 찾을 수 없습니다."));
+        cartItemService.increaseItem(cartItem);
+
+        return cartItem;
+    }
+
+    // 장바구니품목 감소(1개씩)
+    @Transactional
+    @PutMapping("/decrease/{cartItemId}")
+    public CartItem decreaseItem(@PathVariable("cartItemId") long cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new NotFoundException("장바구니 품목을 찾을 수 없습니다."));
+        cartItemService.decreaseItem(cartItem);
+
+        return cartItem;
+    }
+
+    // 장바구니 선택한 품목들 삭제
+    @Transactional
+    @DeleteMapping("/delete")
+    public void deleteCartItems(@RequestParam(name = "cartItemIds") List<Long> cartItemIds) {
+        cartItemService.deleteCartItems(cartItemIds);
+    }
 
 }

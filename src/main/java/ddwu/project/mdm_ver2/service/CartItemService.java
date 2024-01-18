@@ -9,9 +9,8 @@ import ddwu.project.mdm_ver2.repository.CartRepository;
 import ddwu.project.mdm_ver2.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class CartItemService {
@@ -60,65 +59,52 @@ public class CartItemService {
         return cartItem;
     }
 
-    // 장바구니품목 수량 감소
-    
-    //장바구니 품목 삭제
+    // 장바구니품목 증가(1개씩)
+    @Transactional
+    public CartItem increaseItem(CartItem cartItem) {
+        int price = cartItem.getProduct().getPrice();
+        Cart cart = cartItem.getCart();
 
+        cartItem.addCount(1);
+        cartItem.addPrice(cartItem.getProduct().getPrice());
 
+        cart.setCartCount(cart.getCartCount() + 1);
+        cart.setCartPrice(cart.getCartPrice() + (1 * price));
 
-//    // 장바구니품목 삭제
-//    @Transactional
-//    public void deleteCartItem(Long id) {
-//        Optional<CartItem> optionalCartItem = cartItemRepository.findById(id);
-//
-//        CartItem cartItem = optionalCartItem.orElseThrow(() ->
-//                new ResourceNotFoundException("CartItem", "id", id));
-//
-//        Cart cart = cartItem.getCart();
-//        cart.setQty(cart.getQty() - cartItem.getQty());
-//        cart.setPrice(cart.calculateTotalPrice());
-//        cartRepository.save(cart);
-//
-//        cartItemRepository.delete(cartItem);
-//    }
-//
-//    // 장바구니품목 수량
-//    public CartItem updateCartItemQty(long cartItemId, int qty) {
-//        CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(() -> new NotFoundException("CartItem not found"));
-//
-//        int diff = qty - cartItem.getQty(); //새로운 수량
-//
-//
-//        //장바구니품목 업데이트
-//        cartItem.setQty(qty);
-//        cartItemRepository.save(cartItem);
-//
-//
-//        updateCartTotal(cartItem.getCart(), diff);
-//
-//        return cartItem;
-//    }
-//
-//
-//    //장바구니품목 수량
-//    public Integer getCartItemQty(long cartItemId) {
-//        return cartItemRepository.findQtyById(cartItemId);
-//    }
-//
-//    // 장바구니의 총 가격과 총 수량 업데이트
-//    private void addCartTotal(Cart cart, CartItem cartItem) {
-//        int totalqty = cartItem.getQty() + cart.getQty();
-//
-//        cart.setQty(totalqty); // 총 수량 업데이트
-//        cart.setPrice(cart.calculateTotalPrice());
-//        cartRepository.save(cart);
-//    }
-//
-//    //수량 증가, 감소 반영
-//    private void updateCartTotal(Cart cart, int diff) {
-//
-//        cart.setQty(cart.getQty() + diff); // 총 수량 업데이트
-//        cart.setPrice(cart.calculateTotalPrice());
-//        cartRepository.save(cart);
-//    }
+        return cartItemRepository.save(cartItem);
+    }
+
+    // 장바구니품목 감소(1개씩)
+    @Transactional
+    public CartItem decreaseItem(CartItem cartItem) {
+        int price = cartItem.getProduct().getPrice();
+        Cart cart = cartItem.getCart();
+
+        cartItem.subCount(1);
+        cartItem.subPrice(cartItem.getProduct().getPrice());
+
+        cart.setCartCount(cart.getCartCount() - 1);
+        cart.setCartPrice(cart.getCartPrice() - (1 * price));
+
+        return cartItemRepository.save(cartItem);
+    }
+
+    // 장바구니 품목 삭제
+    @Transactional
+    public void deleteCartItems(List<Long> cartItemIds) {
+        for (Long cartItemId : cartItemIds) {
+            CartItem cartItem = cartItemRepository.findById(cartItemId)
+                    .orElseThrow(() -> new IllegalArgumentException("장바구니품목을 찾을 수 없습니다. " + cartItemId));
+
+            Cart cart = cartItem.getCart();
+            int itemCount = cartItem.getCartItemCount();
+            int itemPrice = cartItem.getCartItemPrice();
+
+            cart.setCartCount(cart.getCartCount() - itemCount);
+            cart.setCartPrice(cart.getCartPrice() - itemPrice);
+
+            cartItemRepository.delete(cartItem);
+        }
+    }
+
 }

@@ -1,16 +1,10 @@
 package ddwu.project.mdm_ver2.contorller;
 
 import ddwu.project.mdm_ver2.domain.Cart;
-import ddwu.project.mdm_ver2.domain.User;
 import ddwu.project.mdm_ver2.repository.UserRepository;
 import ddwu.project.mdm_ver2.service.CartService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.webjars.NotFoundException;
-
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor

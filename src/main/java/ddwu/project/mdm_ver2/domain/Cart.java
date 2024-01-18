@@ -17,14 +17,14 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "count")
+    @Column(name = "cartCount")
     private int cartCount; // 전체 상품개수
 
-    @Column(name = "price")
+    @Column(name = "cartPrice")
     private int cartPrice; //전체 상품금액
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "user_code", referencedColumnName = "user_code")
     private User user;
 
@@ -38,29 +38,5 @@ public class Cart {
         cart.setUser(user);
         return cart;
     }
-
-//    public int calculateTotalPrice() {
-//        int totalPrice = 0;
-//        for (CartItem cartItem : cartItems) {
-//            totalPrice += cartItem.getPrice();
-//        }
-//        return totalPrice;
-//    }
-//    public void addCartItem(CartItem cartItem) {
-//        cartItems.add(cartItem);
-//        cartItem.setCart(this);
-//        updateCartTotal();
-//    }
-//
-//    public void removeCartItem(CartItem cartItem) {
-//        cartItems.remove(cartItem);
-//        cartItem.setCart(null);
-//        updateCartTotal();
-//    }
-//
-//    private void updateCartTotal() {
-//        qty = cartItems.stream().mapToInt(CartItem::getQty).sum();
-//        price = calculateTotalPrice();
-//    }
 
 }

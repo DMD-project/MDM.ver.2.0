@@ -1,9 +1,7 @@
 package ddwu.project.mdm_ver2.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,18 +16,18 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "count")
+    @Column(name = "cartItemCount")
     private int cartItemCount; // 상품 개수
 
-    @Column(name = "price")
+    @Column(name = "cartItemPrice")
     private int cartItemPrice; //상품금액
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "cart_id")
     @JsonIgnore
     private Cart cart;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "prod_id")
     private Product product;
 
@@ -40,20 +38,17 @@ public class CartItem {
         this.product = product;
     }
 
-//    public static CartItem createCartItem(Cart cart, Product product, int amount) {
-//        CartItem cartItem = new CartItem();
-//        cartItem.setCart(cart);
-//        cartItem.setProduct(product);
-//        cartItem.setCartItemCount(amount);
-//        return cartItem;
-//    }
-
-    // 이미 담겨있는 물건 또 담을 경우
     public void addCount(int cartItemCount) {
         this.cartItemCount += cartItemCount;
     }
     public void addPrice(int cartItemPrice) {
         this.cartItemPrice += cartItemPrice;
+    }
+    public void subCount(int cartItemCount) {
+        this.cartItemCount -= cartItemCount;
+    }
+    public void subPrice(int cartItemPrice) {
+        this.cartItemPrice -= cartItemPrice;
     }
 
 }

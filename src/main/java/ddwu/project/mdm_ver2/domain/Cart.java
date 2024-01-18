@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,22 +17,24 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Column(name = "count")
+    private int cartCount; // 전체 상품개수
+
+    @Column(name = "price")
+    private int cartPrice; //전체 상품금액
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_code", referencedColumnName = "user_code")
     private User user;
 
-    @Column(name = "count")
-    private int count; // 상품 개수
-
-    @Column(name = "price")
-    private int price; //상품금액
-
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<CartItem> cartItems = new ArrayList<>();
 
     public static Cart createCart(User user) {
         Cart cart = new Cart();
-        cart.setCount(0);
+        cart.setCartCount(0);
+        cart.setCartPrice(0);
         cart.setUser(user);
         return cart;
     }

@@ -18,38 +18,42 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "count")
+    private int cartItemCount; // 상품 개수
+
+    @Column(name = "price")
+    private int cartItemPrice; //상품금액
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id")
-    @JsonIgnoreProperties("cartItems")
+    @JsonIgnore
     private Cart cart;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "prod_id")
-    @JsonIgnore
     private Product product;
 
-    @Column(name = "count")
-    private int count; // 상품 개수
-
-    @Column(name = "price")
-    private int price; //상품금액
-
-    public CartItem(Cart cart, Product product, int count) {
+    public CartItem(int cartItemCount, int cartItemPrice, Cart cart, Product product) {
+        this.cartItemCount = cartItemCount;
+        this.cartItemPrice = cartItemPrice;
         this.cart = cart;
         this.product = product;
-        this.count = count;
     }
 
-    public static CartItem createCartItem(Cart cart, Product product, int amount) {
-        CartItem cartItem = new CartItem();
-        cartItem.setCart(cart);
-        cartItem.setProduct(product);
-        cartItem.setCount(amount);
-        return cartItem;
+//    public static CartItem createCartItem(Cart cart, Product product, int amount) {
+//        CartItem cartItem = new CartItem();
+//        cartItem.setCart(cart);
+//        cartItem.setProduct(product);
+//        cartItem.setCartItemCount(amount);
+//        return cartItem;
+//    }
+
+    // 이미 담겨있는 물건 또 담을 경우
+    public void addCount(int cartItemCount) {
+        this.cartItemCount += cartItemCount;
+    }
+    public void addPrice(int cartItemPrice) {
+        this.cartItemPrice += cartItemPrice;
     }
 
-    // 이미 담겨있는 물건 또 담을 경우 수량 증가
-    public void addCount(int count) {
-        this.count += count;
-    }
 }

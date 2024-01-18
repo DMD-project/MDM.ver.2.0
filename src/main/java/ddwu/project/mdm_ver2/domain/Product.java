@@ -19,7 +19,7 @@ public class Product implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cateId", referencedColumnName = "id")
     private Category category;
 

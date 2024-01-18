@@ -14,11 +14,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUserCode(long userCode);
 
-    boolean existsByUserNickname(String userNickname);
-
     User findByKakaoEmail(String kakaoEmail);
 
     @Transactional
     void deleteByUserCode(long userCode);
+
+    Optional<User> findByUserCode(long userCode);
+
 
 }

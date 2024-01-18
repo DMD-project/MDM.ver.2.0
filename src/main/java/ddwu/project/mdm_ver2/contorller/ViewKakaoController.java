@@ -44,7 +44,7 @@ public class ViewKakaoController {
                 session.setAttribute("newUser", new User((long) userInfo.get("userCode"), userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString()));
 //                ks.addUser();
                 model.addAttribute("kakaoEmail", userInfo.get("kakaoEmail").toString());
-                return "setNickname"; //Figma(join)
+                return "join"; //Figma(join)
 
             }
         }
@@ -57,5 +57,12 @@ public class ViewKakaoController {
     @GetMapping("/kakaoJoin")
     public String submit() {
         return "redirect:/"; //Figma(Main uri)
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+//       session.invalidate();
+//        ks.logout();
+        return "redirect:/";
     }
 }

@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.domain;
 
 import java.security.Timestamp;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 
@@ -33,12 +34,9 @@ public class User {
     @Column(name = "kakao_profile_img")
     private String kakaoProfileImg;
 
-    @Column(name = "user_role")
-    private String userRole;
-
-    @Column(name = "create_time")
-    @CreatedDate//(4)
-    private Timestamp createTime;
+//    @Column(name = "user_role")
+//    @ColumnDefault("general")
+//    private String userRole;
 
     @Builder
     public User(long userCode, String kakaoEmail, String kakaoProfileImg) {

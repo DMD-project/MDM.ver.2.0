@@ -81,7 +81,7 @@ public class KakaoService {
         return access_token;
     }
 
-    public HashMap<String, Object> getKakaoUserInfo(String token) {
+    public HashMap<String, Object> getKakaoUserInfo(String access_token) {
 
         HashMap<String, Object> userInfo = new HashMap<>();
 
@@ -93,7 +93,7 @@ public class KakaoService {
 
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + token); // request header setting
+            conn.setRequestProperty("Authorization", "Bearer " + access_token); // request header setting
 
             // success: code = 200
             int responseCode = conn.getResponseCode();
@@ -136,6 +136,36 @@ public class KakaoService {
         }
 
         return userInfo;
+    }
+
+    public void logout(String access_token) {
+        String request_url = "https://kapi.kakao.com/v1/user/logout";
+
+        try {
+            URL url = new URL(request_url);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Authorization", "Bearer " + access_token); // request header setting
+
+            // success: code = 200
+            int responseCode = conn.getResponseCode();
+            System.out.println("response code: " + responseCode);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+            String result = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+
+            System.out.println("response body: " + result);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public User setUserNickname(String kakaoEmail, String nickname) {

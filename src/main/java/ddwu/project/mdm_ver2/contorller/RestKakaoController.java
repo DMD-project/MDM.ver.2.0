@@ -40,10 +40,6 @@ public class RestKakaoController {
         return ks.checkNicknameDup(nickname);
     }
 
-    public void logout() {
-//       session.invalidate();
-    }
-
     @DeleteMapping("/kakao/{userCode}")
     public void deleteUser(@RequestParam(value="userCode", required=true) long userCode) {
         ks.deleteUser(userCode);

@@ -33,6 +33,8 @@ public class CartItemService {
         //유저 Usercode로 해당 유저의 장바구니 찾기
         Cart cart = cartRepository.findByUser_UserCode(user.getUserCode());
 
+        int price = product.getPrice();
+
         // 장바구니가 존재하지 않는다면
         if (cart == null) {
             cart = Cart.createCart(user);
@@ -43,18 +45,26 @@ public class CartItemService {
         CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product);
 
         if (cartItem != null) {
-            // 상품이 이미 존재하는 경우 수량만 증가
+            // 상품이 이미 존재하는 경우
             cartItem.addCount(count);
+            cartItem.addPrice(price * count);
         } else {
             // 상품이 존재하지 않는 경우 새로운 CartItem을 생성하여 추가
-            cartItem = new CartItem(cart, product, count);
+            cartItem = new CartItem(count, price * count , cart, product);
             cartItemRepository.save(cartItem);
         }
         // 카트 상품 총 개수 증가
-        cart.setCount(cart.getCount()+count);
+        cart.setCartCount(cart.getCartCount() + count);
+        cart.setCartPrice(cart.getCartPrice() + (count * price));
 
         return cartItem;
     }
+
+    // 장바구니품목 수량 감소
+    
+    //장바구니 품목 삭제
+
+
 
 //    // 장바구니품목 삭제
 //    @Transactional

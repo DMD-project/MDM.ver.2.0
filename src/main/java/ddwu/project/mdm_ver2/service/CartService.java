@@ -14,44 +14,24 @@ import java.util.Optional;
 @Service
 public class CartService {
     private final CartRepository cartRepository;
+
     public CartService(CartRepository cartRepository) {
         this.cartRepository = cartRepository;
     }
 
-    // 사용자 장바구니 생성
-//    @Transactional
-//    public Cart findOrCreateCart(User user) {
-//        // 사용자의 장바구니를 찾음
-//        return cartRepository.findByUser(user)
-//                .orElseGet(() -> {
-//                    // 장바구니가 없으면 새로운 장바구니 생성
-//                    Cart newCart = new Cart();
-//                    newCart.setUser(user);
-//                    return cartRepository.save(newCart);
-//                });
-//    }
-
-
     // 사용자 장바구니 조회
     @Transactional
-        public Cart getCartByUser(long userCode) {
+    public Cart getCartByUser(long userCode) {
         return cartRepository.findByUser_UserCode(userCode);
     }
 
+    //장바구니 전체 비우기
+    @Transactional
+    public void clearCart(Long userCode) {
 
-//    //장바구니 비우기
-//    @Transactional
-//    public void clearCart(Long id) {
-//        Cart cart = cartRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFoundException("Cart", "id", id));
-//
-//        cartRepository.deleteItemsInCart(id);
-//    }
-//
-//    // 장바구니 총 수량
-//    @Transactional
-//    public Integer getCartbyCount(long id) {
-//        return cartRepository.findCoutById(id);
-//    }
+        Cart cart = cartRepository.findByUser_UserCode(userCode);
+
+        cartRepository.delete(cart);
+    }
 
 }

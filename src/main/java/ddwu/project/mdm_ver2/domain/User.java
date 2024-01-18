@@ -2,16 +2,12 @@ package ddwu.project.mdm_ver2.domain;
 
 import java.security.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +29,10 @@ public class User {
 
     @Column(name = "kakao_profile_img")
     private String kakaoProfileImg;
+
+    @JsonManagedReference
+    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Cart cart;
 
 //    @Column(name = "user_role")
 //    @ColumnDefault("general")

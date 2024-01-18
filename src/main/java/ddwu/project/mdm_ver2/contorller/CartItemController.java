@@ -25,7 +25,7 @@ public class CartItemController {
     @PostMapping("/{userCode}/{productId}/{count}")
     public void addItemToCart(@PathVariable("userCode") long userCode, @PathVariable("productId") long productId, @PathVariable("count") int count) {
         User user = userRepository.findByUserCode(userCode).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
 
         cartItemService.addItemToCart(user, product, count);
     }

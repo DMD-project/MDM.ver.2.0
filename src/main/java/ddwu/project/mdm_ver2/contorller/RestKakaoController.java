@@ -1,9 +1,12 @@
 package ddwu.project.mdm_ver2.contorller;
 
 import ddwu.project.mdm_ver2.domain.User;
+import ddwu.project.mdm_ver2.dto.UserDTO;
 import ddwu.project.mdm_ver2.service.KakaoService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,20 +19,35 @@ import java.util.Map;
 @AllArgsConstructor
 public class RestKakaoController {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private KakaoService ks;
 
+    @GetMapping("/kakao")
+    public boolean login(@RequestParam String code, Model model) {
+        log.info("code: {}", code);
+        String access_token = ks.getAccessToken(code);
+        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
+        UserDTO newUser = new UserDTO((long) userInfo.get("userCode"), null, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
+        return ks.checkKakaoUser(newUser);
+    }
+
+    @GetMapping("/kakao/ios")
+    public boolean loginIos(@RequestParam String access_token) {
+        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
+        UserDTO newUser = new UserDTO((long) userInfo.get("userCode"), null, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
+        return ks.checkKakaoUser(newUser);
+    }
+
     @PostMapping("/kakaoJoin") // set nickname for new user
-    public User create(@RequestParam(value="userNickname", required=false) String nickname,
-                       HttpSession session) {
+    public UserDTO create(@RequestParam(value="kakaoEmail", required=false) String kakaoEmail,
+                          @RequestParam(value="userNickname", required=false) String nickname) {
 
-        System.out.println("KakaoController>submit: " +nickname);
+        log.info("new user kakaoEmail: {}", kakaoEmail);
+        log.info("new user nickname: {}", nickname);
 
-        User newUser = (User) session.getAttribute("newUser");
-
-        newUser.setUserNickname(nickname);
-//        System.out.println(ks.checkNicknameDup(nickname));
-        return ks.addUser(newUser);
+        return ks.setUserNickname(kakaoEmail, nickname).toDTO();
     }
 
     @GetMapping("/kakaoJoin/check/{userNickname}") // 중복확인 버튼 클릭

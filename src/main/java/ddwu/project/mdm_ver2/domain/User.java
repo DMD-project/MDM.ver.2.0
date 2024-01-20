@@ -1,11 +1,9 @@
 package ddwu.project.mdm_ver2.domain;
 
-import java.security.Timestamp;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import ddwu.project.mdm_ver2.dto.UserDTO;
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.AllArgsConstructor;
 
 
 import lombok.Builder;
@@ -14,6 +12,8 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_master")
 public class User {
@@ -34,18 +34,36 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Cart cart;
 
-//    @Column(name = "user_role")
-//    @ColumnDefault("general")
-//    private String userRole;
+    @Column(name = "user_role")
+    private String userRole;
 
-    @Builder
-    public User(long userCode, String kakaoEmail, String kakaoProfileImg) {
+    public UserDTO toDTO() {
+        return UserDTO.builder()
+                .userCode(userCode)
+                .userNickname(userNickname)
+                .kakaoEmail(kakaoEmail)
+                .kakaoProfileImg(kakaoProfileImg)
+                .build();
+    }
 
-        this.userCode = userCode;
-//        this.userNickname = userNickname;
-        this.kakaoEmail = kakaoEmail;
-        this.kakaoProfileImg = kakaoProfileImg;
-//        this.userRole = userRole;
+    public long getUserCode() {
+        return userCode;
+    }
+
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public String getKakaoEmail() {
+        return kakaoEmail;
+    }
+
+    public String getKakaoProfileImg() {
+        return kakaoProfileImg;
+    }
+
+    public String getUserRole() {
+        return userRole;
     }
 
     public void setUserNickname(String userNickname) {

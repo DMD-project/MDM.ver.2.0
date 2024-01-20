@@ -49,6 +49,12 @@ dependencies {
 	// JSON Parsing
 	implementation 'com.google.code.gson:gson:2.8.9'
 
+	//jwt
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // javax.xml.bind
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
 }
 
 tasks.named('test') {

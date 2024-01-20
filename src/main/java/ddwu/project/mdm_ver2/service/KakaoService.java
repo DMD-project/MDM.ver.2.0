@@ -4,11 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import ddwu.project.mdm_ver2.domain.User;
+import ddwu.project.mdm_ver2.dto.UserDTO;
 import ddwu.project.mdm_ver2.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -125,6 +124,7 @@ public class KakaoService {
             userInfo.put("kakaoEmail", kakaoEmail);
             userInfo.put("kakaoProfileImg", kakaoProfileImg);
 
+
             System.out.println("userCode: " + userCode);
             System.out.println("kakaoEmail: " + kakaoEmail);
             System.out.println("kakaoProfileImg: " + kakaoProfileImg);
@@ -136,6 +136,22 @@ public class KakaoService {
         }
 
         return userInfo;
+    }
+
+    public boolean checkKakaoUser(UserDTO userInfo) {
+
+        System.out.println(userInfo.getKakaoEmail());
+
+        boolean userExist = existUser(userInfo.getUserCode());
+
+        if(!userExist) {
+            System.out.println("User is NOT exist\nsaving ...");
+            addUser(userInfo);
+            return false;
+        }
+
+        System.out.println("User is already EXIST !");
+        return true;
     }
 
     public void logout(String access_token) {
@@ -178,8 +194,13 @@ public class KakaoService {
         return userRepository.existsByUserNickname(nickname);
     }
 
-    public User addUser(User user) {
-        return userRepository.saveAndFlush(user);
+//    public UserDTO getUser(String kakaoEmail) {
+//        User user = userRepository.findByKakaoEmail(kakaoEmail);
+//
+//    }
+
+    public User addUser(UserDTO userdto) {
+        return userRepository.saveAndFlush(userdto.toEntity());
     }
 
     public boolean existUser(long userCode) {

@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.contorller;
 
 import ddwu.project.mdm_ver2.domain.User;
+import ddwu.project.mdm_ver2.dto.UserDTO;
 import ddwu.project.mdm_ver2.service.KakaoService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
@@ -24,26 +26,28 @@ public class ViewKakaoController {
         return "kakaoLogin"; //Figma(login)
     }
 
+    /*
     @GetMapping("/kakao")
-    public String login(@RequestParam String code, Model model, HttpSession session) {
+    public String login(@RequestParam String access_token, Model model) {
 
-        System.out.println(code);
+        System.out.println(access_token);
 
         System.out.println("in ViewKakaoController login");
 
-        String access_token = ks.getAccessToken(code);
-        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
+//        String access_token = ks.getAccessToken(code);
+        UserDTO userInfo = ks.getKakaoUserInfo(access_token);
 
-        if (userInfo.get("userCode") != null) {
-            System.out.println(userInfo.get("kakaoEmail").toString());
+        if (userInfo.getUserCode() < 0) {
 
-            boolean userExist = ks.existUser((long) userInfo.get("userCode"));
+            System.out.println(userInfo.getKakaoEmail());
+
+            boolean userExist = ks.existUser(userInfo.getUserCode());
 
             if(!userExist) {
                 System.out.println("user is not exist\nsaving ...");
-                session.setAttribute("newUser", new User((long) userInfo.get("userCode"), userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString()));
-//                ks.addUser();
-                model.addAttribute("kakaoEmail", userInfo.get("kakaoEmail").toString());
+//                session.setAttribute("newUser", userInfo);
+                ks.addUser(userInfo);
+                model.addAttribute("kakaoEmail", userInfo.getKakaoEmail());
                 return "join"; //Figma(join)
 
             }
@@ -52,7 +56,7 @@ public class ViewKakaoController {
         System.out.println("user is already exist !");
         return "redirect:/"; //Figma(Main uri)
 
-    }
+    }*/
 
     @GetMapping("/kakaoJoin")
     public String submit() {
@@ -60,9 +64,9 @@ public class ViewKakaoController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
+    public String logout() {
+//       ks.logout(session.getAttribute("access_token").toString());
 //       session.invalidate();
-//        ks.logout();
         return "redirect:/";
     }
 }

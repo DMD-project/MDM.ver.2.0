@@ -58,10 +58,10 @@ public class ViewKakaoController {
 
     }*/
 
-    @GetMapping("/kakaoJoin")
-    public String submit() {
-        return "redirect:/"; //Figma(Main uri)
-    }
+//    @GetMapping("/kakaoJoin")
+//    public String submit() {
+//        return "redirect:/"; //Figma(Main uri)
+//    }
 
     @GetMapping("/logout")
     public String logout() {

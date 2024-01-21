@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.contorller;
 
 import ddwu.project.mdm_ver2.domain.User;
 import ddwu.project.mdm_ver2.dto.UserDTO;
+import ddwu.project.mdm_ver2.jwt.JwtProvider;
 import ddwu.project.mdm_ver2.service.KakaoService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,9 +25,10 @@ public class RestKakaoController {
 
     @Autowired
     private KakaoService ks;
+    private JwtProvider jwtProvider;
 
     @GetMapping("/kakao")
-    public boolean login(@RequestParam String code, Model model) {
+    public boolean login(@RequestParam String code) {
         log.info("code: {}", code);
         String access_token = ks.getAccessToken(code);
         HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
@@ -40,14 +43,20 @@ public class RestKakaoController {
         return ks.checkKakaoUser(newUser);
     }
 
-    @PostMapping("/kakaoJoin") // set nickname for new user
+    /* set nickname for NEW user */
+    @GetMapping("/kakaoJoin")
     public UserDTO create(@RequestParam(value="kakaoEmail", required=false) String kakaoEmail,
                           @RequestParam(value="userNickname", required=false) String nickname) {
 
         log.info("new user kakaoEmail: {}", kakaoEmail);
         log.info("new user nickname: {}", nickname);
 
-        return ks.setUserNickname(kakaoEmail, nickname).toDTO();
+        UserDTO newUser = ks.setUserNickname(kakaoEmail, nickname).toDTO();
+
+        jwtProvider.createAccessToken(newUser.getUserCode());
+        jwtProvider.createRefreshToken(newUser.getUserCode());
+
+        return newUser;
     }
 
     @GetMapping("/kakaoJoin/check/{userNickname}") // 중복확인 버튼 클릭

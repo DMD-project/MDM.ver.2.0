@@ -96,7 +96,6 @@ public class KakaoService {
 
             // success: code = 200
             int responseCode = conn.getResponseCode();
-            System.out.println("response code: " + responseCode);
 
             // 요청으로 얻은 JSON type Response message
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -198,6 +197,10 @@ public class KakaoService {
 //        User user = userRepository.findByKakaoEmail(kakaoEmail);
 //
 //    }
+
+    public User getUser(String kakaoEmail) {
+        return userRepository.findByKakaoEmail(kakaoEmail);
+    }
 
     public User addUser(UserDTO userdto) {
         return userRepository.saveAndFlush(userdto.toEntity());

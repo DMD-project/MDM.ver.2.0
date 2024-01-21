@@ -25,6 +25,8 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getServletPath();
+        log.info("path: {}", path);
+        log.info("request: {}", request.getHeaderNames());
 
         // login ->  건너뜀
         if(path.startsWith("/kakao")) {  //"로그인 요청 API"

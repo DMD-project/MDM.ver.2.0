@@ -1,6 +1,8 @@
 package ddwu.project.mdm_ver2.repository;
 
 import ddwu.project.mdm_ver2.domain.Favorite;
+import ddwu.project.mdm_ver2.domain.Product;
+import ddwu.project.mdm_ver2.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,11 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
-    boolean existsByUserIDAndProdID(Long userID, Long prodID); // get favState (exist->fav O)
+    boolean existsByUserAndProduct(User user, Product product); // get favState (exist->fav O)
 
     Favorite saveAndFlush(Favorite favInfo); // 찜등록
 
     @Transactional
-    void deleteByUserIDAndProdID(Long userID, Long prodID); // 찜해제
+    void deleteByUserAndProduct(User user, Product product); // 찜해제
 
 }

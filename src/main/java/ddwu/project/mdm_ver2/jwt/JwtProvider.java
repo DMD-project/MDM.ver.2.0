@@ -44,6 +44,7 @@ public class JwtProvider {
         Claims claims = Jwts.claims();
         claims.put("userCode", userCode);
 
+        log.info("create token: {}", type);
         return Jwts.builder()
                 .setHeaderParam("type", type)
                 .setClaims(claims)

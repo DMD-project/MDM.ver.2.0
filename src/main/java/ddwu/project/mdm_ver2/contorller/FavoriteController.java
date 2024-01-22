@@ -27,10 +27,10 @@ public class FavoriteController {
     public boolean getFavState(@RequestParam(value="kakaoEmail", required=true) String kakaoEmail,
 //            Principal principal,
                                @PathVariable(value="id", required=true) long prodID) {
-        UserDTO userDTO = ks.getUser(kakaoEmail);
+        User user = ks.getUser(kakaoEmail);
         Product product = ps.findProduct(prodID);
 //        System.out.println(Long.valueOf(principal.getName()));
-        return fs.getFavoriteState(userDTO, product); // true(exist)-> 찜 상태, false -> 찜 아닌 상태
+        return fs.getFavoriteState(user, product); // true(exist)-> 찜 상태, false -> 찜 아닌 상태
     }
 
     @GetMapping("/favState/{favState}")
@@ -39,15 +39,15 @@ public class FavoriteController {
                                    @PathVariable(value="id", required=true) long prodID,
                                    @PathVariable(value="favState", required = true) Character favState) {
 
-        UserDTO userDTO = ks.getUser(kakaoEmail);
+        User user = ks.getUser(kakaoEmail);
         Product product = ps.findProduct(prodID);
-        System.out.println(userDTO.getKakaoEmail());
+        System.out.println(user.getKakaoEmail());
         if(favState.equals('y')) { // 클릭 시 'n' -> 찜 해제(db 삭제)
-            fs.deleteFavorite(userDTO, product);
+            fs.deleteFavorite(user, product);
             return null;
         } else { // 클릭 시 'y' -> 찜 등록(db 추가)
 //            return null;
-            Favorite favorite = new Favorite(userDTO.toEntity(), product, 'y');
+            Favorite favorite = new Favorite(user, product, 'y');
             return fs.addFavorite(favorite);
         }
     }

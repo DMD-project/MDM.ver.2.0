@@ -15,16 +15,16 @@ public class FavoriteService {
 
     private FavoriteRepository favoriteRepository;
 
-    public boolean getFavoriteState(UserDTO userDTO, Product product) {
-        return favoriteRepository.existsByUserAndProduct(userDTO.toEntity(), product);
+    public boolean getFavoriteState(User user, Product product) {
+        return favoriteRepository.existsByUserAndProduct(user, product);
     }
 
     public Favorite addFavorite(Favorite fav) {
         return favoriteRepository.saveAndFlush(fav);
     }
 
-    public void deleteFavorite(UserDTO userDTO, Product product) {
-        favoriteRepository.deleteByUserAndProduct(userDTO.toEntity(), product);
+    public void deleteFavorite(User user, Product product) {
+        favoriteRepository.deleteByUserAndProduct(user, product);
     }
 
 }

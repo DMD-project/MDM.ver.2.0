@@ -20,12 +20,15 @@ public class UserDTO {
 
     private String kakaoProfileImg;
 
+    private String userRole;
+
     public User toEntity() {
         return User.builder()
                 .userCode(userCode)
                 .userNickname(userNickname)
                 .kakaoEmail(kakaoEmail)
                 .kakaoProfileImg(kakaoProfileImg)
+                .userRole(userRole)
                 .build();
     }
 

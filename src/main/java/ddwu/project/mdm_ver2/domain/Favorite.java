@@ -24,7 +24,7 @@ public class Favorite implements Serializable {
     @SequenceGenerator(
             name = "fav_seq_generator",
             sequenceName = "FAV_SEQ",
-            initialValue = 1,
+            initialValue = 61,
             allocationSize = 1
     )
     @GeneratedValue(

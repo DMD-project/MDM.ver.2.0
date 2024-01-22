@@ -12,7 +12,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     boolean existsByUserAndProduct(User user, Product product); // get favState (exist->fav O)
 
-//    @Transactional
+    @Transactional
     Favorite saveAndFlush(Favorite favInfo); // 찜등록
 
 //    @Transactional

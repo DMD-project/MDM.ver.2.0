@@ -51,12 +51,23 @@ public class RestKakaoController {
         return ks.addUser(userDTO);
     }
 
-//    @GetMapping("/kakao/ios")
-//    public boolean loginIos(@RequestParam String access_token) {
-//        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
-//        UserDTO newUser = new UserDTO((long) userInfo.get("userCode"), null, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
-//        return ks.checkKakaoUser(newUser);
-//    }
+    @GetMapping("/kakao/ios")
+    public UserDTO loginIos(@RequestParam String access_token) {
+        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
+        boolean existUser = ks.existUser(userInfo.get("kakaoEmail").toString());
+
+        UserDTO userDTO;
+
+        if(!existUser) { // 신규회원
+            String defaultNickname = ks.setDefaultNickname(userInfo.get("userCode").toString());
+            userDTO = new UserDTO((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
+
+        } else { // 기존회원
+            userDTO = ks.getUser(userInfo.get("kakaoEmail").toString());
+        }
+
+        return ks.addUser(userDTO);
+    }
 
     /* set nickname for NEW user */
 //    @GetMapping("/kakaoJoin")

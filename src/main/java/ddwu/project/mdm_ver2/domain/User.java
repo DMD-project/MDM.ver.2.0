@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "user_master")
 public class User {
+
     @Id
     @Column(name = "user_code")
     private long userCode;

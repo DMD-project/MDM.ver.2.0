@@ -28,36 +28,51 @@ public class RestKakaoController {
     private JwtProvider jwtProvider;
 
     @GetMapping("/kakao")
-    public boolean login(@RequestParam String code) {
+    public UserDTO login(@RequestParam String code) {
         log.info("code: {}", code);
+
         String access_token = ks.getAccessToken(code);
         HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
-        UserDTO newUser = new UserDTO((long) userInfo.get("userCode"), null, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
-        return ks.checkKakaoUser(newUser);
+
+//        UserDTO newUser = new UserDTO((long) userInfo.get("userCode"), null, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
+        boolean existUser = ks.existUser(userInfo.get("kakaoEmail").toString());
+
+        UserDTO userDTO;
+
+        if(!existUser) { // 신규회원
+            String defaultNickname = ks.setDefaultNickname(userInfo.get("userCode").toString());
+            userDTO = new UserDTO((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
+
+        } else { // 기존회원
+            userDTO = ks.getUser(userInfo.get("kakaoEmail").toString());
+        }
+
+
+        return ks.addUser(userDTO);
     }
 
-    @GetMapping("/kakao/ios")
-    public boolean loginIos(@RequestParam String access_token) {
-        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
-        UserDTO newUser = new UserDTO((long) userInfo.get("userCode"), null, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
-        return ks.checkKakaoUser(newUser);
-    }
+//    @GetMapping("/kakao/ios")
+//    public boolean loginIos(@RequestParam String access_token) {
+//        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
+//        UserDTO newUser = new UserDTO((long) userInfo.get("userCode"), null, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
+//        return ks.checkKakaoUser(newUser);
+//    }
 
     /* set nickname for NEW user */
-    @GetMapping("/kakaoJoin")
-    public UserDTO create(@RequestParam(value="kakaoEmail", required=false) String kakaoEmail,
-                          @RequestParam(value="userNickname", required=false) String nickname) {
-
-        log.info("new user kakaoEmail: {}", kakaoEmail);
-        log.info("new user nickname: {}", nickname);
-
-        UserDTO newUser = ks.setUserNickname(kakaoEmail, nickname).toDTO();
-
-        jwtProvider.createAccessToken(newUser.getUserCode());
-        jwtProvider.createRefreshToken(newUser.getUserCode());
-
-        return newUser;
-    }
+//    @GetMapping("/kakaoJoin")
+//    public UserDTO create(@RequestParam(value="kakaoEmail", required=false) String kakaoEmail,
+//                          @RequestParam(value="userNickname", required=false) String nickname) {
+//
+//        log.info("new user kakaoEmail: {}", kakaoEmail);
+//        log.info("new user nickname: {}", nickname);
+//
+//        UserDTO newUser = ks.setUserNickname(kakaoEmail, nickname).toDTO();
+//
+//        jwtProvider.createAccessToken(newUser.getUserCode());
+//        jwtProvider.createRefreshToken(newUser.getUserCode());
+//
+//        return newUser;
+//    }
 
     @GetMapping("/kakaoJoin/check/{userNickname}") // 중복확인 버튼 클릭
     public boolean checkNickname(@PathVariable(value="userNickname", required=true) String nickname, Model model) {
@@ -67,8 +82,8 @@ public class RestKakaoController {
         return ks.checkNicknameDup(nickname);
     }
 
-    @DeleteMapping("/kakao/{userCode}")
-    public void deleteUser(@RequestParam(value="userCode", required=true) long userCode) {
-        ks.deleteUser(userCode);
+    @DeleteMapping("/kakao/{kakaoEmail}")
+    public void deleteUser(@RequestParam(value="userCode", required=true) String kakaoEmail) {
+        ks.deleteUser(kakaoEmail);
     }
 }

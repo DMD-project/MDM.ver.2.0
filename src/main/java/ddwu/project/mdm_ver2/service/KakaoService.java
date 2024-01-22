@@ -137,20 +137,47 @@ public class KakaoService {
         return userInfo;
     }
 
-    public boolean checkKakaoUser(UserDTO userInfo) {
+//    public boolean checkKakaoUser(UserDTO userInfo) {
+//
+//        System.out.println(userInfo.getKakaoEmail());
+//
+//        boolean userExist = existUser(userInfo.getUserCode());
+//
+//        if(!userExist) {
+//            System.out.println("User is NOT exist\nsaving ...");
+//            addUser(userInfo);
+//            return false;
+//        }
+//
+//        System.out.println("User is already EXIST !");
+//        return true;
+//    }
 
-        System.out.println(userInfo.getKakaoEmail());
+    public boolean existUser(String kakaoEmail) {
+        return userRepository.existsByKakaoEmail(kakaoEmail);
+    }
 
-        boolean userExist = existUser(userInfo.getUserCode());
+    public String setDefaultNickname(String userCode) {
+        String defaultNickname = "user" + userCode.substring(5) + userCode.substring(0, 5);
+//        3277908747
+        return defaultNickname;
+    }
 
-        if(!userExist) {
-            System.out.println("User is NOT exist\nsaving ...");
-            addUser(userInfo);
-            return false;
-        }
+    public boolean checkNicknameDup(String nickname) {
+        return userRepository.existsByUserNickname(nickname);
+    }
 
-        System.out.println("User is already EXIST !");
-        return true;
+//    public UserDTO getUser(String kakaoEmail) {
+//        User user = userRepository.findByKakaoEmail(kakaoEmail);
+//
+//    }
+
+    public UserDTO getUser(String kakaoEmail) {
+        return userRepository.findByKakaoEmail(kakaoEmail).toDTO();
+    }
+
+    public UserDTO addUser(UserDTO userdto) {
+        return userRepository.saveAndFlush(userdto.toEntity()).toDTO();
     }
 
     public void logout(String access_token) {
@@ -183,34 +210,7 @@ public class KakaoService {
         }
     }
 
-    public User setUserNickname(String kakaoEmail, String nickname) {
-        User user = userRepository.findByKakaoEmail(kakaoEmail);
-        user.setUserNickname(nickname);
-        return userRepository.saveAndFlush(user);
-    }
-
-    public boolean checkNicknameDup(String nickname) {
-        return userRepository.existsByUserNickname(nickname);
-    }
-
-//    public UserDTO getUser(String kakaoEmail) {
-//        User user = userRepository.findByKakaoEmail(kakaoEmail);
-//
-//    }
-
-    public User getUser(String kakaoEmail) {
-        return userRepository.findByKakaoEmail(kakaoEmail);
-    }
-
-    public User addUser(UserDTO userdto) {
-        return userRepository.saveAndFlush(userdto.toEntity());
-    }
-
-    public boolean existUser(long userCode) {
-        return userRepository.existsByUserCode(userCode);
-    }
-
-    public void deleteUser(long userCode) {
-        userRepository.deleteByUserCode(userCode);
+    public void deleteUser(String kakaoEmail) {
+        userRepository.deleteByKakaoEmail(kakaoEmail);
     }
 }

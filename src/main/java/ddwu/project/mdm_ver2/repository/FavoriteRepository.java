@@ -15,7 +15,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     @Transactional
     Favorite saveAndFlush(Favorite favInfo); // 찜등록
 
-//    @Transactional
+    @Transactional
     void deleteByUserAndProduct(User user, Product product); // 찜해제
 
 }

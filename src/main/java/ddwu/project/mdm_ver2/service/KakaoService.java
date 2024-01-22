@@ -172,12 +172,12 @@ public class KakaoService {
 //
 //    }
 
-    public UserDTO getUser(String kakaoEmail) {
-        return userRepository.findByKakaoEmail(kakaoEmail).toDTO();
+    public User getUser(String kakaoEmail) {
+        return userRepository.findByKakaoEmail(kakaoEmail);
     }
 
-    public UserDTO addUser(UserDTO userdto) {
-        return userRepository.saveAndFlush(userdto.toEntity()).toDTO();
+    public User addUser(UserDTO userdto) {
+        return userRepository.saveAndFlush(userdto.toEntity());
     }
 
     public void logout(String access_token) {

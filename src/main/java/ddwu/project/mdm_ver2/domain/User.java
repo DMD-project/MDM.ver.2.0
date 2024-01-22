@@ -9,12 +9,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 @Data
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@DynamicInsert
 @Table(name = "user_master")
 public class User {
 
@@ -36,6 +39,7 @@ public class User {
     private Cart cart;
 
     @Column(name = "user_role")
+//    @ColumnDefault("user")
     private String userRole;
 
     public UserDTO toDTO() {
@@ -44,6 +48,7 @@ public class User {
                 .userNickname(userNickname)
                 .kakaoEmail(kakaoEmail)
                 .kakaoProfileImg(kakaoProfileImg)
+                .userRole(userRole)
                 .build();
     }
 

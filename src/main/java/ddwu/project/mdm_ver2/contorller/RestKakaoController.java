@@ -47,6 +47,9 @@ public class RestKakaoController {
             userDTO = ks.getUser(userInfo.get("kakaoEmail").toString()).toDTO();
         }
 
+        String jwt_access = jwtProvider.createAccessToken(access_token);
+        String jwt_refresh = jwtProvider.createRefreshToken(access_token);
+
         return ks.addUser(userDTO);
     }
 
@@ -64,6 +67,9 @@ public class RestKakaoController {
         } else { // 기존회원
             userDTO = ks.getUser(userInfo.get("kakaoEmail").toString()).toDTO();
         }
+
+        String jwt_access = jwtProvider.createAccessToken(access_token);
+        String jwt_refresh = jwtProvider.createRefreshToken(access_token);
 
         return ks.addUser(userDTO);
     }

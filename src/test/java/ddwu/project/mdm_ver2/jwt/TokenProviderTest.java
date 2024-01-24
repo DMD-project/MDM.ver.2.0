@@ -12,13 +12,13 @@ public class TokenProviderTest{
 
     @Test
     public void 토큰_생성하기() {
-        String token = jwtProvider.createAccessToken(Long.valueOf("3287382897"));
+        String token = jwtProvider.createAccessToken("JZdIDgb5LgTHTSQq9cOTtqCV8TRnrSS9X-oKKiWPAAABjTcA7oeBPKUF0hG4dQ");
         System.out.println(">>>>>>>>>>>>>> token = " + token);
     }
 
     @Test
     public void 토큰_검증하기() {
-        String token = jwtProvider.createAccessToken(Long.valueOf("3287382897"));
+        String token = jwtProvider.createAccessToken("JZdIDgb5LgTHTSQq9cOTtqCV8TRnrSS9X-oKKiWPAAABjTcA7oeBPKUF0hG4dQ");
         System.out.println(token);
         jwtProvider.isValidate(token);
     }

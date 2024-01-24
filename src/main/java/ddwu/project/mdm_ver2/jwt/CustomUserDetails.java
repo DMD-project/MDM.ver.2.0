@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.jwt;
 
+import ddwu.project.mdm_ver2.domain.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
 
     private Long userCode;
     private String kakaoEmail;
-    private String userRole;
+    private Role userRole;
 
     /* 해당 user 권한 목록 */
     @Override
@@ -27,7 +28,7 @@ public class CustomUserDetails implements UserDetails {
         grantedAuthority.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                return getUserRole();
+                return getUserRole().getKey();
             }
         });
         return grantedAuthority;
@@ -45,7 +46,7 @@ public class CustomUserDetails implements UserDetails {
         return String.valueOf(userCode);
     }
 
-    public String getUserRole() {
+    public Role getUserRole() {
         return userRole;
     }
 

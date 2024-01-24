@@ -24,7 +24,7 @@ public class CustomEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setCharacterEncoding("utf-8");
-        log.warn("CustomEntryPoint: 잘못된 토큰으로 페이지 요청");
+        log.warn("CustomEntryPoint: 잘못된 토큰");
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 

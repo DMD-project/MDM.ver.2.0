@@ -64,8 +64,13 @@ public class JwtProvider {
                     .getBody();
             return true;
         } catch (JwtException e) {
-            e.printStackTrace();
+            log.error("JwtException");
+        } catch (IllegalArgumentException e) {
+            log.error("Jwt claims string is empty");
+        } catch (NullPointerException e) {
+            log.error("Jwt Token is empty");
         }
+
         return false;
     }
 
@@ -105,7 +110,7 @@ public class JwtProvider {
     }
 
 
-    /* 회원 정보 조회 */
+    /* token에서 회원 정보 추출 */
     public Long getKakaoUserCode(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)

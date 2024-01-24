@@ -38,9 +38,10 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Cart cart;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "user_role")
 //    @ColumnDefault("user")
-    private String userRole;
+    private Role userRole;
 
     public UserDTO toDTO() {
         return UserDTO.builder()
@@ -68,7 +69,7 @@ public class User {
         return kakaoProfileImg;
     }
 
-    public String getUserRole() {
+    public Role getUserRole() {
         return userRole;
     }
 

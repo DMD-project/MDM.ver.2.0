@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.contorller;
 
+import ddwu.project.mdm_ver2.domain.Role;
 import ddwu.project.mdm_ver2.domain.User;
 import ddwu.project.mdm_ver2.dto.UserDTO;
 import ddwu.project.mdm_ver2.jwt.JwtProvider;
@@ -41,7 +42,7 @@ public class RestKakaoController {
 
         if(!existUser) { // 신규회원
             String defaultNickname = ks.setDefaultNickname(userInfo.get("userCode").toString());
-            userDTO = new UserDTO((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString(), "user");
+            userDTO = new UserDTO((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString(), Role.USER);
             System.out.println(userDTO.getUserRole());
         } else { // 기존회원
             userDTO = ks.getUser(userInfo.get("kakaoEmail").toString()).toDTO();
@@ -62,7 +63,7 @@ public class RestKakaoController {
 
         if(!existUser) { // 신규회원
             String defaultNickname = ks.setDefaultNickname(userInfo.get("userCode").toString());
-            userDTO = new UserDTO((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString(), "user");
+            userDTO = new UserDTO((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString(), Role.USER);
 
         } else { // 기존회원
             userDTO = ks.getUser(userInfo.get("kakaoEmail").toString()).toDTO();

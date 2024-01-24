@@ -29,7 +29,9 @@ public class AuthenticationConfig {
 
         httpSecurity
                 .cors(cors -> cors.disable())
-                .csrf(csrf -> csrf.disable());
+                .csrf(csrf -> csrf.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .formLogin(formLogin -> formLogin.disable());
         httpSecurity
                 .authorizeRequests()
 //                .requestMatchers(HttpMethod.GET, "/").authenticated();

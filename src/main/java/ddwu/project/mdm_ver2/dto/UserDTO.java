@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.dto;
 
+import ddwu.project.mdm_ver2.domain.Role;
 import ddwu.project.mdm_ver2.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class UserDTO {
 
     private String kakaoProfileImg;
 
-    private String userRole;
+    private Role userRole;
 
     public User toEntity() {
         return User.builder()

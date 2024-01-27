@@ -127,7 +127,7 @@
 
         <ul class="navbar_search">
             <li>
-                <form action="/search" method="GET">
+                <form action="<c:url value='/product/search'/>" method="post">
                     <input type="search" placeholder="검색어를 입력하세요." />
 
                 </form>

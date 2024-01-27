@@ -15,6 +15,6 @@ public class HomeController {
 
         System.out.println("in HomeController");
 
-        return "test"; //Figma(Main)
+        return "main"; //Figma(Main)
     }
 }

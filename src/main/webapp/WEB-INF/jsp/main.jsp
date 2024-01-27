@@ -6,20 +6,37 @@
     <title>Main</title>
 
     <style>
-            .category_bar {
-                background-color: #F9F1E7;
-                text-align: center;
+        body {
+            background-color: #F9F1E7;
+        }
+    </style>
 
-                height: 100px;
-                padding: 10px 50px 10px 50px;
-            }
-            .category_bar button {
-                margin: 30px;
-            }
+    <style>
+        .banner {
+            background-color: #FFFFFF;
 
-        </style>
+            height: 400px;
+        }
+    </style>
+
+    <style>
+        .category_bar {
+            background-color: #F9F1E7;
+            text-align: center;
+
+            height: 100px;
+            padding: 10px 50px 10px 50px;
+        }
+        .category_bar button {
+            margin: 30px;
+        }
+    </style>
+
 </head>
 <body>
+
+    <%@ include file="header.jsp" %>
+
     <div class="banner"></div>
 
 

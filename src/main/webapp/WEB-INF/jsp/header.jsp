@@ -120,15 +120,15 @@
 
         <ul class="navbar_menu">
             <li><a href="#"><b>커뮤니티</b></a></li>
-            <li><a href="/shop/list"><b>쇼핑</b></a></li>
+            <li><a href="/product/list"><b>쇼핑</b></a></li>
             <li><a href="#"><b>공동구매</b></a></li>
             <li><a href="#"><b>중고거래</b></a></li>
         </ul>
 
         <ul class="navbar_search">
             <li>
-                <form action="<c:url value='/product/search'/>" method="post">
-                    <input type="search" placeholder="검색어를 입력하세요." />
+                <form action="<c:url value='/product/search'/>" method="GET">
+                    <input type="text" name="keyword" placeholder="검색어를 입력하세요." />
 
                 </form>
             </li>

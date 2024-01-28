@@ -25,7 +25,7 @@ public class CartItemController {
 
     // 장바구니품목 추가
     @Transactional
-    @PostMapping("/{userCode}/{productId}/{count}")
+    @PostMapping("add/{userCode}/{productId}/{count}")
     public void addItemToCart(@PathVariable("userCode") long userCode, @PathVariable("productId") long productId, @PathVariable("count") int count) {
         User user = userRepository.findByUserCode(userCode).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
@@ -57,7 +57,7 @@ public class CartItemController {
 
     // 장바구니 선택한 품목들 삭제
     @Transactional
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/selected")
     public void deleteCartItems(@RequestParam(name = "cartItemIds") List<Long> cartItemIds) {
         cartItemService.deleteCartItems(cartItemIds);
     }

@@ -11,12 +11,23 @@
         }
     </style>
 
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
     <style>
         .photo_banner {
             background-color: #FFFFFF;
-
             height: 400px;
         }
+        .slick-arrow {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    z-index: 5
+        }
+        .slick-prev {    left: 0;}
+        .slick-next {    right: 0;}
     </style>
 
     <style>
@@ -47,7 +58,28 @@
 
     <%@ include file="includes/header.jsp" %>
 
-    <div class="photo_banner"></div>
+    ${param.jwtAccess}
+    <%= request.getParameter("jwtAccess") %>
+    <%= request.getAttribute("jwtAccess") %>
+
+    <div class="slick">
+        <div class="photo_banner">
+            <img src="" alt="배너_이미지_01"/>
+        </div>
+        <div class="photo_banner">
+            <img src="" alt="배너_이미지_02"/>
+        </div>
+        <div class="photo_banner">
+            <img src="" alt="배너_이미지_03"/>
+        </div>
+    </div>
+
+    <script>
+        $('.slick').slick({
+            autoplay: true,
+            autoplaySpeed: 2000,
+        });
+    </script>
 
 
     <div class="category_bar">

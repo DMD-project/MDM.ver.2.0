@@ -25,6 +25,7 @@ public class RestKakaoController {
     private UserService ks;
     private JwtProvider jwtProvider;
 
+    /*
     @GetMapping("/kakao")
     public JwtToken login(@RequestParam String code) {
         log.info("code: {}", code);
@@ -40,7 +41,7 @@ public class RestKakaoController {
         ks.addUser(userResponse);
 
         return new JwtToken(jwt_access, jwt_refresh);
-    }
+    }*/
 
     @GetMapping("/kakao/ios")
     public JwtToken loginIos(@RequestParam String access_token) {

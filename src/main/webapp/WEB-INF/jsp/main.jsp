@@ -12,7 +12,7 @@
     </style>
 
     <style>
-        .banner {
+        .photo_banner {
             background-color: #FFFFFF;
 
             height: 400px;
@@ -24,11 +24,17 @@
             background-color: #F9F1E7;
             text-align: center;
 
-            height: 100px;
             padding: 10px 50px 10px 50px;
         }
         .category_bar button {
-            margin: 30px;
+                    background-color: white;
+
+                    width: 90px;
+                    height: 90px;
+
+                    border: none;
+                    border-radius: 50%;
+                    margin: 20px;
         }
         .category_bar img {
             width: 50px;
@@ -41,7 +47,7 @@
 
     <%@ include file="header.jsp" %>
 
-    <div class="banner"></div>
+    <div class="photo_banner"></div>
 
 
     <div class="category_bar">
@@ -70,5 +76,11 @@
             <img src="../../images/category_btn_08.png"><br/>식물
         </button>
     </div>
+
+    <div class="shop_banner"></div>
+    <div ></div>
+
+    <%@ include file="footer.jsp" %>
+
 </body>
 </html>

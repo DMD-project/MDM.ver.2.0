@@ -52,13 +52,13 @@ public class SecondHandController {
     }
 
     /* 상품 수정 */
-    @GetMapping("/update/{shID}")
+    @PutMapping("/update/{shID}")
     public SecondHand updateSecondHand(@PathVariable("shID") Long shID, @RequestBody SecondHandRequest secondHandRequest) {
         return secondHandService.updateSecondHand(shID, secondHandRequest);
     }
 
     /* 상품 삭제 */
-    @GetMapping("/delete/{shID}")
+    @DeleteMapping("/delete/{shID}")
     public void deleteSecondHand(@PathVariable("shID") Long shID) {
         secondHandService.deleteSecondHand(shID);
     }

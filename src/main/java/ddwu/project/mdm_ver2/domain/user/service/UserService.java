@@ -3,6 +3,7 @@ package ddwu.project.mdm_ver2.domain.user.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import ddwu.project.mdm_ver2.domain.user.entity.Role;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
@@ -137,21 +138,22 @@ public class UserService {
         return userInfo;
     }
 
-//    public boolean checkKakaoUser(UserDTO userInfo) {
-//
-//        System.out.println(userInfo.getKakaoEmail());
-//
-//        boolean userExist = existUser(userInfo.getUserCode());
-//
-//        if(!userExist) {
-//            System.out.println("User is NOT exist\nsaving ...");
-//            addUser(userInfo);
-//            return false;
-//        }
-//
-//        System.out.println("User is already EXIST !");
-//        return true;
-//    }
+    public UserResponse checkKakaoUser(HashMap<String, Object> userInfo) {
+
+        boolean existUser = existUser(userInfo.get("kakaoEmail").toString());
+
+        UserResponse userResponse;
+
+        if(!existUser) { // 신규회원
+            String defaultNickname = setDefaultNickname(userInfo.get("userCode").toString());
+            userResponse = new UserResponse((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString(), Role.USER);
+            System.out.println(userResponse.getUserRole());
+        } else { // 기존회원
+            userResponse = getUser(userInfo.get("kakaoEmail").toString()).toDTO();
+        }
+
+        return userResponse;
+    }
 
     public boolean existUser(String kakaoEmail) {
         return userRepository.existsByKakaoEmail(kakaoEmail);

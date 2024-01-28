@@ -32,23 +32,12 @@ public class RestKakaoController {
         String access_token = ks.getAccessToken(code);
         HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
 
-//        UserDTO newUser = new UserDTO((long) userInfo.get("userCode"), null, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString());
-        boolean existUser = ks.existUser(userInfo.get("kakaoEmail").toString());
-
-        UserResponse userDTO;
-
-        if(!existUser) { // 신규회원
-            String defaultNickname = ks.setDefaultNickname(userInfo.get("userCode").toString());
-            userDTO = new UserResponse((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString(), Role.USER);
-            System.out.println(userDTO.getUserRole());
-        } else { // 기존회원
-            userDTO = ks.getUser(userInfo.get("kakaoEmail").toString()).toDTO();
-        }
+        UserResponse userResponse = ks.checkKakaoUser(userInfo);
 
         String jwt_access = jwtProvider.createAccessToken(access_token);
         String jwt_refresh = jwtProvider.createRefreshToken(access_token);
 
-        ks.addUser(userDTO);
+        ks.addUser(userResponse);
 
         return new JwtToken(jwt_access, jwt_refresh);
     }

@@ -91,6 +91,25 @@ public class SecondHandService {
     /* 전체 요청 정렬 */
 
     /* 상품 수정 */
+    public SecondHand updateSecondHand(Long shID, SecondHandRequest secondHandRequest) {
+        SecondHand secondHand = secondHandRepository.findByShID(shID);
+        if(secondHand == null) {
+            throw new ResourceNotFoundException("SecondHand", "shID", shID);
+        }
+
+        if(secondHand != null) {
+            Category category = categoryRepository.findByCateCode(secondHandRequest.getCateCode());
+
+            secondHand.setCategory(category);
+            secondHand.setShName(secondHandRequest.getShName());
+            secondHand.setShPrice(secondHandRequest.getShPrice());
+            secondHand.setShImg(secondHandRequest.getShImg());
+            secondHand.setShContent(secondHandRequest.getShContent());
+
+            return secondHandRepository.saveAndFlush(secondHand);
+        }
+        return null;
+    }
 
     /* 상품 삭제 */
     @Transactional

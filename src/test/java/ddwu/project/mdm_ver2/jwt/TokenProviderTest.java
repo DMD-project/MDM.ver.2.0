@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.jwt;
 
+import ddwu.project.mdm_ver2.global.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.junit.jupiter.api.Test;

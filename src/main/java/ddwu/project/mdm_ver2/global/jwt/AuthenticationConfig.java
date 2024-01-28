@@ -35,7 +35,8 @@ public class AuthenticationConfig {
         httpSecurity
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers(new AntPathRequestMatcher("/secondHand/add")).hasRole("USER")
+                                .requestMatchers(new AntPathRequestMatcher("/secondHand/add"),
+                                                 new AntPathRequestMatcher("/product/list")).hasRole("USER")
                                 .requestMatchers(new AntPathRequestMatcher("/**"),
                                                  new AntPathRequestMatcher("/login")).permitAll());
 //        httpSecurity

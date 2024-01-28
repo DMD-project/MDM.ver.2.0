@@ -144,6 +144,8 @@
         <ul class="navbar_login">
             <li>
                 <button onclick="location.href='/login'">로그인</button>
+                <%= request.getAttribute("jwt_access")%>
+
             </li>
         </ul>
     </nav>

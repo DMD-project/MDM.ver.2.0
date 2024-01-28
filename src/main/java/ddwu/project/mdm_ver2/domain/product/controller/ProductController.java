@@ -6,6 +6,7 @@ import ddwu.project.mdm_ver2.domain.product.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -17,7 +18,8 @@ public class ProductController { //상품은 관리자만 담당
 
     // 상품 조회
     @GetMapping("/list")
-    public List<Product> getBagList() {
+    public List<Product> getBagList(Principal principal) {
+        System.out.println(principal.getName());
         return productService.findAllProduct();
     }
 

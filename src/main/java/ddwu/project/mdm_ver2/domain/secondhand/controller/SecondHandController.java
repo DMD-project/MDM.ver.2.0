@@ -27,7 +27,7 @@ public class SecondHandController {
     }
 
     /* 카테고리 내 상품 정렬 */
-    @GetMapping("/category/{cateCode}/list")
+    @GetMapping("sort/category/{cateCode}")
     public List<SecondHand> getSortedByCategoryList(@PathVariable("cateCode") String cateCode,
                                                     @RequestParam(name="sortBy", required=false, defaultValue="") String sortBy) {
         return secondHandService.sortProductByCategory(sortBy, cateCode);

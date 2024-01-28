@@ -17,7 +17,7 @@ public class SecondHandBidController {
     private final SecondHandBidService shReqService;
 
     /* 가격 제안 등록 (댓글 등록) */
-    public SecondHandBid addShReq(@PathVariable("shID") Long shID,
+    public SecondHandBid addSHBid(@PathVariable("shID") Long shID,
                                   @RequestBody SecondHandBidRequest shReqRequest) {
         return shReqService.addShReq(shID, shReqRequest);
     }

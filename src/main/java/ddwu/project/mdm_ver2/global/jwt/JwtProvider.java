@@ -33,17 +33,17 @@ public class JwtProvider {
     private static final Long refreshTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 2주
 
     /* access, refresh token 생성 */
-    public String createAccessToken(String kakao_token) {
-        return createToken(kakao_token, "access", accessTokenValidTime);
+    public String createAccessToken(Long userCode) {
+        return createToken(userCode, "access", accessTokenValidTime);
     }
 
-    public String createRefreshToken(String kakao_token) {
-        return createToken(kakao_token, "refresh", refreshTokenValidTime);
+    public String createRefreshToken(Long userCode) {
+        return createToken(userCode, "refresh", refreshTokenValidTime);
     }
 
-    public String createToken(String kakao_token, String type, Long tokenValidTime) {
+    public String createToken(Long userCode, String type, Long tokenValidTime) {
         Claims claims = Jwts.claims();
-        claims.put("kakao_token", kakao_token);
+        claims.put("userCode", userCode);
 
         log.info("create token: {}", type);
         return Jwts.builder()
@@ -106,6 +106,7 @@ public class JwtProvider {
     /* Jwt Token에 담긴 유저 정보 DB에 검색,
     해당 유저의 권한 처리를 위해 Context에 담는 Authentication 객체를 반환 */
     public Authentication getAuthentication(String token){
+        log.info("getUserCode: {}", getUserCode(token));
         CustomUserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(this.getUserCode(token)));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }

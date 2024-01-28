@@ -1,54 +1,56 @@
 package ddwu.project.mdm_ver2.domain.user.controller;
 
+import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
+import ddwu.project.mdm_ver2.global.jwt.JwtProvider;
+import ddwu.project.mdm_ver2.global.jwt.JwtToken;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.HashMap;
 
 @Controller
 @AllArgsConstructor
 public class ViewKakaoController {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private UserService ks;
+    private JwtProvider jwtProvider;
 
     @GetMapping("/login")
     public String reqLogin() {
-        return "kakaoLogin"; //Figma(login)
+        return "login"; //Figma(login)
     }
 
-    /*
+
     @GetMapping("/kakao")
-    public String login(@RequestParam String access_token, Model model) {
+    public String login(@RequestParam String code, Model model) {
 
-        System.out.println(access_token);
+        log.info("code: {}", code);
 
-        System.out.println("in ViewKakaoController login");
+        String access_token = ks.getAccessToken(code);
+        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
 
-//        String access_token = ks.getAccessToken(code);
-        UserDTO userInfo = ks.getKakaoUserInfo(access_token);
+        UserResponse userResponse = ks.checkKakaoUser(userInfo);
 
-        if (userInfo.getUserCode() < 0) {
+        String jwt_access = jwtProvider.createAccessToken(userResponse.getUserCode());
+        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getUserCode());
 
-            System.out.println(userInfo.getKakaoEmail());
+        ks.addUser(userResponse);
+        model.addAttribute("jwt_access", jwt_access);
+        model.addAttribute("jwt_refresh", jwt_refresh);
 
-            boolean userExist = ks.existUser(userInfo.getUserCode());
+        return "redirect:/";
 
-            if(!userExist) {
-                System.out.println("user is not exist\nsaving ...");
-//                session.setAttribute("newUser", userInfo);
-                ks.addUser(userInfo);
-                model.addAttribute("kakaoEmail", userInfo.getKakaoEmail());
-                return "join"; //Figma(join)
-
-            }
-        }
-
-        System.out.println("user is already exist !");
-        return "redirect:/"; //Figma(Main uri)
-
-    }*/
+    }
 
 //    @GetMapping("/kakaoJoin")
 //    public String submit() {

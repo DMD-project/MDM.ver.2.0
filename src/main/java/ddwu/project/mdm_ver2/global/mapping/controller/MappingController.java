@@ -12,10 +12,4 @@ public class MappingController {
     public String main() {
         return "main";
     }
-
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
-
 }

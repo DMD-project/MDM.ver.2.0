@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SecondHandReqRepository extends JpaRepository<SecondHand, Long> {
+public interface SecondHandReqRepository extends JpaRepository<SecondHandReq, Long> {
 
     SecondHandReq findByShReqID(Long shReqID);
     SecondHandReq saveAndFlush(SecondHandReq secondHandReq);

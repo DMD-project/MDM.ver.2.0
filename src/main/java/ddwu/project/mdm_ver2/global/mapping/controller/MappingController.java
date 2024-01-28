@@ -1,4 +1,4 @@
-package ddwu.project.mdm_ver2.domain.home.controller;
+package ddwu.project.mdm_ver2.global.mapping.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -6,12 +6,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @AllArgsConstructor
-public class HomeController {
+public class MappingController {
 
     @GetMapping("/")
-    public String home() {
-        System.out.println("in HomeController");
-
+    public String main() {
         return "main";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
 }

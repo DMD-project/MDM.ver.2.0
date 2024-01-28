@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.contorller;
 
 import ddwu.project.mdm_ver2.domain.Role;
 import ddwu.project.mdm_ver2.domain.User;
+import ddwu.project.mdm_ver2.dto.JwtToken;
 import ddwu.project.mdm_ver2.dto.UserDTO;
 import ddwu.project.mdm_ver2.jwt.JwtProvider;
 import ddwu.project.mdm_ver2.service.KakaoService;
@@ -29,7 +30,7 @@ public class RestKakaoController {
     private JwtProvider jwtProvider;
 
     @GetMapping("/kakao")
-    public User login(@RequestParam String code) {
+    public JwtToken login(@RequestParam String code) {
         log.info("code: {}", code);
 
         String access_token = ks.getAccessToken(code);
@@ -51,11 +52,13 @@ public class RestKakaoController {
         String jwt_access = jwtProvider.createAccessToken(access_token);
         String jwt_refresh = jwtProvider.createRefreshToken(access_token);
 
-        return ks.addUser(userDTO);
+        ks.addUser(userDTO);
+
+        return new JwtToken(jwt_access, jwt_refresh);
     }
 
     @GetMapping("/kakao/ios")
-    public User loginIos(@RequestParam String access_token) {
+    public JwtToken loginIos(@RequestParam String access_token) {
         HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
         boolean existUser = ks.existUser(userInfo.get("kakaoEmail").toString());
 
@@ -71,8 +74,9 @@ public class RestKakaoController {
 
         String jwt_access = jwtProvider.createAccessToken(access_token);
         String jwt_refresh = jwtProvider.createRefreshToken(access_token);
+        ks.addUser(userDTO);
 
-        return ks.addUser(userDTO);
+        return new JwtToken(jwt_access, jwt_refresh);
     }
 
     /* set nickname for NEW user */

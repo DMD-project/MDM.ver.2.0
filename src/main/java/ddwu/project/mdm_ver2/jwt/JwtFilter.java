@@ -29,19 +29,23 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("request: {}", request.getHeaderNames());
 
         // login ->  건너뜀
-        if(path.startsWith("/kakao")) {  //"로그인 요청 API"
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        if(path.startsWith("/kakao")) {  //"로그인 요청 API"
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
 
         String header = request.getHeader("Authorization");
         log.info("Authorization header: {}", header);
-        if(ObjectUtils.isEmpty(header) || !header.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        if(ObjectUtils.isEmpty(header) || !header.startsWith("Bearer ")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
 
-        String token = header.split(" ")[1];
+//        String token = header.split(" ")[1];
+        String token = null;
+        if(request.getHeader("Authorization") != null && request.getHeader("Authorization").startsWith("Bearer ")){
+            token = request.getHeader("Authorization").split(" ")[1];
+        }
 
 //        Long userCode = jwtProvider.getKakaoUserCode(token);
 //        log.info("userCode: {}", userCode);

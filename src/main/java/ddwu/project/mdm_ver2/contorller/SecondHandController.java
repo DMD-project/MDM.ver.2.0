@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.contorller;
 
 import ddwu.project.mdm_ver2.domain.SecondHand;
+import ddwu.project.mdm_ver2.dto.ProductRequest;
 import ddwu.project.mdm_ver2.dto.SecondHandRequest;
 import ddwu.project.mdm_ver2.service.SecondHandService;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,10 @@ public class SecondHandController {
     }
 
     /* 상품 수정 */
+    @GetMapping("/update/{shID}")
+    public SecondHand updateSecondHand(@PathVariable("shID") Long shID, @RequestBody SecondHandRequest secondHandRequest) {
+        return secondHandService.updateSecondHand(shID, secondHandRequest);
+    }
 
     /* 상품 삭제 */
     @GetMapping("/delete/{shID}")
@@ -61,8 +66,8 @@ public class SecondHandController {
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */
 
-    /* 전체 요청 정렬 */
 
+    /* 전체 요청 정렬 */
 
 
 }

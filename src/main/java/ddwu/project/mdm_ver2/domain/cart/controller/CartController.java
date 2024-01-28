@@ -3,6 +3,7 @@ package ddwu.project.mdm_ver2.domain.cart.controller;
 import ddwu.project.mdm_ver2.domain.cart.entity.Cart;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.domain.cart.service.CartService;
+import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,14 +16,13 @@ public class CartController {
 
     // 사용자 장바구니 조회
     @GetMapping("/{userCode}")
-    public Cart getCartByUser(@PathVariable("userCode") long userCode) {
+    public CustomResponse<Cart> getCartByUser(@PathVariable("userCode") long userCode) {
         return cartService.getCartByUser(userCode);
     }
 
     // 장바구니 비우기
-    @DeleteMapping("/{userCode}")
-    public void clearCart(@PathVariable("userCode") Long userCode) {
-        cartService.clearCart(userCode);
+    @DeleteMapping("/delete/{userCode}")
+    public CustomResponse<Void> clearCart(@PathVariable("userCode") Long userCode) {
+        return cartService.clearCart(userCode);
     }
-
 }

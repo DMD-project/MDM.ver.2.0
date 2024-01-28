@@ -34,13 +34,56 @@
 </head>
 <body>
 
-<img src="../images/logo.png" class="logo" />
-<br/>
-<span class="context">SNS 계정으로 간편 로그인</span>
-</br>
-<a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=bbb0d5e603062dd02da05a9fe89b0c1e&redirect_uri=http://localhost:8080/kakao">
-    <img src="../images/kakao_sync_large_wide.png" class="kakao" />
-</a>
+    <img src="../images/logo.png" class="logo" />
+    <br/>
+    <span class="context">SNS 계정으로 간편 로그인</span>
+    </br>
+
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"
+        integrity="sha384-6MFdIr0zOira1CHQkedUqJVql0YtcZA1P0nbPrQYJXVJZUkTk/oX4U9GhUIs3/z8" crossorigin="anonymous"></script>
+
+
+    <a href="javascript:loginWithKakao()">
+        <img src="../images/kakao_sync_large_wide.png" class="kakao" />
+    </a>
+
+<script>
+    Kakao.init('6e1fedab86d6b96e90375545f2dc62da');
+
+    function loginWithKakao() {
+        Kakao.Auth.authorize({
+          redirectUri: 'http://localhost:8080/kakao',
+        });
+    }
+
+    // 아래는 데모를 위한 UI 코드입니다.
+      displayToken()
+          function displayToken() {
+            var token = getCookie('authorize-access-token');
+
+            if(access_token) {
+              Kakao.Auth.setAccessToken(access_token);
+              Kakao.Auth.getStatusInfo()
+                .then(function(res) {
+                  if (res.status === 'connected') {
+                    document.getElementById('token-result').innerText
+                      = 'login success, token: ' + Kakao.Auth.getAccessToken();
+                    window.location.href="main";
+                  }
+                })
+                .catch(function(err) {
+                  Kakao.Auth.setAccessToken(null);
+                });
+            }
+        }
+
+      function getCookie(name) {
+        var parts = document.cookie.split(name + '=');
+        if (parts.length === 2) { return parts[1].split(';')[0]; }
+      }
+
+</script>
+
 
 
 </body>

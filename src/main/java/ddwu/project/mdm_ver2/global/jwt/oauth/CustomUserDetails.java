@@ -17,7 +17,6 @@ import java.util.Collection;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomUserDetails implements UserDetails {
 
-    private Long userCode;
     private String kakaoEmail;
     private Role userRole;
 
@@ -43,7 +42,7 @@ public class CustomUserDetails implements UserDetails {
     /* pk 값 */
     @Override
     public String getUsername() {
-        return String.valueOf(userCode);
+        return kakaoEmail;
     }
 
     public Role getUserRole() {

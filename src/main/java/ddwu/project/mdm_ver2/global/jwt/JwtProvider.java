@@ -27,7 +27,7 @@ public class JwtProvider {
     @Value("${jwt.secretKey}")
     private String SECRET_KEY;
 
-    private CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
     private static final Long accessTokenValidTime = Duration.ofMinutes(30).toMillis(); // 만료시간 30분
     private static final Long refreshTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 2주
@@ -106,18 +106,18 @@ public class JwtProvider {
     /* Jwt Token에 담긴 유저 정보 DB에 검색,
     해당 유저의 권한 처리를 위해 Context에 담는 Authentication 객체를 반환 */
     public Authentication getAuthentication(String token){
-        CustomUserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(this.getKakaoUserCode(token)));
+        CustomUserDetails userDetails = userDetailsService.loadUserByUsername(this.getKakaoEmailCode(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
 
     /* token에서 회원 정보 추출 */
-    public Long getKakaoUserCode(String token) {
+    public String getKakaoEmailCode(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody()
-                .get("userCode", Long.class);
+                .get("kakaoEmail", String.class);
     }
 
     private String getRole(String accessToken) {

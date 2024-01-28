@@ -116,18 +116,18 @@ public class UserService {
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
             JsonObject kakaoAccount = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
-            long userCode = element.getAsJsonObject().get("id").getAsLong();
-            String kakaoEmail = kakaoAccount.getAsJsonObject().get("email").getAsString();
-            String kakaoProfileImg = properties.getAsJsonObject().get("profile_image").getAsString();
+            long userID = element.getAsJsonObject().get("id").getAsLong();
+            String userEmail = kakaoAccount.getAsJsonObject().get("email").getAsString();
+            String userProfileImg = properties.getAsJsonObject().get("profile_image").getAsString();
 
-            userInfo.put("userCode", userCode);
-            userInfo.put("kakaoEmail", kakaoEmail);
-            userInfo.put("kakaoProfileImg", kakaoProfileImg);
+            userInfo.put("userID", userID);
+            userInfo.put("userEmail", userEmail);
+            userInfo.put("userProfileImg", userProfileImg);
 
 
-            System.out.println("userCode: " + userCode);
-            System.out.println("kakaoEmail: " + kakaoEmail);
-            System.out.println("kakaoProfileImg: " + kakaoProfileImg);
+            System.out.println("userID: " + userID);
+            System.out.println("userEmail: " + userEmail);
+            System.out.println("userProfileImg: " + userProfileImg);
 
             br.close();
 
@@ -140,27 +140,27 @@ public class UserService {
 
     public UserResponse checkKakaoUser(HashMap<String, Object> userInfo) {
 
-        boolean existUser = existUser(userInfo.get("kakaoEmail").toString());
+        boolean existUser = existUser(userInfo.get("userEmail").toString());
 
         UserResponse userResponse;
 
         if(!existUser) { // 신규회원
-            String defaultNickname = setDefaultNickname(userInfo.get("userCode").toString());
-            userResponse = new UserResponse((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString(), Role.USER);
+            String defaultNickname = setDefaultNickname(userInfo.get("userID").toString());
+            userResponse = new UserResponse((long) userInfo.get("userID"), defaultNickname, userInfo.get("userEmail").toString(), userInfo.get("userProfileImg").toString(), Role.USER);
             System.out.println(userResponse.getUserRole());
         } else { // 기존회원
-            userResponse = getUser(userInfo.get("kakaoEmail").toString()).toDTO();
+            userResponse = getUser(userInfo.get("userEmail").toString()).toDTO();
         }
 
         return userResponse;
     }
 
-    public boolean existUser(String kakaoEmail) {
-        return userRepository.existsByKakaoEmail(kakaoEmail);
+    public boolean existUser(String userEmail) {
+        return userRepository.existsByUserEmail(userEmail);
     }
 
-    public String setDefaultNickname(String userCode) {
-        String defaultNickname = "user" + userCode.substring(5) + userCode.substring(0, 5);
+    public String setDefaultNickname(String userID) {
+        String defaultNickname = "user" + userID.substring(5) + userID.substring(0, 5);
 //        3277908747
         return defaultNickname;
     }
@@ -174,8 +174,8 @@ public class UserService {
 //
 //    }
 
-    public User getUser(String kakaoEmail) {
-        return userRepository.findByKakaoEmail(kakaoEmail);
+    public User getUser(String userEmail) {
+        return userRepository.findByUserEmail(userEmail);
     }
 
     public User addUser(UserResponse userdto) {
@@ -212,7 +212,7 @@ public class UserService {
         }
     }
 
-    public void deleteUser(String kakaoEmail) {
-        userRepository.deleteByKakaoEmail(kakaoEmail);
+    public void deleteUser(String userEmail) {
+        userRepository.deleteByUserEmail(userEmail);
     }
 }

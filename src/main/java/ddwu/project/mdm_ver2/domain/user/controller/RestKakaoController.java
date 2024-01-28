@@ -81,8 +81,8 @@ public class RestKakaoController {
         return ks.checkNicknameDup(nickname);
     }
 
-    @DeleteMapping("/kakao/{kakaoEmail}")
-    public void deleteUser(@RequestParam(value="userCode", required=true) String kakaoEmail) {
-        ks.deleteUser(kakaoEmail);
+    @DeleteMapping("/kakao/{userEmail}")
+    public void deleteUser(@RequestParam(value="userCode", required=true) String userEmail) {
+        ks.deleteUser(userEmail);
     }
 }

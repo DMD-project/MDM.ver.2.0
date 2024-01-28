@@ -15,16 +15,16 @@ public class UserResponse {
 
     private long userCode;
     private String userNickname;
-    private String kakaoEmail;
-    private String kakaoProfileImg;
+    private String userEmail;
+    private String userProfileImg;
     private Role userRole;
 
     public User toEntity() {
         return User.builder()
                 .userCode(userCode)
                 .userNickname(userNickname)
-                .kakaoEmail(kakaoEmail)
-                .kakaoProfileImg(kakaoProfileImg)
+                .userEmail(userEmail)
+                .userProfileImg(userProfileImg)
                 .userRole(userRole)
                 .build();
     }
@@ -45,19 +45,19 @@ public class UserResponse {
         this.userNickname = userNickname;
     }
 
-    public String getKakaoEmail() {
-        return kakaoEmail;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setKakaoEmail(String kakaoEmail) {
-        this.kakaoEmail = kakaoEmail;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
-    public String getKakaoProfileImg() {
-        return kakaoProfileImg;
+    public String getUserProfileImg() {
+        return userProfileImg;
     }
 
-    public void setKakaoProfileImg(String kakaoProfileImg) {
-        this.kakaoProfileImg = kakaoProfileImg;
+    public void setUserProfileImg(String userProfileImg) {
+        this.userProfileImg = userProfileImg;
     }
 }

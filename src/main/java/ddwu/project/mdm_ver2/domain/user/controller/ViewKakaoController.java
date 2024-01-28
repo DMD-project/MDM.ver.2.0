@@ -3,7 +3,6 @@ package ddwu.project.mdm_ver2.domain.user.controller;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
 import ddwu.project.mdm_ver2.global.jwt.JwtProvider;
-import ddwu.project.mdm_ver2.global.jwt.JwtToken;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +45,7 @@ public class ViewKakaoController {
 
         ks.addUser(userResponse);
         model.addAttribute("jwt_access", jwt_access);
-        model.addAttribute("jwt_refresh", jwt_refresh);
-
+//        model.addAttribute("jwt_refresh", jwt_refresh);
         return "redirect:/";
 
     }

@@ -9,9 +9,11 @@ import ddwu.project.mdm_ver2.domain.product.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @AllArgsConstructor
-@RequestMapping("/product/{id}")
+@RequestMapping("/favorite/{id}")
 public class FavoriteController {
 
     private FavoriteService fs;
@@ -19,24 +21,25 @@ public class FavoriteController {
     private ProductService ps;
 
     @PostMapping("/test/fav") // 수정 ..
-    public boolean getFavState(@RequestParam(value="kakaoEmail", required=true) String kakaoEmail,
-//            Principal principal,
+    public boolean getFavState(Principal principal,
                                @PathVariable(value="id", required=true) long prodID) {
-        User user = ks.getUser(kakaoEmail);
+
+        User user = ks.getUser(principal.getName());
         Product product = ps.findProduct(prodID);
-//        System.out.println(Long.valueOf(principal.getName()));
+
         return fs.getFavoriteState(user, product); // true(exist)-> 찜 상태, false -> 찜 아닌 상태
     }
 
     @GetMapping("/favState/{favState}")
-    public Favorite changeFavState(@RequestParam(value="kakaoEmail", required=true) String kakaoEmail,
-//            Principal principal,
+    public Favorite changeFavState(Principal principal,
                                    @PathVariable(value="id", required=true) long prodID,
                                    @PathVariable(value="favState", required = true) Character favState) {
 
-        User user = ks.getUser(kakaoEmail);
+        User user = ks.getUser(principal.getName());
         Product product = ps.findProduct(prodID);
-        System.out.println(user.getKakaoEmail());
+
+        System.out.println(user.getUserEmail());
+
         if(favState.equals('y')) { // 클릭 시 'n' -> 찜 해제(db 삭제)
             fs.deleteFavorite(user, product);
             return null;

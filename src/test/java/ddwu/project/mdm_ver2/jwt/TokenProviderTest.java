@@ -29,6 +29,6 @@ public class TokenProviderTest{
     @Test
     public void jwt_usercode확인() {
         String token = "eyJ0eXBlIjoiYWNjZXNzIiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VyQ29kZSI6MzI3NzkwODc0NywiaWF0IjoxNzA2NDU5NzE0LCJleHAiOjE3MDY0NjE1MTR9.ajOHxP6V6gc_yYNUky9uKHt9XDD6Obwz0V9BY0v7YJI";
-        System.out.println(jwtProvider.getUserCode(token));
+        System.out.println(jwtProvider.getUserID(token));
     }
 }

@@ -22,24 +22,24 @@ import org.hibernate.annotations.DynamicInsert;
 public class User {
 
     @Id
-    @Column(name = "user_code")
+    @Column(name = "userID")
     private long userCode;
 
-    @Column(name = "user_nickname")
+    @Column(name = "userNickname")
     private String userNickname;
 
-    @Column(name = "kakao_email")
-    private String kakaoEmail;
+    @Column(name = "userEmail")
+    private String userEmail;
 
-    @Column(name = "kakao_profile_img")
-    private String kakaoProfileImg;
+    @Column(name = "userProfileImg")
+    private String userProfileImg;
 
     @JsonManagedReference
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Cart cart;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_role")
+    @Column(name = "userRole")
 //    @ColumnDefault("user")
     private Role userRole;
 
@@ -47,8 +47,8 @@ public class User {
         return UserResponse.builder()
                 .userCode(userCode)
                 .userNickname(userNickname)
-                .kakaoEmail(kakaoEmail)
-                .kakaoProfileImg(kakaoProfileImg)
+                .userEmail(userEmail)
+                .userProfileImg(userProfileImg)
                 .userRole(userRole)
                 .build();
     }
@@ -61,12 +61,12 @@ public class User {
         return userNickname;
     }
 
-    public String getKakaoEmail() {
-        return kakaoEmail;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public String getKakaoProfileImg() {
-        return kakaoProfileImg;
+    public String getuserProfileImg() {
+        return userProfileImg;
     }
 
     public Role getUserRole() {

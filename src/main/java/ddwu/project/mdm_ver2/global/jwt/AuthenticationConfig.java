@@ -35,10 +35,13 @@ public class AuthenticationConfig {
         httpSecurity
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers(new AntPathRequestMatcher("/secondHand/add"),
-                                                 new AntPathRequestMatcher("/product/list")).hasRole("USER")
+                                .requestMatchers(new AntPathRequestMatcher("/cart"),
+                                        new AntPathRequestMatcher("/cartItem"),
+                                        new AntPathRequestMatcher("/secondHand/add"),
+                                        new AntPathRequestMatcher("/product/list"),
+                                        new AntPathRequestMatcher("/favorite/{id}", "/favorite/{id}/**")).hasRole("USER")
                                 .requestMatchers(new AntPathRequestMatcher("/**"),
-                                                 new AntPathRequestMatcher("/login")).permitAll());
+                                        new AntPathRequestMatcher("/login")).permitAll());
 //        httpSecurity
 //                .authorizeRequests()
 //                .requestMatchers(HttpMethod.GET, "/").authenticated();

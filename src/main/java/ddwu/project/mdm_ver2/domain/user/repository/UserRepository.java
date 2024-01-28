@@ -12,14 +12,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User saveAndFlush(User userInfo); //save(+update)
 
-    boolean existsByKakaoEmail(String kakaoEmail);
+    boolean existsByUserEmail(String userEmail);
 
-    User findByKakaoEmail(String kakaoEmail);
+    User findByUserEmail(String userEmail);
 
     @Transactional
-    void deleteByKakaoEmail(String kakaoEmail);
+    void deleteByUserEmail(String userEmail);
 
-    Optional<User> findByUserCode(long userCode);
+    Optional<User> findByUserCode(long userID);
 
     boolean existsByUserNickname(String nickname);
 }

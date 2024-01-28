@@ -33,17 +33,17 @@ public class JwtProvider {
     private static final Long refreshTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 2주
 
     /* access, refresh token 생성 */
-    public String createAccessToken(Long userCode) {
-        return createToken(userCode, "access", accessTokenValidTime);
+    public String createAccessToken(Long userID) {
+        return createToken(userID, "access", accessTokenValidTime);
     }
 
-    public String createRefreshToken(Long userCode) {
-        return createToken(userCode, "refresh", refreshTokenValidTime);
+    public String createRefreshToken(Long userID) {
+        return createToken(userID, "refresh", refreshTokenValidTime);
     }
 
-    public String createToken(Long userCode, String type, Long tokenValidTime) {
+    public String createToken(Long userID, String type, Long tokenValidTime) {
         Claims claims = Jwts.claims();
-        claims.put("userCode", userCode);
+        claims.put("userID", userID);
 
         log.info("create token: {}", type);
         return Jwts.builder()
@@ -106,19 +106,19 @@ public class JwtProvider {
     /* Jwt Token에 담긴 유저 정보 DB에 검색,
     해당 유저의 권한 처리를 위해 Context에 담는 Authentication 객체를 반환 */
     public Authentication getAuthentication(String token){
-        log.info("getUserCode: {}", getUserCode(token));
-        CustomUserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(this.getUserCode(token)));
+        log.info("getUserID: {}", getUserID(token));
+        CustomUserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(this.getUserID(token)));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
 
     /* token에서 회원 정보 추출 */
-    public Long getUserCode(String token) {
+    public Long getUserID(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody()
-                .get("userCode", Long.class);
+                .get("userID", Long.class);
     }
 
     private String getRole(String accessToken) {

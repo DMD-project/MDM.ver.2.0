@@ -13,20 +13,20 @@ public class TokenProviderTest{
 
     @Test
     public void 토큰_생성하기() {
-        String token = jwtProvider.createAccessToken(3290111211L);
+        String token = jwtProvider.createAccessToken(3277908747L);
         System.out.println(">>>>>>>>>>>>>> token = " + token);
     }
 
     @Test
     public void 토큰_검증하기() {
-        String token = jwtProvider.createAccessToken(3290111211L);
+        String token = jwtProvider.createAccessToken(3277908747L);
         System.out.println(jwtProvider.isValidate(token));
 
     }
 
     @Test
     public void jwt_usercode확인() {
-        String token = "eyJ0eXBlIjoiYWNjZXNzIiwiYWxnIjoiSFMyNTYifQ.eyJrYWthb190b2tlbiI6InBnQ2JnWFpKeGdrYVpEWEVKVFFWeVo2WnNNNTRTdDFUaE9vS0t3MGZBQUFCalZERzdUcGI5UG1yNWVnX1pBIiwiaWF0IjoxNzA2NDU3MjI4LCJleHAiOjE3MDY0NTkwMjh9.YvSMZzdE3APQEJTdGZTG1rgOTJ9qYpDeownH8AXAc0E";
+        String token = "eyJ0eXBlIjoiYWNjZXNzIiwiYWxnIjoiSFMyNTYifQ.eyJ1c2VyQ29kZSI6MzI3NzkwODc0NywiaWF0IjoxNzA2NDU5NzE0LCJleHAiOjE3MDY0NjE1MTR9.ajOHxP6V6gc_yYNUky9uKHt9XDD6Obwz0V9BY0v7YJI";
         System.out.println(jwtProvider.getUserCode(token));
     }
 }

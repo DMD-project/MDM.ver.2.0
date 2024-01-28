@@ -45,21 +45,13 @@ public class RestKakaoController {
     @GetMapping("/kakao/ios")
     public JwtToken loginIos(@RequestParam String access_token) {
         HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
-        boolean existUser = ks.existUser(userInfo.get("kakaoEmail").toString());
 
-        UserResponse userDTO;
+        UserResponse userResponse = ks.checkKakaoUser(userInfo);
 
-        if(!existUser) { // 신규회원
-            String defaultNickname = ks.setDefaultNickname(userInfo.get("userCode").toString());
-            userDTO = new UserResponse((long) userInfo.get("userCode"), defaultNickname, userInfo.get("kakaoEmail").toString(), userInfo.get("kakaoProfileImg").toString(), Role.USER);
+        String jwt_access = jwtProvider.createAccessToken(userResponse.getUserCode());
+        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getUserCode());
 
-        } else { // 기존회원
-            userDTO = ks.getUser(userInfo.get("kakaoEmail").toString()).toDTO();
-        }
-
-        String jwt_access = jwtProvider.createAccessToken(userDTO.getUserCode());
-        String jwt_refresh = jwtProvider.createRefreshToken(userDTO.getUserCode());
-        ks.addUser(userDTO);
+        ks.addUser(userResponse);
 
         return new JwtToken(jwt_access, jwt_refresh);
     }

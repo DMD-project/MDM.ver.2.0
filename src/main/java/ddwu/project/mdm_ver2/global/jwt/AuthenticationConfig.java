@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 @EnableWebSecurity
@@ -34,13 +35,15 @@ public class AuthenticationConfig {
         httpSecurity
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .anyRequest().permitAll());
+                                .requestMatchers(new AntPathRequestMatcher("/secondHand/add")).hasRole("USER")
+                                .requestMatchers(new AntPathRequestMatcher("/**"),
+                                                 new AntPathRequestMatcher("/login")).permitAll());
 //        httpSecurity
 //                .authorizeRequests()
-////                .requestMatchers(HttpMethod.GET, "/").authenticated();
-////                .requestMatchers("/login").permitAll()
-////                .requestMatchers("/kakao").permitAll()
-////                .requestMatchers("/kakaoJoin").permitAll()
+//                .requestMatchers(HttpMethod.GET, "/").authenticated();
+//                .requestMatchers("/login").permitAll()
+//                .requestMatchers("/kakao").permitAll()
+//                .requestMatchers("/").permitAll()
 //                .anyRequest().permitAll();
 //                .requestMatchers(HttpMethod.GET, "/*").authenticated();
         httpSecurity

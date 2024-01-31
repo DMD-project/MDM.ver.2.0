@@ -41,9 +41,9 @@ public class JwtProvider {
         return createToken(userID, "refresh", refreshTokenValidTime);
     }
 
-    public String createToken(Long userID, String type, Long tokenValidTime) {
+    public String createToken(Long userId, String type, Long tokenValidTime) {
         Claims claims = Jwts.claims();
-        claims.put("userID", userID);
+        claims.put("userId", userId);
 
         log.info("create token: {}", type);
         return Jwts.builder()
@@ -106,19 +106,19 @@ public class JwtProvider {
     /* Jwt Token에 담긴 유저 정보 DB에 검색,
     해당 유저의 권한 처리를 위해 Context에 담는 Authentication 객체를 반환 */
     public Authentication getAuthentication(String token){
-        log.info("getUserID: {}", getUserID(token));
-        CustomUserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(this.getUserID(token)));
+        log.info("getUserId: {}", getUserId(token));
+        CustomUserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(this.getUserId(token)));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
 
     /* token에서 회원 정보 추출 */
-    public Long getUserID(String token) {
+    public Long getUserId(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody()
-                .get("userID", Long.class);
+                .get("userId", Long.class);
     }
 
     private String getRole(String accessToken) {

@@ -9,26 +9,28 @@ import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandBidRepositor
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 @Service
 @AllArgsConstructor
 public class SecondHandBidService {
 
-    private final SecondHandBidRepository shReqRepository;
+    private final SecondHandBidRepository shBidRepository;
     private final SecondHandRepository secondHandRepository;
 
     /* 가격 제안 등록 (댓글 등록) */
-    public SecondHandBid addShReq(Long shID, SecondHandBidRequest request) {
-        SecondHand secondHand = secondHandRepository.findByShID(shID);
+    public SecondHandBid addShBid(Long shId, SecondHandBidRequest request) {
+        SecondHand secondHand = secondHandRepository.findById(shId)
+                .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-        SecondHandBid secondHandReq = SecondHandBid.builder()
-                .shReqID(request.getShReqID())
+        SecondHandBid secondHandBid = SecondHandBid.builder()
+                .id(request.getId())
                 .secondHand(secondHand)
-                .shReqUserID(request.getShReqUserID())
-                .shReqPrice(request.getShReqPrice())
+                .bidUserId(request.getBidUserId())
+                .price(request.getPrice())
                 .build();
 
-        return shReqRepository.saveAndFlush(secondHandReq);
+        return shBidRepository.saveAndFlush(secondHandBid);
     }
 
     /* 제안 수정 */
@@ -36,12 +38,13 @@ public class SecondHandBidService {
 
     /* 제안 삭제 */
     @Transactional
-    public void deleteSecondHandReq(Long shReqID) {
-        SecondHandBid secondHandReq = shReqRepository.findByShReqID(shReqID);
+    public void deleteSecondHandBid(Long shBidId) {
+        SecondHandBid secondHandBid = shBidRepository.findById(shBidId)
+                .orElseThrow(() -> new NotFoundException("요청을 찾을 수 없습니다."));
 
-        if(secondHandReq == null) {
-            throw new ResourceNotFoundException("secondHandReq", "shReqID", shReqID);
+        if(secondHandBid == null) {
+            throw new ResourceNotFoundException("secondHandBid", "shBidId", shBidId);
         }
-        shReqRepository.deleteByShReqID(shReqID);
+        shBidRepository.deleteById(shBidId);
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicInsert
-@Table(name = "secondHand")
+@Table(name = "second_hand")
 public class SecondHand {
 
     @Id
@@ -28,40 +28,40 @@ public class SecondHand {
             strategy = GenerationType.SEQUENCE,
             generator = "sh_seq_generator"
     )
-    @Column(name = "shID")
-    private Long shID;
+    @Column(name = "sh_id")
+    private Long id;
 
     /* 중고거래 작성자 */
 //    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 //    @JoinColumn(name="userID", referencedColumnName="user_code")
-    @Column(name = "userID")
-    private Long userID;
+    @Column(name = "user_id")
+    private Long userId;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name="cateID", referencedColumnName="id")
+    @JoinColumn(name="cate_id", referencedColumnName="cate_id")
     private Category category;
 
-    @Column(name = "shName")
-    private String shName;
+    @Column(name = "sh_name")
+    private String name;
 
-    @Column(name = "shPrice")
-    private int shPrice;
+    @Column(name = "sh_price")
+    private int price;
 
-    @Column(name = "shImg")
-    private String shImg;
+    @Column(name = "sh_img_url")
+    private String imgUrl;
 
-    @Column(name = "shContent")
-    private String shContent;
+    @Column(name = "sh_content")
+    private String content;
 
     /* 거래 상황 : 판매중(y)/거래 완료(n) */
-    @Column(name = "shState")
-    private char shState;
+    @Column(name = "sh_state")
+    private char state;
 
     /* 거래 요청 수 (가격 제안 댓글 수) */
-    @Column(name = "shReqCnt")
-    private int shReqCnt;
+    @Column(name = "sh_bid_cnt")
+    private int bidCnt;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    private List<SecondHandBid> SHReqList;
+    private List<SecondHandBid> ShBidList;
 
 }

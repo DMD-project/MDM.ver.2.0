@@ -13,51 +13,59 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResponse {
 
-    private long userCode;
-    private String userNickname;
-    private String userEmail;
-    private String userProfileImg;
-    private Role userRole;
+    private long id;
+    private String nickname;
+    private String email;
+    private String profileImgUrl;
+    private Role role;
 
     public User toEntity() {
         return User.builder()
-                .userCode(userCode)
-                .userNickname(userNickname)
-                .userEmail(userEmail)
-                .userProfileImg(userProfileImg)
-                .userRole(userRole)
+                .id(id)
+                .nickname(nickname)
+                .email(email)
+                .profileImgUrl(profileImgUrl)
+                .role(role)
                 .build();
     }
 
-    public long getUserCode() {
-        return userCode;
+    public long getId() {
+        return id;
     }
 
-    public void setUserCode(long userCode) {
-        this.userCode = userCode;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getUserNickname() {
-        return userNickname;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUserNickname(String userNickname) {
-        this.userNickname = userNickname;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getUserProfileImg() {
-        return userProfileImg;
+    public String getProfileImgUrl() {
+        return profileImgUrl;
     }
 
-    public void setUserProfileImg(String userProfileImg) {
-        this.userProfileImg = userProfileImg;
+    public void setProfileImgUrl(String profileImgUrl) {
+        this.profileImgUrl = profileImgUrl;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

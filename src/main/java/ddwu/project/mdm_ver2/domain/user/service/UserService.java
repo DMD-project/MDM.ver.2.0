@@ -9,6 +9,7 @@ import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -116,16 +117,16 @@ public class UserService {
             JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
             JsonObject kakaoAccount = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
-            long userID = element.getAsJsonObject().get("id").getAsLong();
+            long userId = element.getAsJsonObject().get("id").getAsLong();
             String userEmail = kakaoAccount.getAsJsonObject().get("email").getAsString();
             String userProfileImg = properties.getAsJsonObject().get("profile_image").getAsString();
 
-            userInfo.put("userID", userID);
+            userInfo.put("userId", userId);
             userInfo.put("userEmail", userEmail);
             userInfo.put("userProfileImg", userProfileImg);
 
 
-            System.out.println("userID: " + userID);
+            System.out.println("userId: " + userId);
             System.out.println("userEmail: " + userEmail);
             System.out.println("userProfileImg: " + userProfileImg);
 
@@ -145,9 +146,9 @@ public class UserService {
         UserResponse userResponse;
 
         if(!existUser) { // 신규회원
-            String defaultNickname = setDefaultNickname(userInfo.get("userID").toString());
-            userResponse = new UserResponse((long) userInfo.get("userID"), defaultNickname, userInfo.get("userEmail").toString(), userInfo.get("userProfileImg").toString(), Role.USER);
-            System.out.println(userResponse.getUserRole());
+            String defaultNickname = setDefaultNickname(userInfo.get("userId").toString());
+            userResponse = new UserResponse((long) userInfo.get("userId"), defaultNickname, userInfo.get("userEmail").toString(), userInfo.get("userProfileImg").toString(), Role.USER);
+            System.out.println(userResponse.getRole());
         } else { // 기존회원
             userResponse = getUser(userInfo.get("userEmail").toString()).toDTO();
         }
@@ -156,17 +157,17 @@ public class UserService {
     }
 
     public boolean existUser(String userEmail) {
-        return userRepository.existsByUserEmail(userEmail);
+        return userRepository.existsByEmail(userEmail);
     }
 
-    public String setDefaultNickname(String userID) {
-        String defaultNickname = "user" + userID.substring(5) + userID.substring(0, 5);
+    public String setDefaultNickname(String userId) {
+        String defaultNickname = "user" + userId.substring(5) + userId.substring(0, 5);
 //        3277908747
         return defaultNickname;
     }
 
     public boolean checkNicknameDup(String nickname) {
-        return userRepository.existsByUserNickname(nickname);
+        return userRepository.existsByNickname(nickname);
     }
 
 //    public UserDTO getUser(String kakaoEmail) {
@@ -175,11 +176,13 @@ public class UserService {
 //    }
 
     public User getUser(String userEmail) {
-        return userRepository.findByUserEmail(userEmail);
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+        return user;
     }
 
-    public User addUser(UserResponse userdto) {
-        return userRepository.saveAndFlush(userdto.toEntity());
+    public User addUser(UserResponse userResponse) {
+        return userRepository.saveAndFlush(userResponse.toEntity());
     }
 
     public void logout(String access_token) {
@@ -213,6 +216,6 @@ public class UserService {
     }
 
     public void deleteUser(String userEmail) {
-        userRepository.deleteByUserEmail(userEmail);
+        userRepository.deleteByEmail(userEmail);
     }
 }

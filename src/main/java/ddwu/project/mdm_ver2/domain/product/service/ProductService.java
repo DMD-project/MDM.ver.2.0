@@ -95,9 +95,9 @@ public class ProductService {
 
     //상품 개별 조회
     @Transactional
-    public CustomResponse<Product> findProduct(Long id) {
+    public CustomResponse<Product> findProduct(Long prodId) {
         try {
-            Product product = productRepository.findById(id).orElse(null);
+            Product product = productRepository.findById(prodId).orElse(null);
             return CustomResponse.onSuccess(product);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -119,7 +119,7 @@ public class ProductService {
                     .name(request.getName())
                     .price(request.getPrice())
                     .content(request.getContent())
-                    .prodIMGUrl(request.getProdIMGUrl())
+                    .imgUrl(request.getProdImgUrl())
                     .build();
 
             Product addProduct = productRepository.save(product);
@@ -132,10 +132,10 @@ public class ProductService {
 
     //상품 수정
     @Transactional
-    public CustomResponse<Product> updateProduct(Long id, ProductRequest updatedProduct) {
+    public CustomResponse<Product> updateProduct(Long prodId, ProductRequest updatedProduct) {
         try {
-            Product product = productRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
+            Product product = productRepository.findById(prodId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "prodId", prodId));
 
             if (product != null) {
                 Category category = categoryRepository.findByCateCode(updatedProduct.getCategory());
@@ -144,7 +144,7 @@ public class ProductService {
                 product.setName(updatedProduct.getName());
                 product.setPrice(updatedProduct.getPrice());
                 product.setContent(updatedProduct.getContent());
-                product.setProdIMGUrl(updatedProduct.getProdIMGUrl());
+                product.setImgUrl(updatedProduct.getProdImgUrl());
 
                 Product updateProduct = productRepository.save(product);
 
@@ -159,10 +159,10 @@ public class ProductService {
 
     //상품 삭제
     @Transactional
-    public CustomResponse<Void> deleteProduct(Long id) {
+    public CustomResponse<Void> deleteProduct(Long prodId) {
         try {
-            Product product = productRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Product", "id", id));
+            Product product = productRepository.findById(prodId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "prodId", prodId));
 
             productRepository.delete(product);
             return CustomResponse.onSuccess(null);

@@ -40,8 +40,8 @@ public class ViewKakaoController {
 
         UserResponse userResponse = ks.checkKakaoUser(userInfo);
 
-        String jwt_access = jwtProvider.createAccessToken(userResponse.getUserCode());
-        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getUserCode());
+        String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
+        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
 
         ks.addUser(userResponse);
         model.addAttribute("jwt_access", jwt_access);
@@ -49,11 +49,6 @@ public class ViewKakaoController {
         return "redirect:/";
 
     }
-
-//    @GetMapping("/kakaoJoin")
-//    public String submit() {
-//        return "redirect:/"; //Figma(Main uri)
-//    }
 
     @GetMapping("/logout")
     public String logout() {

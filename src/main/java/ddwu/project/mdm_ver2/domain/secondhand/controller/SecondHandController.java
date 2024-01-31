@@ -1,8 +1,10 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller;
 
+import ddwu.project.mdm_ver2.domain.product.dto.ProductRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandService;
+import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,33 +18,27 @@ public class SecondHandController {
     private final SecondHandService secondHandService;
 
     /* 전체 상품 */
-    public List<SecondHand> getSecondHandList() {
-        return secondHandService.findAllProduct();
+    public CustomResponse<List<SecondHand>> getSecondHandList() {
+        return secondHandService.findAllSecondHand();
     }
 
     /* 상품 정렬 */
-    @GetMapping("/list")
-    public List<SecondHand> getSortedList(@RequestParam(name="sortBy", required=false, defaultValue="") String sortBy) {
-        return secondHandService.sortProduct(sortBy);
-    }
-
-    /* 카테고리 내 상품 정렬 */
-    @GetMapping("sort/category/{cateCode}")
-    public List<SecondHand> getSortedByCategoryList(@PathVariable("cateCode") String cateCode,
-                                                    @RequestParam(name="sortBy", required=false, defaultValue="") String sortBy) {
-        return secondHandService.sortProductByCategory(sortBy, cateCode);
+    @GetMapping("/sort/category")
+    public CustomResponse<List<SecondHand>> getSortedList(@RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy,
+                                                          @RequestParam(name = "cateCode", required = false, defaultValue = "") String cateCode) {
+        return secondHandService.sortSecondHand(sortBy, cateCode);
     }
 
     /* 상품 상세 정보 */
-    @GetMapping("/{shID}")
-    public SecondHand getSeconHand(@PathVariable("shID") Long shID) {
-        return secondHandService.getSecondHand(shID);
+    @GetMapping("/{shId}")
+    public CustomResponse<SecondHand> getSeconHand(@PathVariable("shId") Long shId) {
+        return secondHandService.getSecondHand(shId);
     }
 
     /* 상품 등록 */
     @PostMapping("/add")
-    public SecondHand addSecondHand(@RequestBody SecondHandRequest secondHandRequest) {
-        return secondHandService.addSecondHand(secondHandRequest);
+    public CustomResponse<SecondHand> addSecondHand(@RequestBody SecondHandRequest request) {
+        return secondHandService.addSecondHand(request);
     }
 
     /* 상품 검색 */
@@ -52,15 +48,15 @@ public class SecondHandController {
     }
 
     /* 상품 수정 */
-    @PutMapping("/update/{shID}")
-    public SecondHand updateSecondHand(@PathVariable("shID") Long shID, @RequestBody SecondHandRequest secondHandRequest) {
-        return secondHandService.updateSecondHand(shID, secondHandRequest);
+    @PutMapping("/update/{shId}")
+    public CustomResponse<SecondHand> updateSecondHand(@PathVariable("shId") Long shId, @RequestBody SecondHandRequest request) {
+        return secondHandService.updateSecondHand(shId, request);
     }
 
     /* 상품 삭제 */
-    @DeleteMapping("/delete/{shID}")
-    public void deleteSecondHand(@PathVariable("shID") Long shID) {
-        secondHandService.deleteSecondHand(shID);
+    @DeleteMapping("/delete/{shId}")
+    public CustomResponse<Void> deleteSecondHand(@PathVariable("shId") Long shId) {
+        return secondHandService.deleteSecondHand(shId);
     }
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */

@@ -2,10 +2,16 @@ package ddwu.project.mdm_ver2.domain.product.repository;
 
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+@Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    Optional<Product> findById(Long prodId);
+
     List<Product> findAllByOrderByPriceAsc(); // 낮은 가격순
     List<Product> findAllByOrderByPriceDesc(); // 높은 가격순
     List<Product> findAllByOrderByIdDesc(); // 최신순

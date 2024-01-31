@@ -19,7 +19,7 @@ public class ProductController { //상품은 관리자만 담당
 
     // 상품 조회
     @GetMapping("/list")
-    public CustomResponse<List<Product>> getProductList(Principal principal) {
+    public CustomResponse<List<Product>> getProductList() {
         return productService.findAllProduct();
     }
 
@@ -32,9 +32,9 @@ public class ProductController { //상품은 관리자만 담당
     }
 
     //상품 개별 조회
-    @GetMapping("/{id}")
-    public CustomResponse<Product> getProduct(@PathVariable("id") Long id) {
-        return productService.findProduct(id);
+    @GetMapping("/{prodId}")
+    public CustomResponse<Product> getProduct(@PathVariable("prodId") Long prodId) {
+        return productService.findProduct(prodId);
     }
 
     //상품 추가
@@ -44,15 +44,15 @@ public class ProductController { //상품은 관리자만 담당
     }
 
     //상품 수정
-    @PutMapping("update/{id}")
-    public CustomResponse<Product> updateProduct(@RequestBody ProductRequest request, @PathVariable("id") Long id) {
-        return productService.updateProduct(id, request);
+    @PutMapping("update/{prodId}")
+    public CustomResponse<Product> updateProduct(@RequestBody ProductRequest request, @PathVariable("prodId") Long prodId) {
+        return productService.updateProduct(prodId, request);
     }
 
     //상품 삭제
-    @DeleteMapping("delete/{id}")
-    public CustomResponse<Void> deleteBag(@PathVariable("id") Long id) {
-        return productService.deleteProduct(id);
+    @DeleteMapping("delete/{prodId}")
+    public CustomResponse<Void> deleteBag(@PathVariable("prodId") Long prodId) {
+        return productService.deleteProduct(prodId);
     }
 
     // 상품 개수 조회

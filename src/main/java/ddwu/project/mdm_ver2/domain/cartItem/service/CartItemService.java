@@ -1,37 +1,30 @@
 package ddwu.project.mdm_ver2.domain.cartItem.service;
 
 import ddwu.project.mdm_ver2.domain.cart.entity.Cart;
-import ddwu.project.mdm_ver2.domain.cartItem.entity.CartItem;
+import ddwu.project.mdm_ver2.domain.cartItem.entity.Items;
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
-import ddwu.project.mdm_ver2.domain.cartItem.repository.CartItemRepository;
+import ddwu.project.mdm_ver2.domain.cartItem.repository.ItemsRepository;
 import ddwu.project.mdm_ver2.domain.cart.repository.CartRepository;
-import ddwu.project.mdm_ver2.domain.product.repository.ProductRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class CartItemService {
-    private final CartItemRepository cartItemRepository;
+    private final ItemsRepository cartItemRepository;
     private final CartRepository cartRepository;
-    private final ProductRepository productRepository;
-
-    public CartItemService(CartItemRepository cartItemRepository, CartRepository cartRepository, ProductRepository productRepository) {
-        this.cartItemRepository = cartItemRepository;
-        this.cartRepository = cartRepository;
-        this.productRepository = productRepository;
-    }
-
 
     // 장바구니품목 추가
     @Transactional
-    public CustomResponse<CartItem> addItemToCart(User user, Product product, int count) {
+    public CustomResponse<Items> addItemToCart(User user, Product product, int count) {
         try {
-            Cart cart = cartRepository.findByUser_UserCode(user.getUserCode());
+            Cart cart = cartRepository.findByUserId(user.getId());
 
             int price = product.getPrice();
 
@@ -41,17 +34,17 @@ public class CartItemService {
                 cartRepository.save(cart);
             }
 
-            CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product);
+            Items cartItem = cartItemRepository.findByCartAndProduct(cart, product);
 
             if (cartItem != null) {
                 cartItem.addCount(count);
                 cartItem.addPrice(price * count);
             } else {
-                cartItem = new CartItem(count, price * count, cart, product);
+                cartItem = new Items(count, price * count, cart, product);
                 cartItemRepository.save(cartItem);
             }
-            cart.setCartCount(cart.getCartCount() + count);
-            cart.setCartPrice(cart.getCartPrice() + (count * price));
+            cart.setCount(cart.getCount() + count);
+            cart.setPrice(cart.getPrice() + (count * price));
 
             return CustomResponse.onSuccess(cartItem);
         } catch (Exception e) {
@@ -61,17 +54,17 @@ public class CartItemService {
 
     // 장바구니품목 증가(1개씩)
     @Transactional
-    public CustomResponse<CartItem> increaseItem(CartItem cartItem) {
+    public CustomResponse<Items> increaseItem(Items cartItem) {
         try {
             int price = cartItem.getProduct().getPrice();
             Cart cart = cartItem.getCart();
 
             cartItem.addCount(1);
             cartItem.addPrice(cartItem.getProduct().getPrice());
-            cart.setCartCount(cart.getCartCount() + 1);
-            cart.setCartPrice(cart.getCartPrice() + (1 * price));
+            cart.setCount(cart.getCount() + 1);
+            cart.setPrice(cart.getPrice() + (1 * price));
 
-            CartItem updatedCartItem = cartItemRepository.save(cartItem);
+            Items updatedCartItem = cartItemRepository.save(cartItem);
 
             return CustomResponse.onSuccess(updatedCartItem);
         } catch (Exception e) {
@@ -81,7 +74,7 @@ public class CartItemService {
 
     // 장바구니품목 감소(1개씩)
     @Transactional
-    public CustomResponse<CartItem> decreaseItem(CartItem cartItem) {
+    public CustomResponse<Items> decreaseItem(Items cartItem) {
         try {
             int price = cartItem.getProduct().getPrice();
             Cart cart = cartItem.getCart();
@@ -89,10 +82,10 @@ public class CartItemService {
             cartItem.subCount(1);
             cartItem.subPrice(cartItem.getProduct().getPrice());
 
-            cart.setCartCount(cart.getCartCount() - 1);
-            cart.setCartPrice(cart.getCartPrice() - (1 * price));
+            cart.setCount(cart.getCount() - 1);
+            cart.setPrice(cart.getPrice() - (1 * price));
 
-            CartItem updatedCartItem = cartItemRepository.save(cartItem);
+            Items updatedCartItem = cartItemRepository.save(cartItem);
 
             return CustomResponse.onSuccess(updatedCartItem);
         } catch (Exception e) {
@@ -102,17 +95,18 @@ public class CartItemService {
 
     // 장바구니 품목 삭제
     @Transactional
-    public CustomResponse<Void> deleteCartItems(List<Long> cartItemIds) {
+    public CustomResponse<Void> deleteCartItems(List<Long> itemsIds) {
         try {
-            for (Long cartItemId : cartItemIds) {
-                CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow(() -> new IllegalArgumentException("장바구니품목을 찾을 수 없습니다. " + cartItemId));
+            for (Long itemsId : itemsIds) {
+                Items cartItem = cartItemRepository.findById(itemsId)
+                        .orElseThrow(() -> new IllegalArgumentException("장바구니품목을 찾을 수 없습니다. " + itemsId));
 
                 Cart cart = cartItem.getCart();
-                int itemCount = cartItem.getCartItemCount();
-                int itemPrice = cartItem.getCartItemPrice();
+                int itemCount = cartItem.getCount();
+                int itemPrice = cartItem.getPrice();
 
-                cart.setCartCount(cart.getCartCount() - itemCount);
-                cart.setCartPrice(cart.getCartPrice() - itemPrice);
+                cart.setCount(cart.getCount() - itemCount);
+                cart.setPrice(cart.getPrice() - itemPrice);
 
                 cartItemRepository.delete(cartItem);
             }

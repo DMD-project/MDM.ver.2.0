@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/secondhand/{shID}")
+@RequestMapping("/secondhand/{shId}")
 public class SecondHandBidController {
 
-    private final SecondHandBidService shReqService;
+    private final SecondHandBidService shBidService;
 
     /* 가격 제안 등록 (댓글 등록) */
-    public SecondHandBid addSHBid(@PathVariable("shID") Long shID,
-                                  @RequestBody SecondHandBidRequest shReqRequest) {
-        return shReqService.addShReq(shID, shReqRequest);
+    public SecondHandBid addShBid(@PathVariable("shId") Long shId,
+                                  @RequestBody SecondHandBidRequest request) {
+        return shBidService.addShBid(shId, request);
     }
 
     /* 제안 수정 */

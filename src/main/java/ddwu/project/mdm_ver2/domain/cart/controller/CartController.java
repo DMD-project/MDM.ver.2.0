@@ -7,22 +7,23 @@ import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/cart")
 public class CartController {
     private final CartService cartService;
-    private final UserRepository userRepository;
 
     // 사용자 장바구니 조회
-    @GetMapping("/{userCode}")
-    public CustomResponse<Cart> getCartByUser(@PathVariable("userCode") long userCode) {
-        return cartService.getCartByUser(userCode);
+    @GetMapping
+    public CustomResponse<Cart> getCartByUser(Principal principal) {
+        return cartService.getCartByUser(principal.getName());
     }
 
     // 장바구니 비우기
-    @DeleteMapping("/delete/{userCode}")
-    public CustomResponse<Void> clearCart(@PathVariable("userCode") Long userCode) {
-        return cartService.clearCart(userCode);
+    @DeleteMapping("/delete")
+    public CustomResponse<Void> clearCart(Principal principal) {
+        return cartService.clearCart(principal.getName());
     }
 }

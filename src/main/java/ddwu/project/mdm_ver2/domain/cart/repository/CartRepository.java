@@ -6,11 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
-    Cart findByUser_UserCode(long userCode);
+    Cart findByUserId(long userId);
+
+    Cart findByUserEmail(String userEmail);
 
     //    Optional<Cart> findByUser(User user);
 
@@ -20,8 +23,8 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 //    @Query("SELECT c.qty FROM Cart c WHERE c.id = :id")
 //    Integer findQtyById(@Param("id") Long id);
 
-    @Query("DELETE FROM CartItem c WHERE c.id = :id")
-    @Modifying
-    @Transactional
-    void deleteItemsInCart(@Param("id") Long id);
+//    @Query("DELETE FROM cart_item c WHERE c.cart_id = :cartId")
+//    @Modifying
+//    @Transactional
+//    void deleteItemsInCart(@Param("cartId") Long cartId);
 }

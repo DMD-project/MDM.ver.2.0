@@ -18,34 +18,35 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "prod_id")
     private Long id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "cateId", referencedColumnName = "id")
+    @JoinColumn(name = "cate_id", referencedColumnName = "cate_id")
     private Category category;
 
-    @Column(name = "prodName")
+    @Column(name = "prod_name")
     private String name;
 
-    @Column(name = "price")
+    @Column(name = "prod_price")
     private int price;
 
-    @Column(name = "content")
+    @Column(name = "prod_content")
     private String content;
 
-    @Column(name = "prodIMGUrl")
-    private String prodIMGUrl;
+    @Column(name = "prod_img_url")
+    private String imgUrl;
 
     @Builder
-    public Product(Category category, String name,  int price, String content, String prodIMGUrl) {
+    public Product(Category category, String name, int price, String content, String imgUrl) {
         this.category = category;
         this.name = name;
         this.price = price;
         this.content = content;
-        this.prodIMGUrl = prodIMGUrl;
+        this.imgUrl = imgUrl;
     }
 
-    public Product(Category category,String name,  int price, String content) {
+    public Product(Category category, String name, int price, String content) {
         this.category = category;
         this.name = name;
         this.price = price;

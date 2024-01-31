@@ -22,58 +22,82 @@ import org.hibernate.annotations.DynamicInsert;
 public class User {
 
     @Id
-    @Column(name = "userID")
-    private long userCode;
+    @Column(name = "user_id")
+    private long id;
 
-    @Column(name = "userNickname")
-    private String userNickname;
+    @Column(name = "user_nickname")
+    private String nickname;
 
-    @Column(name = "userEmail")
-    private String userEmail;
+    @Column(name = "user_email")
+    private String email;
 
-    @Column(name = "userProfileImg")
-    private String userProfileImg;
+    @Column(name = "user_profile_img_url")
+    private String profileImgUrl;
 
-    @JsonManagedReference
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Cart cart;
+//    @JsonManagedReference
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+//    private Cart cart;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "userRole")
+    @Column(name = "user_role")
 //    @ColumnDefault("user")
-    private Role userRole;
+    private Role role;
 
     public UserResponse toDTO() {
         return UserResponse.builder()
-                .userCode(userCode)
-                .userNickname(userNickname)
-                .userEmail(userEmail)
-                .userProfileImg(userProfileImg)
-                .userRole(userRole)
+                .id(id)
+                .nickname(nickname)
+                .email(email)
+                .profileImgUrl(profileImgUrl)
+                .role(role)
                 .build();
     }
 
-    public long getUserCode() {
-        return userCode;
+    public long getId() {
+        return id;
     }
 
-    public String getUserNickname() {
-        return userNickname;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getNickname() {
+        return nickname;
     }
 
-    public String getuserProfileImg() {
-        return userProfileImg;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public Role getUserRole() {
-        return userRole;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserNickname(String userNickname) {
-        this.userNickname = userNickname;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getProfileImgUrl() {
+        return profileImgUrl;
+    }
+
+    public void setProfileImgUrl(String profileImgUrl) {
+        this.profileImgUrl = profileImgUrl;
+    }
+
+//    public Cart getCart() {
+//        return cart;
+//    }
+//
+//    public void setCart(Cart cart) {
+//        this.cart = cart;
+//    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

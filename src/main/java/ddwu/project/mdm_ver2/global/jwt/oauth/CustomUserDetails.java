@@ -17,8 +17,8 @@ import java.util.Collection;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CustomUserDetails implements UserDetails {
 
-    private String userEmail;
-    private Role userRole;
+    private String email;
+    private Role role;
 
     /* 해당 user 권한 목록 */
     @Override
@@ -42,11 +42,11 @@ public class CustomUserDetails implements UserDetails {
     /* pk 값 */
     @Override
     public String getUsername() {
-        return userEmail;
+        return email;
     }
 
     public Role getUserRole() {
-        return userRole;
+        return role;
     }
 
     @Override

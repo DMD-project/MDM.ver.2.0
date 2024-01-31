@@ -10,16 +10,16 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User saveAndFlush(User userInfo); //save(+update)
+    User saveAndFlush(User user); //save(+update)
 
-    boolean existsByUserEmail(String userEmail);
+    boolean existsByEmail(String userEmail);
 
-    User findByUserEmail(String userEmail);
+    Optional <User> findByEmail(String userEmail);
 
     @Transactional
-    void deleteByUserEmail(String userEmail);
+    void deleteByEmail(String userEmail);
 
-    Optional<User> findByUserCode(long userID);
+    Optional<User> findById(long userId);
 
-    boolean existsByUserNickname(String nickname);
+    boolean existsByNickname(String nickname);
 }

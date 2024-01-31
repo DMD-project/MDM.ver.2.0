@@ -14,15 +14,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public CustomUserDetails loadUserByUsername(String userID) throws UsernameNotFoundException {
-        System.out.println(userID);
-        User user = userRepository.findByUserCode(Long.parseLong(userID))
+    public CustomUserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        User user = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new UsernameNotFoundException(""));
 
         if(user != null) {
             return CustomUserDetails.builder()
-                    .userEmail(user.getUserEmail())
-                    .userRole(user.getUserRole())
+                    .email(user.getEmail())
+                    .role(user.getRole())
                     .build();
 
         }

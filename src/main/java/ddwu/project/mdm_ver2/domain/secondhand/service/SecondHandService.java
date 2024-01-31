@@ -3,13 +3,16 @@ package ddwu.project.mdm_ver2.domain.secondhand.service;
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
+import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.exception.ResourceNotFoundException;
 import ddwu.project.mdm_ver2.domain.category.repository.CategoryRepository;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,59 +25,94 @@ public class SecondHandService {
     private final CategoryRepository categoryRepository;
 
     /* 전체 상품 */
-    public List<SecondHand> findAllProduct() {
-        return secondHandRepository.findAll();
+    public CustomResponse<List<SecondHand>> findAllSecondHand() {
+        try {
+            List<SecondHand> secondHandList = secondHandRepository.findAll();
+            return CustomResponse.onSuccess(secondHandList);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
     }
 
     /* 상품 정렬 */
-    public List<SecondHand> sortProduct(String sort) {
-        switch (sort) {
-            case "newest":
-                return secondHandRepository.findAllByOrderByShIDDesc();
-            default:
-                return secondHandRepository.findAll();
+    public CustomResponse<List<SecondHand>> sortSecondHand(String sort, String cateCode) {
+        try {
+            List<SecondHand> sortedSecondHandList;
+            if(cateCode != null && !cateCode.isEmpty()) {
+                sortedSecondHandList = sortSecondHandsByCategory(sort, cateCode);
+            } else {
+                switch (sort) {
+                    case "lowprice":
+                        sortedSecondHandList = secondHandRepository.findAllByOrderByPriceAsc();
+                        break;
+                    case "highprice":
+                        sortedSecondHandList = secondHandRepository.findAllByOrderByPriceDesc();
+                        break;
+                    case "newest":
+                        sortedSecondHandList = secondHandRepository.findAllByOrderByIdDesc();
+                        break;
+                    default:
+                        sortedSecondHandList = secondHandRepository.findAll();
+                        break;
+                }
+            }
+            return CustomResponse.onSuccess(sortedSecondHandList);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
     /* 카테고리 내 상품 정렬 */
-    public List<SecondHand> sortProductByCategory(String category, String sort) {
+    public List<SecondHand> sortSecondHandsByCategory(String sort, String cateCode) {
+        List<SecondHand> sortedSecondHandList;
 
         switch (sort) {
-            case "newest":
-                return secondHandRepository.findAllByCategoryCateCodeOrderByShIDDesc(category);
-            case "highprice":
-                return secondHandRepository.findAllByCategoryCateCodeOrderByShPriceDesc(category);
             case "lowprice":
-                return secondHandRepository.findAllByCategoryCateCodeOrderByShPriceAsc(category);
+                sortedSecondHandList = secondHandRepository.findAllByCategoryCateCodeOrderByPriceAsc(cateCode);
+            case "highprice":
+                sortedSecondHandList = secondHandRepository.findAllByCategoryCateCodeOrderByPriceDesc(cateCode);
+            case "newest":
+                sortedSecondHandList = secondHandRepository.findAllByCategoryCateCodeOrderByIdDesc(cateCode);
             default:
-                return secondHandRepository.findAllByCategoryCateCode(category);
+                sortedSecondHandList = secondHandRepository.findAllByCategoryCateCode(cateCode);
         }
+        return sortedSecondHandList;
     }
 
     /* 상품 상세 정보 */
-    public SecondHand getSecondHand(long shID) {
-        return secondHandRepository.findByShID(shID);
+    public CustomResponse<SecondHand> getSecondHand(Long shId) {
+        try {
+            SecondHand secondHand = secondHandRepository.findById(shId)
+                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+            return CustomResponse.onSuccess(secondHand);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
     }
 
     /* 상품 등록 */
-    public SecondHand addSecondHand(SecondHandRequest request) {
+    public CustomResponse<SecondHand> addSecondHand(SecondHandRequest request) {
+        try {
+            Category category = categoryRepository.findByCateCode(request.getCateCode());
 
-        Category category = categoryRepository.findByCateCode(request.getCateCode());
+            if (category == null) {
+                throw new NotFoundException("카테고리를 찾을 수 없습니다: " + request.getCateCode());
+            }
 
-//        if (category == null) {
-//            throw new NotFoundException("카테고리를 찾을 수 없습니다: " + request.getCateCode());
-//        }
+            SecondHand secondHand = SecondHand.builder()
+                    .userId(request.getUserId())
+                    .name(request.getName())
+                    .category(category)
+                    .price(request.getPrice())
+                    .imgUrl(request.getImgUrl())
+                    .content(request.getContent())
+                    .build();
 
-        SecondHand secondHand = SecondHand.builder()
-                .userID(request.getUserID())
-                .shName(request.getShName())
-                .category(category)
-                .shPrice(request.getShPrice())
-                .shImg(request.getShImg())
-                .shContent(request.getShContent())
-                .build();
-
-        return secondHandRepository.saveAndFlush(secondHand);
+            SecondHand newSecondHand = secondHandRepository.saveAndFlush(secondHand);
+            return CustomResponse.onSuccess(newSecondHand);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
     }
 
     /* 상품 검색 */
@@ -82,7 +120,7 @@ public class SecondHandService {
         if(StringUtils.isBlank(keyword)) {
             return Collections.emptyList();
         }
-        return secondHandRepository.findByShNameContainingIgnoreCase(keyword);
+        return secondHandRepository.findByNameContainingIgnoreCase(keyword);
     }
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */
@@ -90,36 +128,43 @@ public class SecondHandService {
     /* 전체 요청 정렬 */
 
     /* 상품 수정 */
-    public SecondHand updateSecondHand(Long shID, SecondHandRequest secondHandRequest) {
-        SecondHand secondHand = secondHandRepository.findByShID(shID);
-        if(secondHand == null) {
-            throw new ResourceNotFoundException("SecondHand", "shID", shID);
+    public CustomResponse<SecondHand> updateSecondHand(Long shId, SecondHandRequest request) {
+        try {
+            SecondHand secondHand = secondHandRepository.findById(shId)
+                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+
+            if(secondHand != null) {
+                Category category = categoryRepository.findByCateCode(request.getCateCode());
+
+                secondHand.setCategory(category);
+                secondHand.setName(request.getName());
+                secondHand.setPrice(request.getPrice());
+                secondHand.setImgUrl(request.getImgUrl());
+                secondHand.setContent(request.getContent());
+
+                SecondHand updateSecondHand = secondHandRepository.saveAndFlush(secondHand);
+
+                return CustomResponse.onSuccess(updateSecondHand);
+            }
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "중고거래 상품을 찾을 수 없습니다.");
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
-
-        if(secondHand != null) {
-            Category category = categoryRepository.findByCateCode(secondHandRequest.getCateCode());
-
-            secondHand.setCategory(category);
-            secondHand.setShName(secondHandRequest.getShName());
-            secondHand.setShPrice(secondHandRequest.getShPrice());
-            secondHand.setShImg(secondHandRequest.getShImg());
-            secondHand.setShContent(secondHandRequest.getShContent());
-
-            return secondHandRepository.saveAndFlush(secondHand);
-        }
-        return null;
     }
 
     /* 상품 삭제 */
     @Transactional
-    public void deleteSecondHand(Long shID) {
-        SecondHand secondHand = secondHandRepository.findByShID(shID);
+    public CustomResponse<Void> deleteSecondHand(Long shId) {
+        try {
+            SecondHand secondHand = secondHandRepository.findById(shId)
+                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-        if(secondHand == null) {
-            throw new ResourceNotFoundException("SecondHand", "shID", shID);
+            secondHandRepository.deleteById(shId);
+
+            return CustomResponse.onSuccess(null);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
-
-        secondHandRepository.deleteByShID(shID);
     }
 
 }

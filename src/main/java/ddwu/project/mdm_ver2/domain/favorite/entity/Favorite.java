@@ -34,25 +34,25 @@ public class Favorite implements Serializable {
             generator = "fav_seq_generator"
     )
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "favID")
+    @Column(name = "fav_id")
     private Long id;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "userID", referencedColumnName = "user_code")
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "prodID", referencedColumnName = "id")
+    @JoinColumn(name = "prod_id", referencedColumnName = "prod_id")
     private Product product;
 
-    @Column(name = "favstate")
-    private Character favState;
+    @Column(name = "fav_state")
+    private Character state;
 
-    public Favorite(User user, Product product, Character favState) {
+    public Favorite(User user, Product product, Character state) {
         this.user = user;
         this.product = product;
-        this.favState = favState;
+        this.state = state;
     }
 }

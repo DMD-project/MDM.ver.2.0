@@ -38,7 +38,6 @@ public class AuthenticationConfig {
                                 .requestMatchers(new AntPathRequestMatcher("/cart"),
                                         new AntPathRequestMatcher("/cartItem"),
                                         new AntPathRequestMatcher("/secondHand/add"),
-                                        new AntPathRequestMatcher("/product/list"),
                                         new AntPathRequestMatcher("/favorite/{id}", "/favorite/{id}/**")).hasRole("USER")
                                 .requestMatchers(new AntPathRequestMatcher("/**"),
                                         new AntPathRequestMatcher("/login")).permitAll());

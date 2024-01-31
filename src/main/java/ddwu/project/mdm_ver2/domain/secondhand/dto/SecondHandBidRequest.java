@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SecondHandBidRequest {
 
-    private Long shReqID;
-    private Long shID;
-    private Long shReqUserID;
-    private int shReqPrice;
+    private Long id;
+    private Long shId;
+    private Long bidUserId;
+    private int price;
 
 }

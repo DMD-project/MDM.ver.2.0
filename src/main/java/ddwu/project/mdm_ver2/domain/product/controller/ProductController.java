@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.domain.product.controller;
 
+import ddwu.project.mdm_ver2.domain.product.dto.ProductResponse;
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.product.dto.ProductRequest;
 import ddwu.project.mdm_ver2.domain.product.service.ProductService;
@@ -33,8 +34,11 @@ public class ProductController { //상품은 관리자만 담당
 
     //상품 개별 조회
     @GetMapping("/{prodId}")
-    public CustomResponse<Product> getProduct(@PathVariable("prodId") Long prodId) {
-        return productService.findProduct(prodId);
+    public CustomResponse<ProductResponse> getProduct(@RequestParam(name = "userEmail", required = true) String userEmail,
+//                                                      Principal principal,
+                                                      @PathVariable("prodId") Long prodId) {
+//        return productService.getProduct(principal.getName(), prodId);
+        return productService.getProduct(userEmail, prodId);
     }
 
     //상품 추가

@@ -1,8 +1,11 @@
 package ddwu.project.mdm_ver2.domain.product.service;
 
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
+import ddwu.project.mdm_ver2.domain.favorite.repository.FavoriteRepository;
+import ddwu.project.mdm_ver2.domain.product.dto.ProductResponse;
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.product.dto.ProductRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.exception.ResourceNotFoundException;
 import ddwu.project.mdm_ver2.domain.category.repository.CategoryRepository;
@@ -23,6 +26,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final FavoriteRepository favoriteRepository;
 
     //상품 조회
     @Transactional
@@ -95,10 +99,10 @@ public class ProductService {
 
     //상품 개별 조회
     @Transactional
-    public CustomResponse<Product> findProduct(Long prodId) {
+    public CustomResponse<ProductResponse> getProduct(String userEmail, Long prodId) {
         try {
-            Product product = productRepository.findById(prodId).orElse(null);
-            return CustomResponse.onSuccess(product);
+            ProductResponse response = setResponse(userEmail, prodId) ;
+            return CustomResponse.onSuccess(response);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -205,5 +209,30 @@ public class ProductService {
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
+    }
+
+    public ProductResponse setResponse(String userEmail, Long prodId) {
+        Product product = productRepository.findById(prodId)
+                .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
+
+        boolean exist = favoriteRepository.existsByUserEmailAndProductId(userEmail, prodId);
+        Character favState;
+
+        if(exist) {
+            favState = 'y';
+        } else {
+            favState = 'n';
+        }
+
+        ProductResponse response =
+                new ProductResponse(product.getId(),
+                        product.getCategory().getCateCode(),
+                        product.getName(),
+                        product.getPrice(),
+                        product.getContent(),
+                        product.getImgUrl(),
+                        favState);
+
+        return response;
     }
 }

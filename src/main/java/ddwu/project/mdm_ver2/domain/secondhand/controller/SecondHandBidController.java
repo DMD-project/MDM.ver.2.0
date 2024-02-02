@@ -1,28 +1,45 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller;
 
+import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandBidRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandBidService;
+import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/secondhand/{shId}")
+@RequestMapping("/secondhand/{shId}/bid")
 public class SecondHandBidController {
 
     private final SecondHandBidService shBidService;
 
+    /* 전체 요청 정렬 */
+    @GetMapping("sort")
+    public CustomResponse<List<SecondHandBid>> getSortedList(@PathVariable("shId") Long shId, @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
+        return shBidService.sortShBid(shId, sortBy);
+    }
+
     /* 가격 제안 등록 (댓글 등록) */
-    public SecondHandBid addShBid(@PathVariable("shId") Long shId,
+    @PostMapping("/add")
+    public CustomResponse<SecondHandBid> addShBid(@PathVariable("shId") Long shId,
                                   @RequestBody SecondHandBidRequest request) {
         return shBidService.addShBid(shId, request);
     }
 
     /* 제안 수정 */
+    @PostMapping("/update/{shBidId}")
+    public CustomResponse<SecondHandBid> updateShBid(@PathVariable("shBidId") Long shBidId, @RequestBody SecondHandBidRequest request) {
+        return shBidService.updateShBid(shBidId, request);
+    }
 
     /* 제안 삭제 */
+    @DeleteMapping("/delete/{shBidId}")
+    public CustomResponse<Void> deleteShBid(@PathVariable("shId") Long shId, @PathVariable("shBidId") Long shBidId) {
+        return shBidService.deleteSecondHandBid(shId, shBidId);
+    }
+
 }

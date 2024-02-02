@@ -43,6 +43,15 @@ public class User {
 //    @ColumnDefault("user")
     private Role role;
 
+    @Column(name = "user_street_addr")
+    private String streetAddr;
+
+    @Column(name = "user_detail_addr")
+    private String detailAddr;
+
+    @Column(name = "user_zipcode")
+    private int zipcode;
+
     public UserResponse toDTO() {
         return UserResponse.builder()
                 .id(id)

@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller;
 
 import ddwu.project.mdm_ver2.domain.product.dto.ProductRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandService;
@@ -31,7 +32,7 @@ public class SecondHandController {
 
     /* 상품 상세 정보 */
     @GetMapping("/{shId}")
-    public CustomResponse<SecondHand> getSeconHand(@PathVariable("shId") Long shId) {
+    public CustomResponse<SecondHandResponse> getSeconHand(@PathVariable("shId") Long shId) {
         return secondHandService.getSecondHand(shId);
     }
 
@@ -53,16 +54,16 @@ public class SecondHandController {
         return secondHandService.updateSecondHand(shId, request);
     }
 
+    /* 상품 판매 상태 변경 (판매중/판매 완료) */
+    @PostMapping("/update/{shId}/state/{state}")
+    public CustomResponse<SecondHand> updateSecondHandState(@PathVariable("shId") Long shId, @PathVariable("state") char state) {
+        return secondHandService.updateSecondHandState(shId, state);
+    }
+
     /* 상품 삭제 */
     @DeleteMapping("/delete/{shId}")
     public CustomResponse<Void> deleteSecondHand(@PathVariable("shId") Long shId) {
         return secondHandService.deleteSecondHand(shId);
     }
-
-    /* 상품 판매 상태 변경 (판매중/판매 완료) */
-
-
-    /* 전체 요청 정렬 */
-
 
 }

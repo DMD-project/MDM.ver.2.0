@@ -1,8 +1,10 @@
 package ddwu.project.mdm_ver2.domain.secondhand.service;
 
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandBidRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.exception.ResourceNotFoundException;
 import ddwu.project.mdm_ver2.domain.category.repository.CategoryRepository;
@@ -22,6 +24,7 @@ import java.util.List;
 public class SecondHandService {
 
     private final SecondHandRepository secondHandRepository;
+    private final SecondHandBidRepository secondHandBidRepository;
     private final CategoryRepository categoryRepository;
 
     /* 전체 상품 */
@@ -80,11 +83,10 @@ public class SecondHandService {
     }
 
     /* 상품 상세 정보 */
-    public CustomResponse<SecondHand> getSecondHand(Long shId) {
+    public CustomResponse<SecondHandResponse> getSecondHand(Long shId) {
         try {
-            SecondHand secondHand = secondHandRepository.findById(shId)
-                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
-            return CustomResponse.onSuccess(secondHand);
+            SecondHandResponse response = setResponse(shId);
+            return CustomResponse.onSuccess(response);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -124,8 +126,20 @@ public class SecondHandService {
     }
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */
+    public CustomResponse<SecondHand> updateSecondHandState(Long shId, char state) {
+       try {
+           SecondHand secondHand = secondHandRepository.findById(shId)
+                   .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-    /* 전체 요청 정렬 */
+           if(secondHand != null) {
+               secondHand.setState(state);
+           }
+           return CustomResponse.onSuccess(secondHandRepository.saveAndFlush(secondHand));
+       } catch (Exception e) {
+           return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+       }
+
+    }
 
     /* 상품 수정 */
     public CustomResponse<SecondHand> updateSecondHand(Long shId, SecondHandRequest request) {
@@ -167,4 +181,19 @@ public class SecondHandService {
         }
     }
 
+    public SecondHandResponse setResponse(Long shId) {
+        SecondHand secondHand = secondHandRepository.findById(shId)
+                .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+
+        SecondHandResponse response =
+                new SecondHandResponse(secondHand.getUserId(),
+                        secondHand.getName(),
+                        secondHand.getCategory().getCateCode(),
+                        secondHand.getPrice(),
+                        secondHand.getImgUrl(),
+                        secondHand.getContent(),
+                        secondHandBidRepository.findAllBySecondHandId(shId));
+
+        return response;
+    }
 }

@@ -3,6 +3,7 @@ package ddwu.project.mdm_ver2.domain.favorite.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,16 +44,43 @@ public class Favorite implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "fav_type")
+    private FavoriteType type;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "prod_id", referencedColumnName = "prod_id")
     private Product product;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "sh_id", referencedColumnName = "sh_id")
+    private SecondHand secondHand;
+
+//    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+//    @JoinColumn(name = "gp_id", referencedColumnName = "gp_id")
+//    private GroupPurchase groupPurchase;
+
     @Column(name = "fav_state")
     private Character state;
 
-    public Favorite(User user, Product product, Character state) {
+    public Favorite(User user, FavoriteType type, Product product, Character state) {
         this.user = user;
+        this.type = type;
         this.product = product;
         this.state = state;
     }
+
+    public Favorite(User user, FavoriteType type, SecondHand secondHand, Character state) {
+        this.user = user;
+        this.type = type;
+        this.secondHand = secondHand;
+        this.state = state;
+    }
+
+//    public Favorite(User user, FavoriteType type, GroupPurchase groupPurchase, Character state) {
+//        this.user = user;
+//        this.type = type;
+//        this.groupPurchase = groupPurchase;
+//        this.state = state;
+//    }
 }

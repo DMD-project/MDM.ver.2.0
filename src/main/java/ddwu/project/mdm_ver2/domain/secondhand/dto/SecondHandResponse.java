@@ -21,4 +21,5 @@ public class SecondHandResponse {
     private String imgUrl;
     private String content;
     private List<SecondHandBid> secondHandBidList;
+    private Character favState;
 }

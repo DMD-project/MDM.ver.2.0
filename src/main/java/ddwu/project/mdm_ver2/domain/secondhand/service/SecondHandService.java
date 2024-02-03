@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.domain.secondhand.service;
 
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
+import ddwu.project.mdm_ver2.domain.favorite.repository.FavoriteRepository;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
@@ -26,6 +27,7 @@ public class SecondHandService {
     private final SecondHandRepository secondHandRepository;
     private final SecondHandBidRepository secondHandBidRepository;
     private final CategoryRepository categoryRepository;
+    private final FavoriteRepository favoriteRepository;
 
     /* 전체 상품 */
     public CustomResponse<List<SecondHand>> findAllSecondHand() {
@@ -83,9 +85,9 @@ public class SecondHandService {
     }
 
     /* 상품 상세 정보 */
-    public CustomResponse<SecondHandResponse> getSecondHand(Long shId) {
+    public CustomResponse<SecondHandResponse> getSecondHand(String userEmail, Long shId) {
         try {
-            SecondHandResponse response = setResponse(shId);
+            SecondHandResponse response = setResponse(userEmail, shId);
             return CustomResponse.onSuccess(response);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -181,9 +183,18 @@ public class SecondHandService {
         }
     }
 
-    public SecondHandResponse setResponse(Long shId) {
+    public SecondHandResponse setResponse(String userEmail, Long shId) {
         SecondHand secondHand = secondHandRepository.findById(shId)
                 .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+
+        boolean exist = favoriteRepository.existsByUserEmailAndSecondHandId(userEmail, shId);
+        Character favState;
+
+        if(exist) {
+            favState = 'y';
+        } else {
+            favState = 'n';
+        }
 
         SecondHandResponse response =
                 new SecondHandResponse(secondHand.getUserId(),
@@ -192,7 +203,8 @@ public class SecondHandService {
                         secondHand.getPrice(),
                         secondHand.getImgUrl(),
                         secondHand.getContent(),
-                        secondHandBidRepository.findAllBySecondHandId(shId));
+                        secondHandBidRepository.findAllBySecondHandId(shId),
+                        favState);
 
         return response;
     }

@@ -9,6 +9,7 @@ import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -32,8 +33,11 @@ public class SecondHandController {
 
     /* 상품 상세 정보 */
     @GetMapping("/{shId}")
-    public CustomResponse<SecondHandResponse> getSeconHand(@PathVariable("shId") Long shId) {
-        return secondHandService.getSecondHand(shId);
+    public CustomResponse<SecondHandResponse> getSeconHand(@RequestParam(name = "userEmail", required = true) String userEmail,
+//                                                      Principal principal,
+                                                      @PathVariable("shId") Long shId) {
+//        return productService.getProduct(principal.getName(), prodId);
+        return secondHandService.getSecondHand(userEmail, shId);
     }
 
     /* 상품 등록 */

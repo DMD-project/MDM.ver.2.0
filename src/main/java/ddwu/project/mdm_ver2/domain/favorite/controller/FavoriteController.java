@@ -17,7 +17,7 @@ import java.security.Principal;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/product/{prodId}")
+@RequestMapping("/favType/{favType}/typeId/{typeId}")
 public class FavoriteController {
 
     private FavoriteService favoriteService;
@@ -27,10 +27,11 @@ public class FavoriteController {
     @GetMapping("/favState/{favState}")
     public CustomResponse<Favorite> changeFavoriteState(@RequestParam(name = "userEmail", required = true) String userEmail,
 //            Principal principal,
-                                                   @PathVariable(value="prodId", required=true) long prodId,
+            @PathVariable(value="favType", required=true) String favType,
+                                                   @PathVariable(value="typeId", required=true) long typeId,
                                                    @PathVariable(value="favState", required = true) Character favState) {
-//        return favoriteService.setFavoriteState(principal.getName(), prodId, favState);
-        return favoriteService.setFavoriteState(userEmail, prodId, favState);
+//        return favoriteService.setProdFavoriteState(principal.getName(), prodId, favState);
+        return favoriteService.setFavoriteState(userEmail, favType, typeId, favState);
     }
 
 }

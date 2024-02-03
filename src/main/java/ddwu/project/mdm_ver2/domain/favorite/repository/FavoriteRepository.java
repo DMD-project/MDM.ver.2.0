@@ -13,13 +13,16 @@ import java.util.List;
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     boolean existsByUserEmailAndProductId(String userEmail, Long prodId); // get favState (exist->fav O)
+    boolean existsByUserEmailAndSecondHandId(String userEmail, Long shId);
+//    boolean existsByUserEmailAndGroupPurchaseId(String userEmail, Long gpId);
 
     @Transactional
     Favorite saveAndFlush(Favorite favInfo); // 찜등록
 
-    List<Favorite> findAllByProductId(Long prodId);
-
     @Transactional
     void deleteByUserEmailAndProductId(String userEmail, Long prodId); // 찜해제
-
+    @Transactional
+    void deleteByUserEmailAndSecondHandId(String userEmail, Long shId);
+//    @Transactional
+//    void deleteByUserEmailAndGroupPurchaseId(String userEmail, Long gpId);
 }

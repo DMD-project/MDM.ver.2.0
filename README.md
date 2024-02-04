@@ -1,8 +1,6 @@
 # MDM.ver.2.0
 
-Refactoring In Progress ...
-
-Server
+### 📑 Architecture
   - ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ%20IDEA-000000.svg?style=flat-square&logo=intellij-idea&logoColor=white)
     ![Java](https://img.shields.io/badge/Java17-%23ED8B00.svg?style=flat-square&logo=Java&logoColor=white)
     ![Springboot](https://img.shields.io/badge/Springboot3.14-6DB33F?style=flat-square&logo=springboot&logoColor=white)
@@ -12,14 +10,24 @@ Server
   - ![Oracle](https://img.shields.io/badge/Oracle-F80000?style=flat-square&logo=Oracle&logoColor=white)       
 
 
-#### Git Commit Message Style Guide
-Jsp 🌸 Spring ⚙️
-- `✨feat` : 새로운 기능 추가
-- `🐛fix` : 버그 수정
-- `📝docs` : 문서 내용 변경
-- `💄style` : CSS 등 사용자 UI 디자인 변경
-- `✅test` : 테스트 코드 작성
-- `♻️refactor` : 코드 리팩토링
-- `📦chore` : 환경설정 및 프로젝트 세팅
-- `🚀deploy` : 배포
-- `🔥remove` : 파일이나 코드 삭제
+### 📋 Model Diagram
+
+<img src="https://github.com/M2DM-project/M2DM.ver2.0/assets/94455716/c27c8ffe-44a4-4de8-a2d9-83489344bbe4" width="450" height="300"/>
+
+### ✉️ Commit Messge Rules.
+Jsp [🌸], Spring [⚙️]를 지켜주세요.
+
+**[태그] 제목의 형태**
+
+| 태그 이름 |                       설명                        |
+| :-------: | :-----------------------------------------------: |
+|   ✨feat    |             새로운 기능을 추가할 경우             |
+|    🐛fix    |                 버그를 고친 경우                  |
+|   📦chore   |                    짜잘한 수정                    |
+|   📝docs    |                     문서 수정                     |
+|   ✅test    |      테스트 코드, 리펙토링 테스트 코드 추가       |
+|   💄style   | 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우 |
+| ♻️refactor  |                   코드 리팩토링                   |
+| 🔥remove  |                   파일이나 코드 삭제                   |
+| 🚀deploy |                   배포                   |
+

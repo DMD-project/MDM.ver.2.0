@@ -13,10 +13,13 @@ Server
 
 
 #### Git Commit Message Style Guide
-- `feat` : 새로운 기능 추가
-- `fix` : 버그 수정
-- `docs` : 문서 내용 변경
-- `style` : 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우 등
-- `refactor` : 코드 리팩토링
-- `test` : 테스트 코드 작성
-- `chore` : 빌드 수정, 패키지 매니저 설정, 운영 코드 변경이 없는 경우 등
+Jsp 🌸 Spring ⚙️
+- `✨feat` : 새로운 기능 추가
+- `🐛fix` : 버그 수정
+- `📝docs` : 문서 내용 변경
+- `💄style` : CSS 등 사용자 UI 디자인 변경
+- `✅test` : 테스트 코드 작성
+- `♻️refactor` : 코드 리팩토링
+- `📦chore` : 환경설정 및 프로젝트 세팅
+- `🚀deploy` : 배포
+- `🔥remove` : 파일이나 코드 삭제

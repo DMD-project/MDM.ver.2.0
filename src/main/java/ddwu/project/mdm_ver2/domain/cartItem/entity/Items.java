@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "items")
 public class Items {
+
     @Id
     @SequenceGenerator(
             name = "items_seq_generator",
@@ -53,12 +54,15 @@ public class Items {
     public void addCount(int count) {
         this.count += count;
     }
+
     public void addPrice(int price) {
         this.price += price;
     }
+
     public void subCount(int count) {
         this.count -= count;
     }
+
     public void subPrice(int price) {
         this.price -= price;
     }

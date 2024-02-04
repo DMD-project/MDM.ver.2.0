@@ -24,7 +24,7 @@ public class FavoriteController {
     private UserService userService;
     private ProductRepository productRepository;
 
-    @GetMapping("/favState/{favState}")
+    @PostMapping("/favState/{favState}")
     public CustomResponse<Favorite> changeFavoriteState(@RequestParam(name = "userEmail", required = true) String userEmail,
 //            Principal principal,
             @PathVariable(value="favType", required=true) String favType,

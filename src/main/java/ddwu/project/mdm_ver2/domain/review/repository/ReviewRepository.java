@@ -24,4 +24,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Review saveAndFlush(Review review);
 
     void deleteById(Long reviewId);
+
+    List<Review> findAllByUserEmail(String userEmail);
 }

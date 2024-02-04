@@ -23,4 +23,6 @@ public class ProductResponse {
     private String imgUrl;
     private Character favState;
     private List<Review> reviewList;
+    private int reviewCnt;
+//    private int starTotal;
 }

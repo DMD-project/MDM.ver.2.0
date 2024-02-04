@@ -49,7 +49,8 @@ public class ReviewController {
     @DeleteMapping("/delete/{reviewId}")
     public CustomResponse<Void> deleteReview(@RequestParam("userEmail") String userEmail,
 //            Principal principal,
+                                             @PathVariable("prodId") Long prodId,
                                              @PathVariable("reviewId") Long reviewId) {
-        return reviewService.deleteReview(userEmail, reviewId);
+        return reviewService.deleteReview(userEmail, prodId, reviewId);
     }
 }

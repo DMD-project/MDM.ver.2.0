@@ -1,6 +1,10 @@
 package ddwu.project.mdm_ver2.domain.user.controller;
 
-import ddwu.project.mdm_ver2.domain.user.entity.Role;
+import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
+import ddwu.project.mdm_ver2.domain.favorite.service.FavoriteService;
+import ddwu.project.mdm_ver2.domain.review.entity.Review;
+import ddwu.project.mdm_ver2.domain.review.service.ReviewService;
+import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtToken;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtProvider;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 
 //@Controller
 @RestController
@@ -23,21 +28,25 @@ public class RestKakaoController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private UserService ks;
-    private JwtProvider jwtProvider;
+    private final UserService userService;
+    private final FavoriteService favoriteService;
+    private final ReviewService reviewService;
+    private final JwtProvider jwtProvider;
+
+
 
     @GetMapping("/kakao/ios")
     public JwtToken loginIos(@RequestParam String access_token) {
-        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
+        HashMap<String, Object> userInfo = userService.getKakaoUserInfo(access_token);
 
-        UserResponse userResponse = ks.checkKakaoUser(userInfo);
+        UserResponse userResponse = userService.checkKakaoUser(userInfo);
 
         String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
         String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
 
         System.out.println("jwt_access: " +jwt_access);
 
-        ks.addUser(userResponse);
+        userService.addUser(userResponse);
 
         return new JwtToken(jwt_access, jwt_refresh);
     }
@@ -45,13 +54,25 @@ public class RestKakaoController {
     @GetMapping("/kakaoJoin/check/{userNickname}") // 중복확인 버튼 클릭
     public boolean checkNickname(@PathVariable(value="userNickname", required=true) String nickname, Model model) {
         log.info("nickname: {}", nickname);
-        log.info("nickname 중복 여부: {}", ks.checkNicknameDup(nickname)); // 중복 -> true, 중복X -> false
-        model.addAttribute("nicknameDup", ks.checkNicknameDup(nickname));
-        return ks.checkNicknameDup(nickname);
+        log.info("nickname 중복 여부: {}", userService.checkNicknameDup(nickname)); // 중복 -> true, 중복X -> false
+        model.addAttribute("nicknameDup", userService.checkNicknameDup(nickname));
+        return userService.checkNicknameDup(nickname);
+    }
+
+//    @GetMapping("/mypage/favorite")
+//    public CustomResponse<List<Favorite>> getUserFavorite(Principal principal) {
+//
+//    }
+
+    @GetMapping("/mypage/review")
+    public CustomResponse<List<Review>> getUserReview(@RequestParam("userEmail") String userEmail
+//            Principal principal
+    ) {
+        return reviewService.getUserReviewList(userEmail);
     }
 
     @DeleteMapping("/kakao")
     public void deleteUser(Principal principal) {
-        ks.deleteUser(principal.getName());
+        userService.deleteUser(principal.getName());
     }
 }

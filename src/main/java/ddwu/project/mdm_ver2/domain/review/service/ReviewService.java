@@ -68,6 +68,7 @@ public class ReviewService {
                     .content(request.getContent())
                     .build();
 
+            setReviewCnt(product, product.getReviewCnt(), "add");
             reviewRepository.saveAndFlush(review);
 
             return CustomResponse.onSuccess(review);
@@ -104,12 +105,16 @@ public class ReviewService {
 
     /* 리뷰 삭제 */
     @Transactional
-    public CustomResponse<Void> deleteReview(String userEmail, Long reviewId) {
+    public CustomResponse<Void> deleteReview(String userEmail, Long prodId, Long reviewId) {
         try {
+            Product product = productRepository.findById(prodId)
+                    .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
+
             Review review = reviewRepository.findById(reviewId)
                     .orElseThrow(() -> new NotFoundException("리뷰를 찾을 수 없습니다."));
 
             if(userEmail.equals(review.getUser().getEmail())) {
+                setReviewCnt(product, product.getReviewCnt(), "delete");
                 reviewRepository.deleteById(reviewId);
             } else {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "리뷰를 삭제할 수 없습니다.");
@@ -119,5 +124,34 @@ public class ReviewService {
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
+    }
+
+    /* 특정 사용자 리뷰 가져오기 */
+    public CustomResponse<List<Review>> getUserReviewList(String userEmail) {
+        try {
+            List<Review> userReviewList = reviewRepository.findAllByUserEmail(userEmail);
+            return CustomResponse.onSuccess(userReviewList);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
+    }
+
+    public void setReviewCnt(Product product, int cnt, String calc) {
+        if(product != null) {
+            switch (calc) {
+                case "add":
+                    product.setReviewCnt(cnt + 1);
+                    break;
+                case "delete":
+                    if(product.getReviewCnt() != 0) {
+                        product.setReviewCnt(cnt - 1);
+                    }
+                    break;
+            }
+        }
+    }
+
+    public void setReviewStarTotal(Product product, int star) {
+
     }
 }

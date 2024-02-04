@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.domain.product.dto;
 
 import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
+import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,4 +22,5 @@ public class ProductResponse {
     private String content;
     private String imgUrl;
     private Character favState;
+    private List<Review> reviewList;
 }

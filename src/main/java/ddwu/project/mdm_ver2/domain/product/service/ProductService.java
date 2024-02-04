@@ -5,6 +5,8 @@ import ddwu.project.mdm_ver2.domain.favorite.repository.FavoriteRepository;
 import ddwu.project.mdm_ver2.domain.product.dto.ProductResponse;
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.product.dto.ProductRequest;
+import ddwu.project.mdm_ver2.domain.review.entity.Review;
+import ddwu.project.mdm_ver2.domain.review.repository.ReviewRepository;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.exception.ResourceNotFoundException;
@@ -27,6 +29,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final FavoriteRepository favoriteRepository;
+    private final ReviewRepository reviewRepository;
 
     //상품 조회
     @Transactional
@@ -224,6 +227,8 @@ public class ProductService {
             favState = 'n';
         }
 
+        List<Review> reviewList = reviewRepository.findAllByProductId(prodId);
+
         ProductResponse response =
                 new ProductResponse(product.getId(),
                         product.getCategory().getCateCode(),
@@ -231,7 +236,8 @@ public class ProductService {
                         product.getPrice(),
                         product.getContent(),
                         product.getImgUrl(),
-                        favState);
+                        favState,
+                        reviewList);
 
         return response;
     }

@@ -98,8 +98,11 @@ public class CartItemService {
     public CustomResponse<Void> deleteCartItems(List<Long> itemsIds) {
         try {
             for (Long itemsId : itemsIds) {
-                Items cartItem = cartItemRepository.findById(itemsId)
-                        .orElseThrow(() -> new IllegalArgumentException("장바구니품목을 찾을 수 없습니다. " + itemsId));
+                Items cartItem = cartItemRepository.findById(itemsId).orElse(null);
+
+                if (cartItem == null) {
+                    return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), itemsId + " 장바구니품목을 찾을 수 없습니다." );
+                }
 
                 Cart cart = cartItem.getCart();
                 int itemCount = cartItem.getCount();

@@ -1,7 +1,6 @@
 package ddwu.project.mdm_ver2.domain.cart.controller;
 
 import ddwu.project.mdm_ver2.domain.cart.entity.Cart;
-import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.domain.cart.service.CartService;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,8 @@ import java.security.Principal;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/cart")
-public class CartController {
+public class CartController implements CartApi {
+
     private final CartService cartService;
 
     // 사용자 장바구니 조회
@@ -26,4 +26,5 @@ public class CartController {
     public CustomResponse<Void> clearCart(Principal principal) {
         return cartService.clearCart(principal.getName());
     }
+
 }

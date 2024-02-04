@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "category")
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cate_id", unique = true)
@@ -26,4 +27,5 @@ public class Category {
         this.cateCode = cateCode;
         this.name = name;
     }
+
 }

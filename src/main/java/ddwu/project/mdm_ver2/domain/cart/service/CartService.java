@@ -2,18 +2,16 @@ package ddwu.project.mdm_ver2.domain.cart.service;
 
 import ddwu.project.mdm_ver2.domain.cart.entity.Cart;
 import ddwu.project.mdm_ver2.domain.cart.repository.CartRepository;
-import ddwu.project.mdm_ver2.domain.user.entity.User;
-import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
 @Service
 @AllArgsConstructor
 public class CartService {
+
     private final CartRepository cartRepository;
 
     // 사용자 장바구니 조회

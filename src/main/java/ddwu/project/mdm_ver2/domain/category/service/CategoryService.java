@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }

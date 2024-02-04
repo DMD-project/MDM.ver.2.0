@@ -237,7 +237,8 @@ public class ProductService {
                         product.getContent(),
                         product.getImgUrl(),
                         favState,
-                        reviewList);
+                        reviewList,
+                        reviewList.size());
 
         return response;
     }

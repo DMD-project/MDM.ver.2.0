@@ -56,7 +56,7 @@ public class SecondHandBidService {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-            setSecondHandBidCnt(secondHand, secondHand.getBidCnt(), '+');
+            setSecondHandBidCnt(secondHand, secondHand.getBidCnt(), "add");
 
             SecondHandBid secondHandBid = SecondHandBid.builder()
                     .id(request.getId())
@@ -101,25 +101,26 @@ public class SecondHandBidService {
             SecondHandBid secondHandBid = shBidRepository.findById(shBidId)
                     .orElseThrow(() -> new NotFoundException("상품 요청을 찾을 수 없습니다."));
 
-            setSecondHandBidCnt(secondHand, secondHand.getBidCnt(), '-');
-
             if(secondHandBid == null) {
                 throw new ResourceNotFoundException("secondHandBid", "shBidId", shBidId);
             }
+
+            setSecondHandBidCnt(secondHand, secondHand.getBidCnt(), "delete");
             shBidRepository.deleteById(shBidId);
+
             return CustomResponse.onSuccess(null);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-    public void setSecondHandBidCnt(SecondHand secondHand, int cnt, char calc) {
+    public void setSecondHandBidCnt(SecondHand secondHand, int cnt, String calc) {
         if(secondHand != null) {
             switch (calc) {
-                case '+':
+                case "add":
                     secondHand.setBidCnt(cnt + 1);
                     break;
-                case'-':
+                case "delete":
                     if(secondHand.getBidCnt() != 0) {
                         secondHand.setBidCnt(cnt - 1);
                     }

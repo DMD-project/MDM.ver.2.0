@@ -37,6 +37,9 @@ public class Product implements Serializable {
     @Column(name = "prod_img_url")
     private String imgUrl;
 
+    @Column(name = "review_cnt")
+    private int reviewCnt;
+
     @Builder
     public Product(Category category, String name, int price, String content, String imgUrl) {
         this.category = category;

@@ -43,6 +43,8 @@ public class ViewKakaoController {
         String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
         String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
 
+        System.out.println("jwt_access: " +jwt_access);
+
         ks.addUser(userResponse);
         model.addAttribute("jwt_access", jwt_access);
 //        model.addAttribute("jwt_refresh", jwt_refresh);

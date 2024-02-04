@@ -49,7 +49,7 @@ public class UserService {
 
             // success: code = 200
             int responseCode = conn.getResponseCode();
-            System.out.println("response code: " +responseCode);
+//            System.out.println("response code: " +responseCode);
 
             // 요청으로 얻은 JSON type Response message
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -69,8 +69,8 @@ public class UserService {
             access_token = element.getAsJsonObject().get("access_token").getAsString();
             refresh_token = element.getAsJsonObject().get("refresh_token").getAsString();
 
-            System.out.println("access token: " +access_token);
-            System.out.println("refresh token: " +refresh_token);
+//            System.out.println("access token: " +access_token);
+//            System.out.println("refresh token: " +refresh_token);
 
             br.close();
             bw.close();
@@ -125,10 +125,9 @@ public class UserService {
             userInfo.put("userEmail", userEmail);
             userInfo.put("userProfileImg", userProfileImg);
 
-
-            System.out.println("userId: " + userId);
-            System.out.println("userEmail: " + userEmail);
-            System.out.println("userProfileImg: " + userProfileImg);
+//            System.out.println("userId: " + userId);
+//            System.out.println("userEmail: " + userEmail);
+//            System.out.println("userProfileImg: " + userProfileImg);
 
             br.close();
 

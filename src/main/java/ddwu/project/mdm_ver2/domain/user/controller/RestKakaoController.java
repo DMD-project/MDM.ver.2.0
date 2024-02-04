@@ -35,6 +35,8 @@ public class RestKakaoController {
         String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
         String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
 
+        System.out.println("jwt_access: " +jwt_access);
+
         ks.addUser(userResponse);
 
         return new JwtToken(jwt_access, jwt_refresh);

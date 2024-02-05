@@ -49,7 +49,7 @@ public class SecondHandBidService {
 
             return CustomResponse.onSuccess(sortedBidList);
         } catch (Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
 

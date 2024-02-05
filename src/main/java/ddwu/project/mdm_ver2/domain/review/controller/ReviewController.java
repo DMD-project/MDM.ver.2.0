@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/product/{prodId}/review")
-public class ReviewController {
+public class ReviewController implements ReviewApi{
 
     private ReviewService reviewService;
 
@@ -27,31 +27,28 @@ public class ReviewController {
 
     /* 리뷰 등록 */
     @PostMapping("/add")
-    public CustomResponse<Review> addReview(@RequestParam("userEmail") String userEmail,
-//            Principal principal,
+    public CustomResponse<Review> addReview(Principal principal,
                                             @PathVariable("prodId") Long prodId,
                                             @RequestBody ReviewRequest request) {
-//        return reviewService.addReview(principal.getName(), prodId, request);
-        return reviewService.addReview(userEmail, prodId, request);
+        return reviewService.addReview(principal.getName(), prodId, request);
+//        return reviewService.addReview(userEmail, prodId, request);
     }
 
     /* 리뷰 수정 */
     @PostMapping("/update/{reviewId}")
-    public CustomResponse<Review> updateReview(@RequestParam("userEmail") String userEmail,
-//            Principal principal,
+    public CustomResponse<Review> updateReview(Principal principal,
                                                @PathVariable("prodId") Long prodId,
                                                @PathVariable("reviewId") Long reviewId,
                                                @RequestBody ReviewRequest request) {
-//        return reviewService.updateReview(principal.getName(), reviewId, request);
-        return reviewService.updateReview(userEmail, prodId, reviewId, request);
+        return reviewService.updateReview(principal.getName(), prodId, reviewId, request);
+//        return reviewService.updateReview(userEmail, prodId, reviewId, request);
     }
 
     /* 리뷰 삭제 */
     @DeleteMapping("/delete/{reviewId}")
-    public CustomResponse<Void> deleteReview(@RequestParam("userEmail") String userEmail,
-//            Principal principal,
+    public CustomResponse<Void> deleteReview(Principal principal,
                                              @PathVariable("prodId") Long prodId,
                                              @PathVariable("reviewId") Long reviewId) {
-        return reviewService.deleteReview(userEmail, prodId, reviewId);
+        return reviewService.deleteReview(principal.getName(), prodId, reviewId);
     }
 }

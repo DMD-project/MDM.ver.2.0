@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/secondhand")
-public class SecondHandController {
+public class SecondHandController implements SecondHandApi {
 
     private final SecondHandService secondHandService;
 
@@ -33,11 +33,9 @@ public class SecondHandController {
 
     /* 상품 상세 정보 */
     @GetMapping("/{shId}")
-    public CustomResponse<SecondHandResponse> getSeconHand(@RequestParam(name = "userEmail", required = true) String userEmail,
-//                                                      Principal principal,
+    public CustomResponse<SecondHandResponse> getSeconHand(Principal principal,
                                                       @PathVariable("shId") Long shId) {
-//        return productService.getProduct(principal.getName(), prodId);
-        return secondHandService.getSecondHand(userEmail, shId);
+        return secondHandService.getSecondHand(principal.getName(), shId);
     }
 
     /* 상품 등록 */

@@ -40,6 +40,9 @@ public class Product implements Serializable {
     @Column(name = "review_cnt")
     private int reviewCnt;
 
+    @Column(name = "review_star_avg")
+    private float reviewStarAvg;
+
     @Builder
     public Product(Category category, String name, int price, String content, String imgUrl) {
         this.category = category;

@@ -68,8 +68,11 @@ public class ReviewService {
                     .content(request.getContent())
                     .build();
 
-            setReviewCnt(product, product.getReviewCnt(), "add");
             reviewRepository.saveAndFlush(review);
+
+            setReviewCnt(product, product.getReviewCnt(), "add");
+            product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
+            productRepository.saveAndFlush(product);
 
             return CustomResponse.onSuccess(review);
 
@@ -79,8 +82,11 @@ public class ReviewService {
     }
 
     /* 리뷰 수정 */
-    public CustomResponse<Review> updateReview(String userEmail, Long reviewId, ReviewRequest request) {
+    public CustomResponse<Review> updateReview(String userEmail, Long prodId, Long reviewId, ReviewRequest request) {
         try {
+            Product product = productRepository.findById(prodId)
+                    .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
+
             Review review = reviewRepository.findById(reviewId)
                     .orElseThrow(() -> new NotFoundException("리뷰를 찾을 수 없습니다."));
 
@@ -91,12 +97,15 @@ public class ReviewService {
 
                     Review updateReview = reviewRepository.saveAndFlush(review);
 
+                    product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
+                    productRepository.saveAndFlush(product);
+
                     return CustomResponse.onSuccess(updateReview);
                 } else {
                     return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "리뷰를 찾을 수 없습니다.");
                 }
             } else {
-                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "리뷰를 삭제할 수 없습니다.");
+                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "리뷰를 수정할 수 없습니다.");
             }
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -116,6 +125,9 @@ public class ReviewService {
             if(userEmail.equals(review.getUser().getEmail())) {
                 setReviewCnt(product, product.getReviewCnt(), "delete");
                 reviewRepository.deleteById(reviewId);
+
+                product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
+                productRepository.saveAndFlush(product);
             } else {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "리뷰를 삭제할 수 없습니다.");
             }
@@ -149,9 +161,5 @@ public class ReviewService {
                     break;
             }
         }
-    }
-
-    public void setReviewStarTotal(Product product, int star) {
-
     }
 }

@@ -59,10 +59,10 @@ public class RestKakaoController {
         return userService.checkNicknameDup(nickname);
     }
 
-//    @GetMapping("/mypage/favorite")
-//    public CustomResponse<List<Favorite>> getUserFavorite(Principal principal) {
-//
-//    }
+    @GetMapping("/mypage/favorite")
+    public CustomResponse<List<Favorite>> getUserFavorite(@RequestParam("userEmail") String userEmail) {
+        return favoriteService.getUserFavoriteList(userEmail);
+    }
 
     @GetMapping("/mypage/review")
     public CustomResponse<List<Review>> getUserReview(@RequestParam("userEmail") String userEmail

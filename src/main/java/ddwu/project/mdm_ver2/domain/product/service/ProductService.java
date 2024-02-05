@@ -238,7 +238,8 @@ public class ProductService {
                         product.getImgUrl(),
                         favState,
                         reviewList,
-                        reviewList.size());
+                        product.getReviewCnt(),
+                        product.getReviewStarAvg());
 
         return response;
     }

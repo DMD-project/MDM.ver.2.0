@@ -5,6 +5,8 @@ import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandBidRequest;
+import ddwu.project.mdm_ver2.domain.user.entity.User;
+import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.exception.ResourceNotFoundException;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandRepository;
@@ -23,6 +25,7 @@ public class SecondHandBidService {
 
     private final SecondHandBidRepository shBidRepository;
     private final SecondHandRepository secondHandRepository;
+    private final UserRepository userRepository;
 
     /* 전체 요청 정렬 */
     public CustomResponse<List<SecondHandBid>> sortShBid(Long shId, String sort) {
@@ -74,18 +77,26 @@ public class SecondHandBidService {
     }
 
     /* 제안 수정 */
-    public CustomResponse<SecondHandBid> updateShBid(Long shBidId, SecondHandBidRequest request) {
+    public CustomResponse<SecondHandBid> updateShBid(String userEmail, Long shBidId, SecondHandBidRequest request) {
         try {
             SecondHandBid secondHandBid = shBidRepository.findById(shBidId)
                     .orElseThrow(() -> new NotFoundException("상품 요청을 찾을 수 없습니다."));
 
-            if(secondHandBid != null) {
-                secondHandBid.setPrice(request.getPrice());
-                SecondHandBid updateSecondHandBid = shBidRepository.saveAndFlush(secondHandBid);
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-                return CustomResponse.onSuccess(updateSecondHandBid);
+            if((user.getId()) == (secondHandBid.getBidUserId())) {
+                if(secondHandBid != null) {
+                    secondHandBid.setPrice(request.getPrice());
+                    SecondHandBid updateSecondHandBid = shBidRepository.saveAndFlush(secondHandBid);
+
+                    return CustomResponse.onSuccess(updateSecondHandBid);
+                } else {
+                    return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "상품 요청을 찾을 수 없습니다.");
+                }
+            } else {
+                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "요청을 수정할 수 없습니다.");
             }
-            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "상품 요청을 찾을 수 없습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -93,7 +104,7 @@ public class SecondHandBidService {
 
     /* 제안 삭제 */
     @Transactional
-    public CustomResponse<Void> deleteSecondHandBid(Long shId, Long shBidId) {
+    public CustomResponse<Void> deleteSecondHandBid(String userEmail, Long shId, Long shBidId) {
         try {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
@@ -101,8 +112,15 @@ public class SecondHandBidService {
             SecondHandBid secondHandBid = shBidRepository.findById(shBidId)
                     .orElseThrow(() -> new NotFoundException("상품 요청을 찾을 수 없습니다."));
 
-            if(secondHandBid == null) {
-                throw new ResourceNotFoundException("secondHandBid", "shBidId", shBidId);
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+            if((user.getId()) == (secondHandBid.getBidUserId())) {
+                if(secondHandBid == null) {
+                    throw new ResourceNotFoundException("secondHandBid", "shBidId", shBidId);
+                }
+            } else {
+                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "요청을 삭제할 수 없습니다.");
             }
 
             setSecondHandBidCnt(secondHand, secondHand.getBidCnt(), "delete");

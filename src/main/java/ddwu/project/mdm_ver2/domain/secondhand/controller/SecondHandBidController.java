@@ -8,6 +8,7 @@ import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -32,14 +33,18 @@ public class SecondHandBidController {
 
     /* 제안 수정 */
     @PostMapping("/update/{shBidId}")
-    public CustomResponse<SecondHandBid> updateShBid(@PathVariable("shBidId") Long shBidId, @RequestBody SecondHandBidRequest request) {
-        return shBidService.updateShBid(shBidId, request);
+    public CustomResponse<SecondHandBid> updateShBid(@RequestParam("userEmail") String userEmail,
+//                                                     Principal principal,
+                                                     @PathVariable("shBidId") Long shBidId, @RequestBody SecondHandBidRequest request) {
+        return shBidService.updateShBid(userEmail, shBidId, request);
     }
 
     /* 제안 삭제 */
     @DeleteMapping("/delete/{shBidId}")
-    public CustomResponse<Void> deleteShBid(@PathVariable("shId") Long shId, @PathVariable("shBidId") Long shBidId) {
-        return shBidService.deleteSecondHandBid(shId, shBidId);
+    public CustomResponse<Void> deleteShBid(@RequestParam("userEmail") String userEmail,
+//                                            Principal principal,
+                                            @PathVariable("shId") Long shId, @PathVariable("shBidId") Long shBidId) {
+        return shBidService.deleteSecondHandBid(userEmail, shId, shBidId);
     }
 
 }

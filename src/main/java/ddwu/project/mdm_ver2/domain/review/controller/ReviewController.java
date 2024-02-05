@@ -39,10 +39,11 @@ public class ReviewController {
     @PostMapping("/update/{reviewId}")
     public CustomResponse<Review> updateReview(@RequestParam("userEmail") String userEmail,
 //            Principal principal,
+                                               @PathVariable("prodId") Long prodId,
                                                @PathVariable("reviewId") Long reviewId,
                                                @RequestBody ReviewRequest request) {
 //        return reviewService.updateReview(principal.getName(), reviewId, request);
-        return reviewService.updateReview(userEmail, reviewId, request);
+        return reviewService.updateReview(userEmail, prodId, reviewId, request);
     }
 
     /* 리뷰 삭제 */

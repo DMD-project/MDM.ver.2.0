@@ -1,8 +1,9 @@
 package ddwu.project.mdm_ver2.domain.review.repository;
 
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
-import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +27,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     void deleteById(Long reviewId);
 
     List<Review> findAllByUserEmail(String userEmail);
+
+    @Query(value = "select avg(review_star) " +
+            "from review " +
+            "where prod_id=:prodId " +
+            "group by prod_id", nativeQuery = true)
+    float getReviewStarAvg(@Param("prodId")Long prodId);
 }

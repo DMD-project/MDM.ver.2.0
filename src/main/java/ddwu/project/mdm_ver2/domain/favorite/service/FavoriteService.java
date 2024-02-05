@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class FavoriteService {
@@ -119,4 +121,13 @@ public class FavoriteService {
         }
     }
 
+    /* 특정 사용자 찜 가져오기 */
+    public CustomResponse<List<Favorite>> getUserFavoriteList(String userEmail) {
+        try{
+            List<Favorite> userFavoriteList = favoriteRepository.findAllByUserEmail(userEmail);
+            return CustomResponse.onSuccess(userFavoriteList);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
+    }
 }

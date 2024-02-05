@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.domain.user.controller;
 
+import ddwu.project.mdm_ver2.domain.cart.controller.CartApi;
 import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
 import ddwu.project.mdm_ver2.domain.favorite.service.FavoriteService;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
@@ -23,7 +24,7 @@ import java.util.List;
 //@Controller
 @RestController
 @AllArgsConstructor
-public class RestKakaoController {
+public class RestKakaoController implements UserApi {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -32,8 +33,6 @@ public class RestKakaoController {
     private final FavoriteService favoriteService;
     private final ReviewService reviewService;
     private final JwtProvider jwtProvider;
-
-
 
     @GetMapping("/kakao/ios")
     public JwtToken loginIos(@RequestParam String access_token) {
@@ -60,15 +59,13 @@ public class RestKakaoController {
     }
 
     @GetMapping("/mypage/favorite")
-    public CustomResponse<List<Favorite>> getUserFavorite(@RequestParam("userEmail") String userEmail) {
-        return favoriteService.getUserFavoriteList(userEmail);
+    public CustomResponse<List<Favorite>> getUserFavorite(Principal principal) {
+        return favoriteService.getUserFavoriteList(principal.getName());
     }
 
     @GetMapping("/mypage/review")
-    public CustomResponse<List<Review>> getUserReview(@RequestParam("userEmail") String userEmail
-//            Principal principal
-    ) {
-        return reviewService.getUserReviewList(userEmail);
+    public CustomResponse<List<Review>> getUserReview(Principal principal) {
+        return reviewService.getUserReviewList(principal.getName());
     }
 
     @DeleteMapping("/kakao")

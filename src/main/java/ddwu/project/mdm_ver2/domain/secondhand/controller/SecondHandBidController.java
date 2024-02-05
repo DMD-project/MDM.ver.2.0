@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/secondhand/{shId}/bid")
-public class SecondHandBidController {
+public class SecondHandBidController implements SecondHandBidApi{
 
     private final SecondHandBidService shBidService;
 
@@ -33,18 +33,16 @@ public class SecondHandBidController {
 
     /* 제안 수정 */
     @PostMapping("/update/{shBidId}")
-    public CustomResponse<SecondHandBid> updateShBid(@RequestParam("userEmail") String userEmail,
-//                                                     Principal principal,
+    public CustomResponse<SecondHandBid> updateShBid(Principal principal,
                                                      @PathVariable("shBidId") Long shBidId, @RequestBody SecondHandBidRequest request) {
-        return shBidService.updateShBid(userEmail, shBidId, request);
+        return shBidService.updateShBid(principal.getName(), shBidId, request);
     }
 
     /* 제안 삭제 */
     @DeleteMapping("/delete/{shBidId}")
-    public CustomResponse<Void> deleteShBid(@RequestParam("userEmail") String userEmail,
-//                                            Principal principal,
+    public CustomResponse<Void> deleteShBid(Principal principal,
                                             @PathVariable("shId") Long shId, @PathVariable("shBidId") Long shBidId) {
-        return shBidService.deleteSecondHandBid(userEmail, shId, shBidId);
+        return shBidService.deleteSecondHandBid(principal.getName(), shId, shBidId);
     }
 
 }

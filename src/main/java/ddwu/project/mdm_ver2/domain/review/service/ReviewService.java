@@ -46,7 +46,7 @@ public class ReviewService {
 
             return CustomResponse.onSuccess(sortedReviewList);
         } catch(Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
 
@@ -144,7 +144,7 @@ public class ReviewService {
             List<Review> userReviewList = reviewRepository.findAllByUserEmail(userEmail);
             return CustomResponse.onSuccess(userReviewList);
         } catch (Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
 

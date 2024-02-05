@@ -35,7 +35,7 @@ public class SecondHandService {
             List<SecondHand> secondHandList = secondHandRepository.findAll();
             return CustomResponse.onSuccess(secondHandList);
         } catch (Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
 
@@ -63,7 +63,7 @@ public class SecondHandService {
             }
             return CustomResponse.onSuccess(sortedSecondHandList);
         } catch (Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
 
@@ -90,7 +90,7 @@ public class SecondHandService {
             SecondHandResponse response = setResponse(userEmail, shId);
             return CustomResponse.onSuccess(response);
         } catch (Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
 

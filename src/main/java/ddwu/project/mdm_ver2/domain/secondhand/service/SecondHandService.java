@@ -2,14 +2,13 @@ package ddwu.project.mdm_ver2.domain.secondhand.service;
 
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
 import ddwu.project.mdm_ver2.domain.favorite.repository.FavoriteRepository;
-import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandResponse;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
-import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandBidRepository;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
-import ddwu.project.mdm_ver2.global.exception.ResourceNotFoundException;
 import ddwu.project.mdm_ver2.domain.category.repository.CategoryRepository;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandRepository;
 import lombok.AllArgsConstructor;

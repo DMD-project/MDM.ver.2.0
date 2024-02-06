@@ -1,4 +1,4 @@
-package ddwu.project.mdm_ver2.domain.secondhand.dto;
+package ddwu.project.mdm_ver2.domain.secondhand.dto.shBid;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

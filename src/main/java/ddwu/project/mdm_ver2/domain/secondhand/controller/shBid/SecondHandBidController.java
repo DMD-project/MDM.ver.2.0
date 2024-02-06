@@ -1,7 +1,7 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller.shBid;
 
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
-import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandBidRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandBidService;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
@@ -34,14 +34,14 @@ public class SecondHandBidController implements SecondHandBidApi{
     @PostMapping("/update/{shBidId}")
     public CustomResponse<SecondHandBid> updateShBid(Principal principal,
                                                      @PathVariable("shBidId") Long shBidId, @RequestBody SecondHandBidRequest request) {
-        return shBidService.updateShBid(principal.getName(), shBidId, request);
+        return shBidService.updateShBid(principal, shBidId, request);
     }
 
     /* 제안 삭제 */
     @DeleteMapping("/delete/{shBidId}")
     public CustomResponse<Void> deleteShBid(Principal principal,
                                             @PathVariable("shId") Long shId, @PathVariable("shBidId") Long shBidId) {
-        return shBidService.deleteSecondHandBid(principal.getName(), shId, shBidId);
+        return shBidService.deleteSecondHandBid(principal, shId, shBidId);
     }
 
 }

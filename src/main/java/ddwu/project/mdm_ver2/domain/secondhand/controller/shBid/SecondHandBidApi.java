@@ -1,4 +1,4 @@
-package ddwu.project.mdm_ver2.domain.secondhand.controller;
+package ddwu.project.mdm_ver2.domain.secondhand.controller.shBid;
 
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandBidRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;

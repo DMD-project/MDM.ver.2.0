@@ -29,28 +29,27 @@ public class ViewKakaoController {
         return "login"; //Figma(login)
     }
 
-
-    @GetMapping("/kakao")
-    public String login(@RequestParam String code, Model model) {
-
-        log.info("code: {}", code);
-
-        String access_token = ks.getAccessToken(code);
-        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
-
-        UserResponse userResponse = ks.checkKakaoUser(userInfo);
-
-        String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
-        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
-
-        System.out.println("jwt_access: " +jwt_access);
-
-        ks.addUser(userResponse);
-        model.addAttribute("jwt_access", jwt_access);
-//        model.addAttribute("jwt_refresh", jwt_refresh);
-        return "redirect:/";
-
-    }
+//    @GetMapping("/kakao")
+//    public String login(@RequestParam String code, Model model) {
+//
+//        log.info("code: {}", code);
+//
+//        String access_token = ks.getAccessToken(code);
+//        HashMap<String, Object> userInfo = ks.getKakaoUserInfo(access_token);
+//
+//        UserResponse userResponse = ks.checkKakaoUser(userInfo);
+//
+//        String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
+//        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
+//
+//        System.out.println("jwt_access: " +jwt_access);
+//
+//        ks.addUser(userResponse);
+//        model.addAttribute("jwt_access", jwt_access);
+////        model.addAttribute("jwt_refresh", jwt_refresh);
+//        return "redirect:/";
+//
+//    }
 
     @GetMapping("/logout")
     public String logout() {

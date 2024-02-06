@@ -99,10 +99,6 @@ public class JwtProvider {
         return false;
     }
 
-//    public UsernamePasswordAuthenticationToken getAuthentication(String accessToken) {
-//        return new UsernamePasswordAuthenticationToken(getKakaoUserCode(accessToken), "", createAuthorityList(getRole(accessToken)));
-//    }
-
     /* Jwt Token에 담긴 유저 정보 DB에 검색,
     해당 유저의 권한 처리를 위해 Context에 담는 Authentication 객체를 반환 */
     public Authentication getAuthentication(String token){
@@ -127,6 +123,10 @@ public class JwtProvider {
                 .parseClaimsJws(accessToken)
                 .getBody()
                 .get("role", String.class);
+
+    }
+
+    public void logout() {
 
     }
 }

@@ -22,4 +22,5 @@ public class SecondHandResponse {
     private String content;
     private List<SecondHandBid> secondHandBidList;
     private Character favState;
+    private Character userState; /* 로그인 X, 작성자와 현재 사용자 다름 ('n') */
 }

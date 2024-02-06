@@ -1,4 +1,4 @@
-package ddwu.project.mdm_ver2.domain.secondhand.controller;
+package ddwu.project.mdm_ver2.domain.secondhand.controller.sh;
 
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandResponse;
@@ -56,7 +56,8 @@ public interface SecondHandApi {
             @ApiResponse(responseCode = "200", description = "상품 수정 성공"),
             @ApiResponse(responseCode = "500", description = "상품 수정 실패")
     })
-    public CustomResponse<SecondHand> updateSecondHand(@Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
+    public CustomResponse<SecondHand> updateSecondHand(@Parameter(description = "현재 사용자 객체") Principal principal,
+                                                       @Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
                                                        @Parameter(description = "중고 거래 상품 수정 내용") @RequestBody SecondHandRequest request);
 
 
@@ -73,5 +74,6 @@ public interface SecondHandApi {
             @ApiResponse(responseCode = "200", description = "상품 삭제 성공"),
             @ApiResponse(responseCode = "500", description = "상품 삭제 실패")
     })
-    public CustomResponse<Void> deleteSecondHand(@Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId);
+    public CustomResponse<Void> deleteSecondHand(@Parameter(description = "현재 사용자 객체") Principal principal,
+                                                 @Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId);
 }

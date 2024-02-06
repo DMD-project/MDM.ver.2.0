@@ -34,6 +34,25 @@ public class RestKakaoController implements UserApi {
     private final ReviewService reviewService;
     private final JwtProvider jwtProvider;
 
+    @GetMapping("/kakao")
+    public JwtToken login(@RequestParam String code, Model model) {
+
+        String access_token = userService.getAccessToken(code);
+
+        HashMap<String, Object> userInfo = userService.getKakaoUserInfo(access_token);
+
+        UserResponse userResponse = userService.checkKakaoUser(userInfo);
+
+        String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
+        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
+
+        System.out.println("jwt_access: " +jwt_access);
+
+        userService.addUser(userResponse);
+
+        return new JwtToken(jwt_access, jwt_refresh);
+    }
+
     @GetMapping("/kakao/ios")
     public JwtToken loginIos(@RequestParam String access_token) {
         HashMap<String, Object> userInfo = userService.getKakaoUserInfo(access_token);

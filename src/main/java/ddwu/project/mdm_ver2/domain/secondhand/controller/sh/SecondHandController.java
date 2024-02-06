@@ -1,6 +1,5 @@
-package ddwu.project.mdm_ver2.domain.secondhand.controller;
+package ddwu.project.mdm_ver2.domain.secondhand.controller.sh;
 
-import ddwu.project.mdm_ver2.domain.product.dto.ProductRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
@@ -33,9 +32,8 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 상세 정보 */
     @GetMapping("/{shId}")
-    public CustomResponse<SecondHandResponse> getSeconHand(Principal principal,
-                                                      @PathVariable("shId") Long shId) {
-        return secondHandService.getSecondHand(principal.getName(), shId);
+    public CustomResponse<SecondHandResponse> getSeconHand(Principal principal, @PathVariable("shId") Long shId) {
+        return secondHandService.getSecondHand(principal, shId);
     }
 
     /* 상품 등록 */
@@ -52,8 +50,8 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 수정 */
     @PutMapping("/update/{shId}")
-    public CustomResponse<SecondHand> updateSecondHand(@PathVariable("shId") Long shId, @RequestBody SecondHandRequest request) {
-        return secondHandService.updateSecondHand(shId, request);
+    public CustomResponse<SecondHand> updateSecondHand(Principal principal, @PathVariable("shId") Long shId, @RequestBody SecondHandRequest request) {
+        return secondHandService.updateSecondHand(principal, shId, request);
     }
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */
@@ -64,8 +62,8 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 삭제 */
     @DeleteMapping("/delete/{shId}")
-    public CustomResponse<Void> deleteSecondHand(@PathVariable("shId") Long shId) {
-        return secondHandService.deleteSecondHand(shId);
+    public CustomResponse<Void> deleteSecondHand(Principal principal, @PathVariable("shId") Long shId) {
+        return secondHandService.deleteSecondHand(principal, shId);
     }
 
 }

@@ -1,6 +1,6 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller.shBid;
 
-import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandBidRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,7 +1,7 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller.sh;
 
-import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandRequest;
-import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandResponse;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;

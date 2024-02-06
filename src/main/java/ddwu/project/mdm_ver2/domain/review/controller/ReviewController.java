@@ -3,7 +3,6 @@ package ddwu.project.mdm_ver2.domain.review.controller;
 import ddwu.project.mdm_ver2.domain.review.dto.ReviewRequest;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.review.service.ReviewService;
-import ddwu.project.mdm_ver2.domain.secondhand.dto.SecondHandBidRequest;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

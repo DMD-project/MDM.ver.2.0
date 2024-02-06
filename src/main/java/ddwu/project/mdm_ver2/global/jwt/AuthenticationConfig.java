@@ -40,7 +40,10 @@ public class AuthenticationConfig {
                                         new AntPathRequestMatcher("/secondHand/add"),
                                         new AntPathRequestMatcher("/favorite/{id}", "/favorite/{id}/**")).hasRole("USER")
                                 .requestMatchers(new AntPathRequestMatcher("/**"),
-                                        new AntPathRequestMatcher("/login")).permitAll());
+                                        new AntPathRequestMatcher("/login"),
+                                        new AntPathRequestMatcher("/swagger-ui/**"),
+                                        new AntPathRequestMatcher("/**/admin/**"
+                                        )).permitAll());
 //        httpSecurity
 //                .authorizeRequests()
 //                .requestMatchers(HttpMethod.GET, "/").authenticated();

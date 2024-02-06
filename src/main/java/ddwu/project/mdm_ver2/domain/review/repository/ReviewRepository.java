@@ -28,7 +28,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findAllByUserEmail(String userEmail);
 
-    @Query(value = "select avg(review_star) " +
+    @Query(value = "select round(avg(review_star), 1) " +
             "from review " +
             "where prod_id=:prodId " +
             "group by prod_id", nativeQuery = true)

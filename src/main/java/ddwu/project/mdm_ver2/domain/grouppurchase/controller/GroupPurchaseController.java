@@ -1,5 +1,6 @@
-package ddwu.project.mdm_ver2.domain.grouppurchase.controller.gp;
+package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 
+import ddwu.project.mdm_ver2.domain.grouppurchase.controller.GroupPurcahseApi;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;

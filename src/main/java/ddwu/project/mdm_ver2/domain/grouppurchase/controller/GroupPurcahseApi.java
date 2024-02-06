@@ -1,4 +1,4 @@
-package ddwu.project.mdm_ver2.domain.grouppurchase.controller.gp;
+package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
@@ -62,6 +62,6 @@ public interface GroupPurcahseApi {
     @Operation(summary = "공동구매 검색")
     @ApiResponse(responseCode = "200", description = "공동구매 검색 성공")
     @ApiResponse(responseCode = "500", description = "서버 오류")
-    CustomResponse<List<GroupPurchase>> searchGroupPurchase(@RequestParam(name = "keyword") String keyword);
+    CustomResponse<List<GroupPurchase>> searchGroupPurchase(@Parameter(description = "상품이름 검색", required = true) @RequestParam(name = "keyword") String keyword);
 
 }

@@ -7,7 +7,6 @@ import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.product.dto.ProductRequest;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.review.repository.ReviewRepository;
-import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.exception.ResourceNotFoundException;
 import ddwu.project.mdm_ver2.domain.category.repository.CategoryRepository;
@@ -31,7 +30,74 @@ public class ProductService {
     private final FavoriteRepository favoriteRepository;
     private final ReviewRepository reviewRepository;
 
-    //상품 조회
+    //  일반상품 등록
+    @Transactional
+    public CustomResponse<Product> addProduct(ProductRequest request) {
+        try {
+            Category category = categoryRepository.findByCateCode(request.getCategory());
+
+            if (category == null) {
+                throw new NotFoundException("카테고리를 찾을 수 없습니다: " + request.getCategory());
+            }
+
+            Product product = Product.builder()
+                    .category(category)
+                    .name(request.getName())
+                    .price(request.getPrice())
+                    .content(request.getContent())
+                    .imgUrl(request.getProdImgUrl())
+                    .build();
+
+            Product addProduct = productRepository.save(product);
+
+            return CustomResponse.onSuccess(addProduct);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
+    }
+
+    // 일반상품 수정
+    @Transactional
+    public CustomResponse<Product> updateProduct(Long prodId, ProductRequest updatedProduct) {
+        try {
+            Product product = productRepository.findById(prodId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "prodId", prodId));
+
+            if (product != null) {
+                Category category = categoryRepository.findByCateCode(updatedProduct.getCategory());
+
+                product.setCategory(category);
+                product.setName(updatedProduct.getName());
+                product.setPrice(updatedProduct.getPrice());
+                product.setContent(updatedProduct.getContent());
+                product.setImgUrl(updatedProduct.getProdImgUrl());
+
+                Product updateProduct = productRepository.save(product);
+
+                return CustomResponse.onSuccess(updateProduct);
+            }
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "상품을 찾을 수 없습니다.");
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
+    }
+
+
+    //  일반상품 삭제
+    @Transactional
+    public CustomResponse<Void> deleteProduct(Long prodId) {
+        try {
+            Product product = productRepository.findById(prodId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Product", "prodId", prodId));
+
+            productRepository.delete(product);
+            return CustomResponse.onSuccess(null);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
+    }
+
+    //  일반상품 조회
     @Transactional
     public CustomResponse<List<Product>> findAllProduct() {
         try {
@@ -42,7 +108,7 @@ public class ProductService {
         }
     }
 
-    // 상품 정렬
+    // 일반상품 정렬
     @Transactional
     public CustomResponse<List<Product>> SortProduct(String sort, String cateCode) {
         try {
@@ -72,7 +138,7 @@ public class ProductService {
     }
 
 
-    // 카테고리 분류 후 상품 정렬
+    // 카테고리 분류 후 일반상품 정렬
     @Transactional
     public List<Product> sortProductsByCategory(String sort, String cateCode) {
         List<Product> productList;
@@ -100,85 +166,18 @@ public class ProductService {
         return StringUtils.isNotBlank(category) ? categoryList : defaultList;
     }
 
-    //상품 개별 조회
+    //일반상품 개별 조회
     @Transactional
     public CustomResponse<ProductResponse> getProduct(String userEmail, Long prodId) {
         try {
-            ProductResponse response = setResponse(userEmail, prodId) ;
+            ProductResponse response = setResponse(userEmail, prodId);
             return CustomResponse.onSuccess(response);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-    //상품 추가
-    @Transactional
-    public CustomResponse<Product> addProduct(ProductRequest request) {
-        try {
-            Category category = categoryRepository.findByCateCode(request.getCategory());
-
-            if (category == null) {
-                throw new NotFoundException("카테고리를 찾을 수 없습니다: " + request.getCategory());
-            }
-
-            Product product = Product.builder()
-                    .category(category)
-                    .name(request.getName())
-                    .price(request.getPrice())
-                    .content(request.getContent())
-                    .imgUrl(request.getProdImgUrl())
-                    .build();
-
-            Product addProduct = productRepository.save(product);
-
-            return CustomResponse.onSuccess(addProduct);
-        } catch (Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-        }
-    }
-
-    //상품 수정
-    @Transactional
-    public CustomResponse<Product> updateProduct(Long prodId, ProductRequest updatedProduct) {
-        try {
-            Product product = productRepository.findById(prodId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Product", "prodId", prodId));
-
-            if (product != null) {
-                Category category = categoryRepository.findByCateCode(updatedProduct.getCategory());
-
-                product.setCategory(category);
-                product.setName(updatedProduct.getName());
-                product.setPrice(updatedProduct.getPrice());
-                product.setContent(updatedProduct.getContent());
-                product.setImgUrl(updatedProduct.getProdImgUrl());
-
-                Product updateProduct = productRepository.save(product);
-
-                return CustomResponse.onSuccess(updateProduct);
-            }
-            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "상품을 찾을 수 없습니다.");
-        } catch (Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-        }
-    }
-
-
-    //상품 삭제
-    @Transactional
-    public CustomResponse<Void> deleteProduct(Long prodId) {
-        try {
-            Product product = productRepository.findById(prodId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Product", "prodId", prodId));
-
-            productRepository.delete(product);
-            return CustomResponse.onSuccess(null);
-        } catch (Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-        }
-    }
-
-    //상품 개수 - 전체
+    //일반상품 개수 - 전체
     public CustomResponse<Long> getProductCount() {
         try {
             long count = productRepository.count();
@@ -188,7 +187,7 @@ public class ProductService {
         }
     }
 
-    //상품 개수 - 카테고리 분류
+    //일반상품 개수 - 카테고리 분류
     @Transactional
     public CustomResponse<Long> getProductCountByCategory(String cateCode) {
         try {
@@ -199,7 +198,7 @@ public class ProductService {
         }
     }
 
-    // 상품 검색
+    // 일반상품 검색
     @Transactional
     public CustomResponse<List<Product>> searchProduct(String keyword) {
         try {
@@ -221,7 +220,7 @@ public class ProductService {
         boolean exist = favoriteRepository.existsByUserEmailAndProductId(userEmail, prodId);
         Character favState;
 
-        if(exist) {
+        if (exist) {
             favState = 'y';
         } else {
             favState = 'n';
@@ -243,4 +242,5 @@ public class ProductService {
 
         return response;
     }
+
 }

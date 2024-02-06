@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
     Optional<Product> findById(Long prodId);
 
     List<Product> findAllByOrderByPriceAsc(); // 낮은 가격순
@@ -21,9 +20,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByCategoryCateCodeOrderByIdDesc(String cateCode);
     List<Product> findAllByCategoryCateCode(String cateCode);
 
-
     long countByCategoryCateCode(String cateCode); //상품 개수 - 카테고리 분류
-
     List<Product> findByNameContainingIgnoreCase(String keyword); // 상품 이름으로 검색
 
 }

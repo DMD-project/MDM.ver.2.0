@@ -32,8 +32,8 @@ public class ProductController implements ProductApi { //상품은 관리자만 
 
     //상품 개별 조회
     @GetMapping("/{prodId}")
-    public CustomResponse<ProductResponse> getProduct(@RequestParam(name = "userEmail", required = true) Principal principal, @PathVariable("prodId") Long prodId) {
-        return productService.getProduct(principal.getName(), prodId);
+    public CustomResponse<ProductResponse> getProduct(Principal principal, @PathVariable("prodId") Long prodId) {
+        return productService.getProduct(principal, prodId);
     }
 
     // 상품 개수 조회

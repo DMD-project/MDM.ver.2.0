@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -168,9 +169,9 @@ public class ProductService {
 
     //일반상품 개별 조회
     @Transactional
-    public CustomResponse<ProductResponse> getProduct(String userEmail, Long prodId) {
+    public CustomResponse<ProductResponse> getProduct(Principal principal, Long prodId) {
         try {
-            ProductResponse response = setResponse(userEmail, prodId);
+            ProductResponse response = setResponse(principal, prodId);
             return CustomResponse.onSuccess(response);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -213,17 +214,22 @@ public class ProductService {
         }
     }
 
-    public ProductResponse setResponse(String userEmail, Long prodId) {
+    public ProductResponse setResponse(Principal principal, Long prodId) {
         Product product = productRepository.findById(prodId)
                 .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
 
-        boolean exist = favoriteRepository.existsByUserEmailAndProductId(userEmail, prodId);
         Character favState;
 
-        if (exist) {
-            favState = 'y';
-        } else {
+        if(principal == null) {
             favState = 'n';
+        } else {
+            boolean exist = favoriteRepository.existsByUserEmailAndProductId(principal.getName(), prodId);
+
+            if (exist) {
+                favState = 'y';
+            } else {
+                favState = 'n';
+            }
         }
 
         List<Review> reviewList = reviewRepository.findAllByProductId(prodId);

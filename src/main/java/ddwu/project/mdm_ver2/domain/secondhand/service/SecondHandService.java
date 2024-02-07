@@ -93,32 +93,7 @@ public class SecondHandService {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-            SecondHandResponse response;
-
-            if(principal == null) {
-                response = setResponse(shId, 'n', 'n');
-
-            } else {
-                String userEmail = principal.getName();
-
-                User user = userRepository.findByEmail(userEmail)
-                        .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-
-                boolean exist = favoriteRepository.existsByUserEmailAndSecondHandId(userEmail, shId);
-                Character favState;
-
-                if(exist) {
-                    favState = 'y';
-                } else {
-                    favState = 'n';
-                }
-
-                if(user.getId() != (secondHand.getUserId())) {
-                    response = setResponse(shId, favState, 'n');
-                } else {
-                    response = setResponse(shId, favState, 'y');
-                }
-            }
+            SecondHandResponse response = setResponse(principal, shId);
 
             return CustomResponse.onSuccess(response);
         } catch (Exception e) {
@@ -184,9 +159,7 @@ public class SecondHandService {
             if(principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 수정할 수 없습니다.");
             } else {
-                String userEmail = principal.getName();
-
-                User user = userRepository.findByEmail(userEmail)
+                User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
                 if(user.getId() == request.getUserId()) {
@@ -220,9 +193,7 @@ public class SecondHandService {
             if(principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 삭제할 수 없습니다.");
             } else {
-                String userEmail = principal.getName();
-
-                User user = userRepository.findByEmail(userEmail)
+                User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
                 if(user.getId() == secondHand.getUserId()) {
@@ -237,9 +208,34 @@ public class SecondHandService {
         }
     }
 
-    public SecondHandResponse setResponse(Long shId, Character favState, Character userState) {
+    public SecondHandResponse setResponse(Principal principal, Long shId) {
         SecondHand secondHand = secondHandRepository.findById(shId)
                 .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+
+        Character favState;
+        Character userState;
+
+        if(principal == null) {
+            favState = 'n';
+            userState = 'n';
+        } else {
+            String userEmail = principal.getName();
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+            boolean exist = favoriteRepository.existsByUserEmailAndSecondHandId(userEmail, shId);
+            if(exist) {
+                favState = 'y';
+            } else {
+                favState = 'n';
+            }
+
+            if(user.getId() != (secondHand.getUserId())) {
+                userState = 'n';
+            } else {
+                userState = 'y';
+            }
+        }
 
         SecondHandResponse response =
                 new SecondHandResponse(secondHand.getUserId(),

@@ -65,9 +65,6 @@ public class RestKakaoController implements UserApi {
 
     @GetMapping("/kakao/logout")
     public CustomResponse<Void> logout(HttpServletRequest request) {
-//        HttpServletRequest request
-        log.info("logout controller");
-//        System.out.println(access_token);request.getHeader("Authorization")
         return userService.logout(request.getHeader("Authorization"));
     }
 

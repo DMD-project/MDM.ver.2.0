@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.global.jwt;
 
 import ddwu.project.mdm_ver2.global.jwt.oauth.CustomUserDetails;
 import ddwu.project.mdm_ver2.global.jwt.oauth.CustomUserDetailsService;
+import ddwu.project.mdm_ver2.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +29,7 @@ public class JwtProvider {
     private String SECRET_KEY;
 
     private final CustomUserDetailsService userDetailsService;
+    private final RedisUtil redisUtil;
 
     private static final Long accessTokenValidTime = Duration.ofMinutes(30).toMillis(); // 만료시간 30분
     private static final Long refreshTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 2주
@@ -38,7 +40,10 @@ public class JwtProvider {
     }
 
     public String createRefreshToken(Long userID) {
-        return createToken(userID, "refresh", refreshTokenValidTime);
+        String refresh_token = createToken(userID, "refresh", refreshTokenValidTime);
+        redisUtil.setDataExpire(String.valueOf(userID), refresh_token, refreshTokenValidTime);
+
+        return refresh_token;
     }
 
     public String createToken(Long userId, String type, Long tokenValidTime) {
@@ -126,7 +131,14 @@ public class JwtProvider {
 
     }
 
-    public void logout() {
-
+    /* 남은 유효 시간 확인 */
+    public Long getAccessTokenValidTime(String accessToken) {
+        Date expiration = Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 }

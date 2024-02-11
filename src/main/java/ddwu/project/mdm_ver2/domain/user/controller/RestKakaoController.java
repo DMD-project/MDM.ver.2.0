@@ -5,11 +5,13 @@ import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
 import ddwu.project.mdm_ver2.domain.favorite.service.FavoriteService;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.review.service.ReviewService;
+import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtToken;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtProvider;
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +30,7 @@ public class RestKakaoController implements UserApi {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
     private final UserService userService;
-    private final FavoriteService favoriteService;
-    private final ReviewService reviewService;
-    private final JwtProvider jwtProvider;
 
     @GetMapping("/kakao")
     public JwtToken login(@RequestParam String code, Model model) {
@@ -43,14 +41,11 @@ public class RestKakaoController implements UserApi {
 
         UserResponse userResponse = userService.checkKakaoUser(userInfo);
 
-        String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
-        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
-
-        System.out.println("jwt_access: " +jwt_access);
+        JwtToken jwtToken = userService.setToken(userResponse);
 
         userService.addUser(userResponse);
 
-        return new JwtToken(jwt_access, jwt_refresh);
+        return jwtToken;
     }
 
     @GetMapping("/kakao/ios")
@@ -58,37 +53,26 @@ public class RestKakaoController implements UserApi {
         HashMap<String, Object> userInfo = userService.getKakaoUserInfo(access_token);
 
         UserResponse userResponse = userService.checkKakaoUser(userInfo);
-
-        String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
-        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
-
-        System.out.println("jwt_access: " +jwt_access);
-
         userService.addUser(userResponse);
 
-        return new JwtToken(jwt_access, jwt_refresh);
+        return userService.setToken(userResponse);
     }
 
-    @GetMapping("/kakaoJoin/check/{userNickname}") // 중복확인 버튼 클릭
-    public boolean checkNickname(@PathVariable(value="userNickname", required=true) String nickname, Model model) {
-        log.info("nickname: {}", nickname);
-        log.info("nickname 중복 여부: {}", userService.checkNicknameDup(nickname)); // 중복 -> true, 중복X -> false
-        model.addAttribute("nicknameDup", userService.checkNicknameDup(nickname));
-        return userService.checkNicknameDup(nickname);
+    @PostMapping("/reissue")
+    public CustomResponse<JwtToken> reissue(HttpServletRequest request) {
+        return userService.reissue(request);
     }
 
-    @GetMapping("/mypage/favorite")
-    public CustomResponse<List<Favorite>> getUserFavorite(Principal principal) {
-        return favoriteService.getUserFavoriteList(principal.getName());
+    @GetMapping("/kakao/logout")
+    public CustomResponse<Void> logout(HttpServletRequest request) {
+//        HttpServletRequest request
+        log.info("logout controller");
+//        System.out.println(access_token);request.getHeader("Authorization")
+        return userService.logout(request.getHeader("Authorization"));
     }
 
-    @GetMapping("/mypage/review")
-    public CustomResponse<List<Review>> getUserReview(Principal principal) {
-        return reviewService.getUserReviewList(principal.getName());
-    }
-
-    @DeleteMapping("/kakao")
-    public void deleteUser(Principal principal) {
-        userService.deleteUser(principal.getName());
-    }
+//    @DeleteMapping("/kakao")
+//    public void deleteUser(Principal principal) {
+//        userService.deleteUser(principal.getName());
+//    }
 }

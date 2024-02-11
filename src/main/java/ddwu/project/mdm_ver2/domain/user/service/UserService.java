@@ -258,15 +258,6 @@ public class UserService {
             int responseCode = conn.getResponseCode();
             System.out.println("response code: " + responseCode);
 
-//            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//            String line = "";
-//            String result = "";
-//
-//            while ((line = br.readLine()) != null) {
-//                result += line;
-//            }
-//            System.out.println("response body: " + result);
-
             if(redisUtil.getData(String.valueOf(userId)) != null) { // Redis에 있는 Refresh Token 삭제
                 redisUtil.deleteData(String.valueOf(userId));
             }

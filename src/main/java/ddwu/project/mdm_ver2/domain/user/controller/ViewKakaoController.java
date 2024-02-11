@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.domain.user.controller;
 
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
+import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtProvider;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -51,10 +52,10 @@ public class ViewKakaoController {
 //
 //    }
 
-    @GetMapping("/logout")
-    public String logout() {
-//       ks.logout(session.getAttribute("access_token").toString());
-//       session.invalidate();
-        return "redirect:/";
-    }
+//    @GetMapping("/logout")
+//    public String logout() {
+////       ks.logout(session.getAttribute("access_token").toString());
+////       session.invalidate();
+//        return "redirect:/";
+//    }
 }

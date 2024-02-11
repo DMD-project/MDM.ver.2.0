@@ -7,29 +7,57 @@ import ddwu.project.mdm_ver2.domain.user.entity.Role;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
+import ddwu.project.mdm_ver2.global.exception.CustomResponse;
+import ddwu.project.mdm_ver2.global.jwt.JwtProvider;
+import ddwu.project.mdm_ver2.global.jwt.JwtToken;
+import ddwu.project.mdm_ver2.global.redis.RedisUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.Principal;
 import java.util.HashMap;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
-    private UserRepository userRepository;
+    @Value("${kakao.rest-api-key}")
+    private String restApiKey;
+
+    @Value("${kakao.request-url.token}")
+    private String TokenReqUrl;
+
+    @Value("${kakao.login-uri}")
+    private String loginUri;
+
+    @Value("${kakao.request-url.user-info}")
+    private String UserInfoReqUrl;
+
+    @Value("${kakao.request-url.logout}")
+    private String logoutReqUrl;
+
+    @Value("${kakao.logout-uri}")
+    private String logoutUri;
+
+    private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
+    private final RedisUtil redisUtil;
 
     public String getAccessToken(String code) {
 
         String access_token = "";
         String refresh_token = "";
-        String request_url = "https://kauth.kakao.com/oauth/token";
 
         try {
-            URL url = new URL(request_url);
+            URL url = new URL(TokenReqUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("POST");
@@ -40,8 +68,8 @@ public class UserService {
             StringBuilder sb = new StringBuilder();
 
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=bbb0d5e603062dd02da05a9fe89b0c1e"); // REST_API_KEY
-            sb.append("&redirect_uri=http://localhost:8080/kakao"); // redirect uri
+            sb.append("&client_id=" +restApiKey); // REST_API_KEY
+            sb.append("&redirect_uri=" +loginUri); // redirect uri
             sb.append("&code=" +code);
 
             bw.write(sb.toString());
@@ -69,9 +97,6 @@ public class UserService {
             access_token = element.getAsJsonObject().get("access_token").getAsString();
             refresh_token = element.getAsJsonObject().get("refresh_token").getAsString();
 
-//            System.out.println("access token: " +access_token);
-//            System.out.println("refresh token: " +refresh_token);
-
             br.close();
             bw.close();
 
@@ -86,10 +111,8 @@ public class UserService {
 
         HashMap<String, Object> userInfo = new HashMap<>();
 
-        String request_url = "https://kapi.kakao.com/v2/user/me";
-
         try {
-            URL url = new URL(request_url);
+            URL url = new URL(UserInfoReqUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("POST");
@@ -125,10 +148,6 @@ public class UserService {
             userInfo.put("userEmail", userEmail);
             userInfo.put("userProfileImg", userProfileImg);
 
-//            System.out.println("userId: " + userId);
-//            System.out.println("userEmail: " + userEmail);
-//            System.out.println("userProfileImg: " + userProfileImg);
-
             br.close();
 
         } catch (IOException e) {
@@ -155,6 +174,15 @@ public class UserService {
         return userResponse;
     }
 
+    public JwtToken setToken(UserResponse userResponse) {
+        String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
+        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
+
+        System.out.println("jwt_access: " +jwt_access);
+
+        return new JwtToken(jwt_access, jwt_refresh);
+    }
+
     public boolean existUser(String userEmail) {
         return userRepository.existsByEmail(userEmail);
     }
@@ -164,15 +192,6 @@ public class UserService {
 //        3277908747
         return defaultNickname;
     }
-
-    public boolean checkNicknameDup(String nickname) {
-        return userRepository.existsByNickname(nickname);
-    }
-
-//    public UserDTO getUser(String kakaoEmail) {
-//        User user = userRepository.findByKakaoEmail(kakaoEmail);
-//
-//    }
 
     public User getUser(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
@@ -184,37 +203,87 @@ public class UserService {
         return userRepository.saveAndFlush(userResponse.toEntity());
     }
 
-    public void logout(String access_token) {
-        String request_url = "https://kapi.kakao.com/v1/user/logout";
+    public CustomResponse<JwtToken> reissue(HttpServletRequest request) {
+        String refresh_token = request.getHeader("Authorization").split(" ")[1];
 
+        if(!jwtProvider.isValidate(refresh_token)) {
+            return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "유효하지 않은 Refresh Token입니다"); // 재로그인 필요
+        }
+
+        Long userId = jwtProvider.getUserId(refresh_token);
+
+        if(redisUtil.getData(String.valueOf(userId)) == null) { // 로그아웃되어 Redis에 존재 X
+            return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "잘못된 요청입니다.");
+        }
+
+        if(!refresh_token.equals(redisUtil.getData(String.valueOf(userId)))) {
+            return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "Refresh Token 정보가 일치하지 않습니다");
+        }
+
+        String new_access_token = jwtProvider.createAccessToken(userId);
+
+        return CustomResponse.onSuccess(new JwtToken(new_access_token, refresh_token));
+    }
+
+    public CustomResponse<Void> logout(String header) {
+
+        String access_token = header.split(" ")[1];
+        System.out.println("Access Token for Logout: " +access_token);
+
+        if(!jwtProvider.isValidate(access_token)) {
+            return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "유효하지 않은 Access Token입니다");
+        }
+
+        Long userId = jwtProvider.getUserId(access_token);
+
+//        https://kauth.kakao.com/oauth/logout?client_id=${YOUR_REST_API_KEY}&logout_redirect_uri=${YOUR_LOGOUT_REDIRECT_URI}
         try {
-            URL url = new URL(request_url);
+            URL url = new URL(logoutReqUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestMethod("POST");
+            conn.setRequestMethod("GET");
             conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + access_token); // request header setting
+////            conn.setRequestProperty("Authorization", "Bearer " + access_token); // request header setting
+//
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("client_id=" +restApiKey); // REST_API_KEY
+            sb.append("&logout_redirect_uri=" +logoutUri); // redirect uri
+
+            bw.write(sb.toString());
+            bw.flush();
 
             // success: code = 200
             int responseCode = conn.getResponseCode();
             System.out.println("response code: " + responseCode);
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-            String result = "";
+//            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//            String line = "";
+//            String result = "";
+//
+//            while ((line = br.readLine()) != null) {
+//                result += line;
+//            }
+//            System.out.println("response body: " + result);
 
-            while ((line = br.readLine()) != null) {
-                result += line;
+            if(redisUtil.getData(String.valueOf(userId)) != null) { // Redis에 있는 Refresh Token 삭제
+                redisUtil.deleteData(String.valueOf(userId));
             }
 
-            System.out.println("response body: " + result);
+            Long expiration = jwtProvider.getAccessTokenValidTime(access_token);
+            redisUtil.setDataExpire(access_token, "logout", expiration); // 해당 Access Token BlackList 등록
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("로그아웃 성공");
+            return CustomResponse.onSuccess(null);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), "로그아웃에 실패하였습니다.");
         }
     }
 
-    public void deleteUser(String userEmail) {
+    public void deleteUser(String userEmail)
+
+    {
         userRepository.deleteByEmail(userEmail);
     }
 }

@@ -1,6 +1,8 @@
 package ddwu.project.mdm_ver2.global.jwt;
 
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
+import ddwu.project.mdm_ver2.global.redis.RedisUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,15 +15,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @Configuration
+@AllArgsConstructor
 public class AuthenticationConfig {
 
     private UserService kakaoService;
 
     private JwtProvider jwtProvider;
-
-    public AuthenticationConfig(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
+    private RedisUtil redisUtil;
 
     @Bean
     public DefaultSecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -57,7 +57,7 @@ public class AuthenticationConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));// jwt 사용하는 경우 사용
 
         httpSecurity
-                .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtFilter(jwtProvider, redisUtil), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
 

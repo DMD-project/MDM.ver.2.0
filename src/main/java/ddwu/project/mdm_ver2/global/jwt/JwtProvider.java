@@ -35,20 +35,21 @@ public class JwtProvider {
     private static final Long refreshTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 2주
 
     /* access, refresh token 생성 */
-    public String createAccessToken(Long userID) {
-        return createToken(userID, "access", accessTokenValidTime);
+    public String createAccessToken(Long userId, String kakaoAccessToken) {
+        return createToken(userId, kakaoAccessToken, "access", accessTokenValidTime);
     }
 
-    public String createRefreshToken(Long userID) {
-        String refresh_token = createToken(userID, "refresh", refreshTokenValidTime);
-        redisUtil.setDataExpire(String.valueOf(userID), refresh_token, refreshTokenValidTime);
+    public String createRefreshToken(Long userId, String kakaoAccessToken) {
+        String refresh_token = createToken(userId, kakaoAccessToken, "refresh", refreshTokenValidTime);
+        redisUtil.setDataExpire(String.valueOf(userId), refresh_token, refreshTokenValidTime);
 
         return refresh_token;
     }
 
-    public String createToken(Long userId, String type, Long tokenValidTime) {
+    public String createToken(Long userId, String kakaoAccessToken, String type, Long tokenValidTime) {
         Claims claims = Jwts.claims();
         claims.put("userId", userId);
+        claims.put("kakaoAccessToken", kakaoAccessToken);
 
         log.info("create token: {}", type);
         return Jwts.builder()
@@ -120,6 +121,14 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("userId", Long.class);
+    }
+
+    public String getKakaoAccessToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("kakaoAccessToken", String.class);
     }
 
     private String getRole(String accessToken) {

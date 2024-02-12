@@ -41,7 +41,7 @@ public class RestKakaoController implements UserApi {
 
         UserResponse userResponse = userService.checkKakaoUser(userInfo);
 
-        JwtToken jwtToken = userService.setToken(userResponse);
+        JwtToken jwtToken = userService.setToken(userResponse, access_token);
 
         userService.addUser(userResponse);
 
@@ -55,7 +55,7 @@ public class RestKakaoController implements UserApi {
         UserResponse userResponse = userService.checkKakaoUser(userInfo);
         userService.addUser(userResponse);
 
-        return userService.setToken(userResponse);
+        return userService.setToken(userResponse, access_token);
     }
 
     @PostMapping("/reissue")
@@ -68,7 +68,7 @@ public class RestKakaoController implements UserApi {
         return userService.logout(request);
     }
 
-    @DeleteMapping("/kakao/drawal")
+    @DeleteMapping("/kakao/withdrawal")
     public CustomResponse<Void> withdrawal(HttpServletRequest request) {
         return userService.deleteUser(request);
     }

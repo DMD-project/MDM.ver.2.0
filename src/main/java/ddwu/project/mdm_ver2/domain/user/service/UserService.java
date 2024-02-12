@@ -89,6 +89,7 @@ public class UserService {
             access_token = element.getAsJsonObject().get("access_token").getAsString();
             refresh_token = element.getAsJsonObject().get("refresh_token").getAsString();
 
+            System.out.println("kakao access token: " +access_token);
             br.close();
             bw.close();
 
@@ -167,9 +168,9 @@ public class UserService {
         return userResponse;
     }
 
-    public JwtToken setToken(UserResponse userResponse) {
-        String jwt_access = jwtProvider.createAccessToken(userResponse.getId());
-        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId());
+    public JwtToken setToken(UserResponse userResponse, String kakao_access_token) {
+        String jwt_access = jwtProvider.createAccessToken(userResponse.getId(), kakao_access_token);
+        String jwt_refresh = jwtProvider.createRefreshToken(userResponse.getId(), kakao_access_token);
 
         System.out.println("jwt_access: " +jwt_access);
 
@@ -204,6 +205,7 @@ public class UserService {
         }
 
         Long userId = jwtProvider.getUserId(refresh_token);
+        String kakao_access_token = jwtProvider.getKakaoAccessToken(refresh_token);
 
         if(redisUtil.getData(String.valueOf(userId)) == null) { // 로그아웃되어 Redis에 존재 X
             return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "잘못된 요청입니다.");
@@ -213,7 +215,7 @@ public class UserService {
             return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "Refresh Token 정보가 일치하지 않습니다");
         }
 
-        String new_access_token = jwtProvider.createAccessToken(userId);
+        String new_access_token = jwtProvider.createAccessToken(userId, kakao_access_token);
 
         return CustomResponse.onSuccess(new JwtToken(new_access_token, refresh_token));
     }
@@ -240,8 +242,8 @@ public class UserService {
             int responseCode = conn.getResponseCode();
             System.out.println("response code: " + responseCode);
 
-            if(redisUtil.getData(String.valueOf(userId)) != null) { // Redis에 있는 Refresh Token 삭제
-                redisUtil.deleteData(String.valueOf(userId));
+            if(redisUtil.getData(String.valueOf(userId)) != null) {
+                redisUtil.deleteData(String.valueOf(userId)); // Redis에 있는 Refresh Token 삭제
             }
 
             Long expiration = jwtProvider.getAccessTokenValidTime(access_token);
@@ -258,6 +260,8 @@ public class UserService {
         String access_token = request.getHeader("Authorization").split(" ")[1];
         System.out.println(access_token);
 
+        String kakao_access_token = jwtProvider.getKakaoAccessToken(access_token);
+
         String request_url = "https://kapi.kakao.com/v1/user/unlink";
         try {
             URL url = new URL(request_url);
@@ -265,7 +269,7 @@ public class UserService {
 
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
-            conn.setRequestProperty("Authorization", "Bearer " + access_token); // request header setting
+            conn.setRequestProperty("Authorization", "Bearer " + kakao_access_token); // request header setting
 
             // success: code = 200
             int responseCode = conn.getResponseCode();

@@ -15,13 +15,13 @@ public class TokenProviderTest{
 
     @Test
     public void 토큰_생성하기() {
-        String token = jwtProvider.createAccessToken(3277908747L);
+        String token = jwtProvider.createAccessToken(3277908747L, "test");
         System.out.println(">>>>>>>>>>>>>> token = " + token);
     }
 
     @Test
     public void 토큰_검증하기() {
-        String token = jwtProvider.createAccessToken(3277908747L);
+        String token = jwtProvider.createAccessToken(3277908747L, "test");
         System.out.println(jwtProvider.isValidate(token));
 
     }

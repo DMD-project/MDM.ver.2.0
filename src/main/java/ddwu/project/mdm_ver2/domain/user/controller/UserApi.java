@@ -11,10 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -45,4 +42,12 @@ public interface UserApi {
     })
     @GetMapping("/kakao/logout")
     public CustomResponse<Void> logout(@Parameter(description = "Request 정보") HttpServletRequest request);
+
+    @Operation(summary = "회원 탈퇴/카카오 연결 끊기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "탈퇴 성공"),
+            @ApiResponse(responseCode = "500", description = "탈퇴 실패")
+    })
+    @DeleteMapping("/kakao/withdrawal")
+    public CustomResponse<Void> withdrawal(@Parameter(description = "Request 정보") HttpServletRequest request);
 }

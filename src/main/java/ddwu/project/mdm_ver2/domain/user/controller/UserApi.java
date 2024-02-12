@@ -40,7 +40,7 @@ public interface UserApi {
 
     @Operation(summary = "카카오 계정과 함께 로그아웃")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "302", description = "로그아웃 성공"),
             @ApiResponse(responseCode = "500", description = "로그아웃 실패")
     })
     @GetMapping("/kakao/logout")

@@ -65,11 +65,11 @@ public class RestKakaoController implements UserApi {
 
     @GetMapping("/kakao/logout")
     public CustomResponse<Void> logout(HttpServletRequest request) {
-        return userService.logout(request.getHeader("Authorization"));
+        return userService.logout(request);
     }
 
-//    @DeleteMapping("/kakao")
-//    public void deleteUser(Principal principal) {
-//        userService.deleteUser(principal.getName());
-//    }
+    @DeleteMapping("/kakao/drawal")
+    public CustomResponse<Void> withdrawal(HttpServletRequest request) {
+        return userService.deleteUser(request);
+    }
 }

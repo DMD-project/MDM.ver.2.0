@@ -32,17 +32,8 @@ public class UserService {
     @Value("${kakao.rest-api-key}")
     private String restApiKey;
 
-    @Value("${kakao.request-url.token}")
-    private String TokenReqUrl;
-
     @Value("${kakao.login-uri}")
     private String loginUri;
-
-    @Value("${kakao.request-url.user-info}")
-    private String UserInfoReqUrl;
-
-    @Value("${kakao.request-url.logout}")
-    private String logoutReqUrl;
 
     @Value("${kakao.logout-uri}")
     private String logoutUri;
@@ -56,8 +47,9 @@ public class UserService {
         String access_token = "";
         String refresh_token = "";
 
+        String request_url = "https://kauth.kakao.com/oauth/token";
         try {
-            URL url = new URL(TokenReqUrl);
+            URL url = new URL(request_url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("POST");
@@ -111,8 +103,9 @@ public class UserService {
 
         HashMap<String, Object> userInfo = new HashMap<>();
 
+        String request_url = "https://kapi.kakao.com/v2/user/me";
         try {
-            URL url = new URL(UserInfoReqUrl);
+            URL url = new URL(request_url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("POST");
@@ -225,9 +218,8 @@ public class UserService {
         return CustomResponse.onSuccess(new JwtToken(new_access_token, refresh_token));
     }
 
-    public CustomResponse<Void> logout(String header) {
-
-        String access_token = header.split(" ")[1];
+    public CustomResponse<Void> logout(HttpServletRequest request) {
+        String access_token = request.getHeader("Authorization").split(" ")[1];
         System.out.println("Access Token for Logout: " +access_token);
 
         if(!jwtProvider.isValidate(access_token)) {
@@ -236,25 +228,15 @@ public class UserService {
 
         Long userId = jwtProvider.getUserId(access_token);
 
-//        https://kauth.kakao.com/oauth/logout?client_id=${YOUR_REST_API_KEY}&logout_redirect_uri=${YOUR_LOGOUT_REDIRECT_URI}
+        String request_url = "https://kauth.kakao.com/oauth/logout?client_id="+restApiKey+"&logout_redirect_uri="+logoutUri;
         try {
-            URL url = new URL(logoutReqUrl);
+            URL url = new URL(request_url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             conn.setRequestMethod("GET");
             conn.setDoOutput(true);
-////            conn.setRequestProperty("Authorization", "Bearer " + access_token); // request header setting
-//
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-            StringBuilder sb = new StringBuilder();
 
-            sb.append("client_id=" +restApiKey); // REST_API_KEY
-            sb.append("&logout_redirect_uri=" +logoutUri); // redirect uri
-
-            bw.write(sb.toString());
-            bw.flush();
-
-            // success: code = 200
+            // success: code = 302
             int responseCode = conn.getResponseCode();
             System.out.println("response code: " + responseCode);
 
@@ -272,9 +254,49 @@ public class UserService {
         }
     }
 
-    public void deleteUser(String userEmail)
+    public CustomResponse<Void> deleteUser(HttpServletRequest request) {
+        String access_token = request.getHeader("Authorization").split(" ")[1];
+        System.out.println(access_token);
 
-    {
-        userRepository.deleteByEmail(userEmail);
+        String request_url = "https://kapi.kakao.com/v1/user/unlink";
+        try {
+            URL url = new URL(request_url);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Authorization", "Bearer " + access_token); // request header setting
+
+            // success: code = 200
+            int responseCode = conn.getResponseCode();
+            System.out.println("response code: " +responseCode);
+
+            // 요청으로 얻은 JSON type Response message
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line = "";
+            String result = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+
+            System.out.println("response body: " + result);
+
+            // JSON Parsing 객체 생성 (Gson 라이브러리에 포함된 클래스 사용)
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(result);
+
+            Long id = element.getAsJsonObject().get("id").getAsLong();
+            System.out.println(id);
+
+            br.close();
+
+            redisUtil.deleteData(String.valueOf(id));
+            userRepository.deleteById(id);
+
+            return CustomResponse.onSuccess(null);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), "회원 탈퇴에 실패하였습니다.");
+        }
     }
 }

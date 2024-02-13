@@ -1,6 +1,6 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller.shBid;
 
-import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidDto;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +32,7 @@ public interface SecondHandBidApi {
             @ApiResponse(responseCode = "500", description = "요청 작성 실패")
     })
     public CustomResponse<SecondHandBid> addShBid(@Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
-                                                  @Parameter(description = "새 요청 내용") @RequestBody SecondHandBidRequest request);
+                                                  @Parameter(description = "새 요청 내용") @RequestBody SecondHandBidDto request);
 
     @Operation(summary = "중고 거래 요청 수정")
     @ApiResponses(value = {
@@ -43,7 +43,7 @@ public interface SecondHandBidApi {
     })
     public CustomResponse<SecondHandBid> updateShBid(@Parameter(description = "현재 사용자 객체") Principal principal,
                                                      @Parameter(description = "현재 요청 아이디") @PathVariable("shBidId") Long shBidId,
-                                                     @Parameter(description = "요청 수정 내용") @RequestBody SecondHandBidRequest request);
+                                                     @Parameter(description = "요청 수정 내용") @RequestBody SecondHandBidDto request);
 
     @Operation(summary = "중고 거래 요청 삭제")
     @ApiResponses(value = {

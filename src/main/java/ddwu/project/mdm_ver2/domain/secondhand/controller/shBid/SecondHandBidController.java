@@ -1,7 +1,7 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller.shBid;
 
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
-import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidDto;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandBidService;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
@@ -26,14 +26,14 @@ public class SecondHandBidController implements SecondHandBidApi{
     /* 가격 제안 등록 (댓글 등록) */
     @PostMapping("/add")
     public CustomResponse<SecondHandBid> addShBid(@PathVariable("shId") Long shId,
-                                  @RequestBody SecondHandBidRequest request) {
+                                  @RequestBody SecondHandBidDto request) {
         return shBidService.addShBid(shId, request);
     }
 
     /* 제안 수정 */
     @PostMapping("/update/{shBidId}")
     public CustomResponse<SecondHandBid> updateShBid(Principal principal,
-                                                     @PathVariable("shBidId") Long shBidId, @RequestBody SecondHandBidRequest request) {
+                                                     @PathVariable("shBidId") Long shBidId, @RequestBody SecondHandBidDto request) {
         return shBidService.updateShBid(principal, shBidId, request);
     }
 

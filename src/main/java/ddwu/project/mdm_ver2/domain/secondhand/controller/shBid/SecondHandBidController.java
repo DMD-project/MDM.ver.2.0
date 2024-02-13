@@ -12,14 +12,14 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/secondhand/{shId}/bid")
+@RequestMapping("/shBid/{shId}")
 public class SecondHandBidController implements SecondHandBidApi{
 
     private final SecondHandBidService shBidService;
 
     /* 전체 요청 정렬 */
     @GetMapping("/sort")
-    public CustomResponse<List<SecondHandBid>> getSortedList(@PathVariable("shId") Long shId, @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
+    public CustomResponse<List<SecondHandBidDto>> getSortedList(@PathVariable("shId") Long shId, @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
         return shBidService.sortShBid(shId, sortBy);
     }
 

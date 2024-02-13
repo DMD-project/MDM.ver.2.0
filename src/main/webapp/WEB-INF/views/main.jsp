@@ -58,10 +58,6 @@
 
     <%@ include file="includes/header.jsp" %>
 
-    ${param.jwtAccess}
-    <%= request.getParameter("jwtAccess") %>
-    <%= request.getAttribute("jwtAccess") %>
-
     <div class="slick">
         <div class="photo_banner">
             <img src="" alt="배너_이미지_01"/>

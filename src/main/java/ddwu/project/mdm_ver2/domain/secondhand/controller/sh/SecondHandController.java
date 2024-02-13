@@ -19,6 +19,7 @@ public class SecondHandController implements SecondHandApi {
     private final SecondHandService secondHandService;
 
     /* 전체 상품 */
+    @GetMapping("/list")
     public CustomResponse<List<SecondHand>> getSecondHandList() {
         return secondHandService.findAllSecondHand();
     }

@@ -5,6 +5,7 @@ import ddwu.project.mdm_ver2.domain.favorite.repository.FavoriteRepository;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandBidRepository;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
@@ -245,7 +246,7 @@ public class SecondHandService {
                         secondHand.getPrice(),
                         secondHand.getImgUrl(),
                         secondHand.getContent(),
-                        secondHandBidService.getSecondHandBidList(shId),
+                        secondHandBidService.getSecondHandBidList(secondHandBidRepository.findAllBySecondHandId(shId)),
                         favState,
                         userState);
 

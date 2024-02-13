@@ -27,25 +27,28 @@ public class SecondHandBidService {
     private final UserRepository userRepository;
 
     /* 전체 요청 정렬 */
-    public CustomResponse<List<SecondHandBid>> sortShBid(Long shId, String sort) {
+    public CustomResponse<List<SecondHandBidDto>> sortShBid(Long shId, String sort) {
         try {
-            List<SecondHandBid> sortedBidList;
+            List<SecondHandBidDto> sortedBidList;
 
             switch (sort) {
                 case "lowprice":
-                    sortedBidList = shBidRepository.findAllBySecondHandIdOrderByPriceAsc(shId);
+                    sortedBidList =
+                            getSecondHandBidList(shBidRepository.findAllBySecondHandIdOrderByPriceAsc(shId));
                     break;
                 case "highprice":
-                    sortedBidList = shBidRepository.findAllBySecondHandIdOrderByPriceDesc(shId);
+                    sortedBidList =
+                            getSecondHandBidList(shBidRepository.findAllBySecondHandIdOrderByPriceDesc(shId));
                     break;
                 case "newest":
-                    sortedBidList = shBidRepository.findAllBySecondHandIdOrderByIdDesc(shId);
+                    sortedBidList =
+                            getSecondHandBidList(shBidRepository.findAllBySecondHandIdOrderByIdDesc(shId));
                     break;
                 default:
-                    sortedBidList = shBidRepository.findAllBySecondHandId(shId);
+                    sortedBidList =
+                            getSecondHandBidList(shBidRepository.findAllBySecondHandId(shId));
                     break;
             }
-
             return CustomResponse.onSuccess(sortedBidList);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
@@ -150,18 +153,16 @@ public class SecondHandBidService {
         }
     }
 
-    public List<SecondHandBidDto> getSecondHandBidList(Long shId) {
-        List<SecondHandBid> shBidList = shBidRepository.findAllBySecondHandId(shId);
-
-        List<SecondHandBidDto> newShBidList = new ArrayList<>();
-        for(SecondHandBid bid : shBidList) {
+    public List<SecondHandBidDto> getSecondHandBidList(List<SecondHandBid> tmpList) {
+        List<SecondHandBidDto> shBidList = new ArrayList<>();
+        for(SecondHandBid bid : tmpList) {
             SecondHandBidDto shBidDto =
                     new SecondHandBidDto (bid.getId(),
                             bid.getSecondHand().getId(),
                             bid.getBidUserId(),
                             bid.getPrice());
-            newShBidList.add(shBidDto);
+            shBidList.add(shBidDto);
         }
-        return newShBidList;
+        return shBidList;
     }
 }

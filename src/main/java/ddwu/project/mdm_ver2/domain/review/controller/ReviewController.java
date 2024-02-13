@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/product/{prodId}/review")
+@RequestMapping("/review/{prodId}")
 public class ReviewController implements ReviewApi{
 
     private ReviewService reviewService;

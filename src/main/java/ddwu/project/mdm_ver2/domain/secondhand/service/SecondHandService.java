@@ -31,6 +31,7 @@ public class SecondHandService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final FavoriteRepository favoriteRepository;
+    private final SecondHandBidService secondHandBidService;
 
     /* 전체 상품 */
     public CustomResponse<List<SecondHand>> findAllSecondHand() {
@@ -244,7 +245,7 @@ public class SecondHandService {
                         secondHand.getPrice(),
                         secondHand.getImgUrl(),
                         secondHand.getContent(),
-                        secondHandBidRepository.findAllBySecondHandId(shId),
+                        secondHandBidService.getSecondHandBidList(shId),
                         favState,
                         userState);
 

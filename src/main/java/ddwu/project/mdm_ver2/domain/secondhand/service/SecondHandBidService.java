@@ -2,11 +2,10 @@ package ddwu.project.mdm_ver2.domain.secondhand.service;
 
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
-import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidDto;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
-import ddwu.project.mdm_ver2.global.exception.ResourceNotFoundException;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandRepository;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandBidRepository;
 import jakarta.transaction.Transactional;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,7 +53,7 @@ public class SecondHandBidService {
     }
 
     /* 가격 제안 등록 (댓글 등록) */
-    public CustomResponse<SecondHandBid> addShBid(Long shId, SecondHandBidRequest request) {
+    public CustomResponse<SecondHandBid> addShBid(Long shId, SecondHandBidDto request) {
         try {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
@@ -76,7 +76,7 @@ public class SecondHandBidService {
     }
 
     /* 제안 수정 */
-    public CustomResponse<SecondHandBid> updateShBid(Principal principal, Long shBidId, SecondHandBidRequest request) {
+    public CustomResponse<SecondHandBid> updateShBid(Principal principal, Long shBidId, SecondHandBidDto request) {
         try {
             SecondHandBid secondHandBid = shBidRepository.findById(shBidId)
                     .orElseThrow(() -> new NotFoundException("상품 요청을 찾을 수 없습니다."));
@@ -148,5 +148,20 @@ public class SecondHandBidService {
                     break;
             }
         }
+    }
+
+    public List<SecondHandBidDto> getSecondHandBidList(Long shId) {
+        List<SecondHandBid> shBidList = shBidRepository.findAllBySecondHandId(shId);
+
+        List<SecondHandBidDto> newShBidList = new ArrayList<>();
+        for(SecondHandBid bid : shBidList) {
+            SecondHandBidDto shBidDto =
+                    new SecondHandBidDto (bid.getId(),
+                            bid.getSecondHand().getId(),
+                            bid.getBidUserId(),
+                            bid.getPrice());
+            newShBidList.add(shBidDto);
+        }
+        return newShBidList;
     }
 }

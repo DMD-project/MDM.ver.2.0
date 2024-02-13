@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SecondHandBidRequest {
+public class SecondHandBidDto {
 
     private Long id;
     private Long shId;

@@ -93,17 +93,17 @@
           padding-right: 20px;
         }
         .navbar_login button {
-        background-color: #FF7500;
-        color: white;
-        font-size: 15px;
-        text-align: center;
+            background-color: #FF7500;
+            color: white;
+            font-size: 15px;
+            text-align: center;
 
-        width: 80px;
-        height: 30px;
+            width: 80px;
+            height: 30px;
 
-        border: none;
-        border-radius: 10px;
-    }
+            border: none;
+            border-radius: 10px;
+        }
 
 
     </style>
@@ -121,8 +121,8 @@
         <ul class="navbar_menu">
             <li><a href="#"><b>커뮤니티</b></a></li>
             <li><a href="/product/list"><b>쇼핑</b></a></li>
-            <li><a href="#"><b>공동구매</b></a></li>
-            <li><a href="#"><b>중고거래</b></a></li>
+            <li><a href="/gp/list"><b>공동구매</b></a></li>
+            <li><a href="/secondhand/list"><b>중고거래</b></a></li>
         </ul>
 
         <ul class="navbar_search">
@@ -144,7 +144,6 @@
         <ul class="navbar_login">
             <li>
                 <button onclick="location.href='/login'">로그인</button>
-                <%= request.getAttribute("jwt_access")%>
 
             </li>
         </ul>

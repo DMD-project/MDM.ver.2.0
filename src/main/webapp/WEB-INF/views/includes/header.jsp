@@ -79,7 +79,7 @@
           list-style: none;
           display: flex;
           margin: 0;
-          padding-left: 0;
+          padding-left: 400px;
         }
         .navbar_icons li {
             padding: 0px 10px;
@@ -90,7 +90,7 @@
             display: flex;
         }
         .navbar_login li {
-          padding-right: 20px;
+            padding-right: 50px;
         }
         .navbar_login button {
             background-color: #FF7500;
@@ -125,14 +125,7 @@
             <li><a href="/secondhand/list"><b>중고거래</b></a></li>
         </ul>
 
-        <ul class="navbar_search">
-            <li>
-                <form action="<c:url value='/product/search'/>" method="GET">
-                    <input type="text" name="keyword" placeholder="검색어를 입력하세요." />
 
-                </form>
-            </li>
-        </ul>
 
         <ul class="navbar_icons">
             <li>관심목록</li>
@@ -144,7 +137,6 @@
         <ul class="navbar_login">
             <li>
                 <button onclick="location.href='/login'">로그인</button>
-
             </li>
         </ul>
     </nav>

@@ -104,8 +104,11 @@ public class SecondHandService {
     }
 
     /* 상품 등록 */
-    public CustomResponse<SecondHand> addSecondHand(SecondHandRequest request) {
+    public CustomResponse<SecondHand> addSecondHand(String userEmail, SecondHandRequest request) {
         try {
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
             Category category = categoryRepository.findByCateCode(request.getCateCode());
 
             if (category == null) {
@@ -113,7 +116,7 @@ public class SecondHandService {
             }
 
             SecondHand secondHand = SecondHand.builder()
-                    .userId(request.getUserId())
+                    .userId(user.getId())
                     .name(request.getName())
                     .category(category)
                     .price(request.getPrice())
@@ -164,7 +167,7 @@ public class SecondHandService {
                 User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-                if(user.getId() == request.getUserId()) {
+                if(user.getId() == secondHand.getUserId()) {
                     Category category = categoryRepository.findByCateCode(request.getCateCode());
 
                     secondHand.setCategory(category);

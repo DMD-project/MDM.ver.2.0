@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SecondHandBidDto {
+public class SecondHandBidRequest {
 
-    private Long id;
     private Long shId;
-    private Long bidUserId;
     private int price;
-
 }

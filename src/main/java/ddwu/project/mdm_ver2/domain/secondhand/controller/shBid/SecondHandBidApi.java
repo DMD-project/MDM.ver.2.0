@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller.shBid;
 
-import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidDto;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,16 +24,17 @@ public interface SecondHandBidApi {
             @ApiResponse(responseCode = "200", description = "요청 조회 및 정렬 성공"),
             @ApiResponse(responseCode = "404", description = "요청이 없거나 찾을 수 없음")
     })
-    public CustomResponse<List<SecondHandBidDto>> getSortedList(@Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
-                                                             @Parameter(description = "요청 정렬 방식") @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy);
+    public CustomResponse<List<SecondHandBidResponse>> getSortedList(@Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
+                                                                     @Parameter(description = "요청 정렬 방식") @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy);
 
     @Operation(summary = "중고 거래 요청 추가")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "요청 작성 성공"),
             @ApiResponse(responseCode = "500", description = "요청 작성 실패")
     })
-    public CustomResponse<SecondHandBid> addShBid(@Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
-                                                  @Parameter(description = "새 요청 내용") @RequestBody SecondHandBidDto request);
+    public CustomResponse<SecondHandBid> addShBid(@Parameter(description = "현재 사용자 객체") Principal principal,
+                                                  @Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
+                                                  @Parameter(description = "새 요청 내용") @RequestBody SecondHandBidRequest request);
 
     @Operation(summary = "중고 거래 요청 수정")
     @ApiResponses(value = {
@@ -43,7 +45,7 @@ public interface SecondHandBidApi {
     })
     public CustomResponse<SecondHandBid> updateShBid(@Parameter(description = "현재 사용자 객체") Principal principal,
                                                      @Parameter(description = "현재 요청 아이디") @PathVariable("shBidId") Long shBidId,
-                                                     @Parameter(description = "요청 수정 내용") @RequestBody SecondHandBidDto request);
+                                                     @Parameter(description = "요청 수정 내용") @RequestBody SecondHandBidRequest request);
 
     @Operation(summary = "중고 거래 요청 삭제")
     @ApiResponses(value = {

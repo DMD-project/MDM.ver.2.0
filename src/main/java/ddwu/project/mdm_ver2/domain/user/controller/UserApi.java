@@ -32,7 +32,6 @@ public interface UserApi {
             @ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
             @ApiResponse(responseCode = "400", description = "토큰 재발급 실패")
     })
-    @PostMapping("/reissue")
     public CustomResponse<JwtToken> reissue(@Parameter(description = "Request 정보") HttpServletRequest request);
 
     @Operation(summary = "카카오 계정과 함께 로그아웃")
@@ -40,7 +39,6 @@ public interface UserApi {
             @ApiResponse(responseCode = "302", description = "로그아웃 성공"),
             @ApiResponse(responseCode = "500", description = "로그아웃 실패")
     })
-    @GetMapping("/kakao/logout")
     public CustomResponse<Void> logout(@Parameter(description = "Request 정보") HttpServletRequest request);
 
     @Operation(summary = "회원 탈퇴/카카오 연결 끊기")
@@ -48,6 +46,5 @@ public interface UserApi {
             @ApiResponse(responseCode = "200", description = "탈퇴 성공"),
             @ApiResponse(responseCode = "500", description = "탈퇴 실패")
     })
-    @DeleteMapping("/kakao/withdrawal")
     public CustomResponse<Void> withdrawal(@Parameter(description = "Request 정보") HttpServletRequest request);
 }

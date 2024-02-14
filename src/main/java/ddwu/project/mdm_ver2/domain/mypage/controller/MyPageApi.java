@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.domain.mypage.controller;
 
 import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
+import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,4 +36,10 @@ public interface MyPageApi {
     })
     public CustomResponse<List<Review>> getUserReview(@Parameter(description = "현재 사용자 객체") Principal principal);
 
+    @Operation(summary = "사용자 참여 공동구매 상품 리스트 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특정 사용자가 참여한 모든 공동구매 조회 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    CustomResponse<List<GroupPurchase>> getGroupPurchasesByUser(@Parameter(description = "현재 사용자 객체") Principal principal);
 }

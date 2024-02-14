@@ -32,49 +32,41 @@ public class GroupPurchaseController implements GroupPurcahseApi {
         return groupPurchaseService.sortGroupPurchase(sortBy, cateCode);
     }
 
+    // 특정 공동구매 상품 조회
+    @GetMapping("/{gpId}")
+    public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchase (@PathVariable Long gpId){
+        return groupPurchaseService.getGroupPurchase(gpId);
+    }
 
-        // 특정 공동구매상품 조회
-        @GetMapping("/{gpId}")
-        public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchase (@PathVariable Long gpId){
-            return groupPurchaseService.getGroupPurchase(gpId);
-        }
+    // 공동구매 전체 개수
+    @GetMapping("/count")
+    public CustomResponse<Long> countAllGroupPurchases() {
+        return groupPurchaseService.countAllGroupPurchases();
+    }
 
-        //특정 사용자가 참여한 모든 공동구매
-        @GetMapping("/participants")
-        public CustomResponse<List<GroupPurchase>> getGroupPurchasesByUser (Principal principal){
-            return groupPurchaseService.getGroupPurchasesByUser(principal.getName());
-        }
+    // 공동구매 참여
+    @PostMapping("/order/{gpId}/{purchasedQty}")
+    public CustomResponse<String> joinGroupPurchase (@PathVariable Long gpId,
+                                                     @PathVariable int purchasedQty, Principal principal){
+        return groupPurchaseService.joinGroupPurchase(gpId, principal.getName(), purchasedQty);
+    }
 
-        // 공동구매 전체 개수
-        @GetMapping("/count")
-        public CustomResponse<Long> countAllGroupPurchases () {
-            return groupPurchaseService.countAllGroupPurchases();
-        }
+    // 공동구매 취소
+    @DeleteMapping("/cancel/{gpId}")
+    public CustomResponse<String> cancelGroupPurchase (@PathVariable Long gpId, Principal principal){
+        return groupPurchaseService.cancelGroupPurchase(gpId, principal.getName());
+    }
 
+    //  공동구매 검색
+    @GetMapping("/search/{keyword}")
+    public CustomResponse<List<GroupPurchase>> searchGroupPurchase (@RequestParam(name = "keyword") String keyword){
+        return groupPurchaseService.searchGroupPurchase(keyword);
+    }
 
-        // 공동구매 참여
-        @PostMapping("/order/{gpId}/{purchasedQty}")
-        public CustomResponse<String> joinGroupPurchase (@PathVariable Long gpId,
-        @PathVariable int purchasedQty, Principal principal){
-            return groupPurchaseService.joinGroupPurchase(gpId, principal.getName(), purchasedQty);
-        }
-
-        // 공동구매 취소
-        @DeleteMapping("/cancel/{gpId}")
-        public CustomResponse<String> cancelGroupPurchase (@PathVariable Long gpId, Principal principal){
-            return groupPurchaseService.cancelGroupPurchase(gpId, principal.getName());
-        }
-
-        //  공동구매 검색
-        @GetMapping("/search/{keyword}")
-        public CustomResponse<List<GroupPurchase>> searchGroupPurchase (@RequestParam(name = "keyword") String keyword){
-            return groupPurchaseService.searchGroupPurchase(keyword);
-        }
-//
-//    // 공동구매 결제
+    // 공동구매 결제
 //    @PostMapping("/pay/{gpId}")
 //    public CustomResponse<Void> payGroupPurchase(@PathVariable Long gpId, Principal principal) {
 //        return groupPurchaseService.payGroupPurchase(gpId, principal.getName());
 //    }
 
-    }
+}

@@ -5,13 +5,10 @@
 <head>
     <title>footer</title>
 
-    <style>
-
-    </style>
 </head>
 <body>
 
-this is footer
+    <div style="background-color: #FFFFFF; height: 100px;"></div>
 
 </body>
 </html>

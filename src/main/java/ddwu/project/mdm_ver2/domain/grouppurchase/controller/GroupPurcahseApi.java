@@ -43,7 +43,9 @@ public interface GroupPurcahseApi {
     @Operation(summary = "공동구매 참여")
     @ApiResponse(responseCode = "200", description = "공동구매 참여 성공")
     @ApiResponse(responseCode = "400", description = "이미 공동구매에 참여한 사용자입니다.")
+    @ApiResponse(responseCode = "400", description = "주문 수량이 최대 구매 수량을 초과")
     @ApiResponse(responseCode = "404", description = "공동구매를 찾을 수 없음")
+    @ApiResponse(responseCode = "405", description = "공동구매 참여 가능한 기간이 아님")
     @ApiResponse(responseCode = "500", description = "서버 오류")
     CustomResponse<String> joinGroupPurchase(@PathVariable Long gpId, @PathVariable int purchasedQty, Principal principal);
 

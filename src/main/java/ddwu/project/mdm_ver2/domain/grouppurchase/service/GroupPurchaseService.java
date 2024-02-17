@@ -113,7 +113,6 @@ public class GroupPurchaseService {
         }
     }
 
-
     // 공동구매 정렬
     @Transactional
     public CustomResponse<List<GroupPurchase>> sortGroupPurchase(String sort, String cateCode) {
@@ -218,6 +217,13 @@ public class GroupPurchaseService {
                     .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
 
             if (groupPurchase.getState() == GPStatus.ONGOING || groupPurchase.getState() == GPStatus.URGENT) {
+                if(purchasedQty > groupPurchase.getMaxQty()) {
+                    return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "주문 수량이 최대 구매 가능 수량을 초과했습니다.");
+                }
+
+                int now = groupPurchase.getNowQty();
+                groupPurchase.setNowQty(now + purchasedQty);
+
                 GroupPurchaseParticipant participant = new GroupPurchaseParticipant();
                 participant.setGroupPurchase(groupPurchase);
                 participant.setUser(user);
@@ -230,13 +236,12 @@ public class GroupPurchaseService {
                 return CustomResponse.onSuccess("공동구매 참여가 완료되었습니다.");
 
             } else {
-                return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "주문 수량이 최대 구매 가능 수량을 초과했습니다.");
+                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "공동구매에 참여 가능한 기간이 아닙니다.");
             }
         } catch (
                 Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
-
     }
 
     private boolean isUserAlreadyJoined(Long gpId, User user) {
@@ -250,7 +255,6 @@ public class GroupPurchaseService {
         }
         return false;
     }
-
 
     // 공동구매 참여 취소
     @Transactional

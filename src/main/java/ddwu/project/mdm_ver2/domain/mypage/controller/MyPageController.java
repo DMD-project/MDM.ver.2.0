@@ -34,14 +34,14 @@ public class MyPageController implements MyPageApi {
     private final GroupPurchaseService groupPurchaseService;
 
     /* 닉네임 중복 확인 */
-    @GetMapping("/check/{nickname}")
+    @GetMapping("/check/{userNickname}")
     public boolean checkNickname(@PathVariable(value="userNickname", required=true) String nickname, Model model) {
         model.addAttribute("nicknameDup", myPageService.checkNicknameDup(nickname)); // 중복 -> true, 중복X -> false
         return myPageService.checkNicknameDup(nickname);
     }
 
     /* 닉네임 변경 */
-    @PostMapping("/nickname/{nickname}")
+    @PostMapping("/nickname/{userNickname}")
     public CustomResponse<User> setUserNickname(Principal principal, @PathVariable(value="userNickname", required=true) String nickname) {
         return myPageService.setUserNickname(principal.getName(), nickname);
     }

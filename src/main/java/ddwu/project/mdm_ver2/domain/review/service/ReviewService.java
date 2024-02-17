@@ -61,7 +61,6 @@ public class ReviewService {
                     .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
 
             Review review = Review.builder()
-                    .id(request.getId())
                     .user(user)
                     .product(product)
                     .star(request.getStar())
@@ -128,9 +127,15 @@ public class ReviewService {
             } else {
                 if((principal.getName()).equals(review.getUser().getEmail())) {
                     setReviewCnt(product, product.getReviewCnt(), "delete");
+
                     reviewRepository.deleteById(reviewId);
 
-                    product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
+                    if(product.getReviewCnt() == 0) {
+                        product.setReviewStarAvg(0);
+                    } else {
+                        product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
+                    }
+
                     productRepository.saveAndFlush(product);
                 } else {
                     return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "리뷰를 삭제할 수 없습니다.");

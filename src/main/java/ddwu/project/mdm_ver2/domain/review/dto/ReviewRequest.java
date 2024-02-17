@@ -13,7 +13,6 @@ import java.sql.Date;
 @NoArgsConstructor
 public class ReviewRequest {
 
-    private Long id;
     private Long prodId;
     private int star;
     private Date date;

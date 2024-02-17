@@ -21,7 +21,7 @@ public class SecondHand {
     @SequenceGenerator(
             name = "sh_seq_generator",
             sequenceName = "SH_SEQ",
-            initialValue = 4000,
+            initialValue = 1,
             allocationSize = 1
     )
     @GeneratedValue(

@@ -19,6 +19,7 @@ public class SecondHandController implements SecondHandApi {
     private final SecondHandService secondHandService;
 
     /* 전체 상품 */
+    @GetMapping("/list")
     public CustomResponse<List<SecondHand>> getSecondHandList() {
         return secondHandService.findAllSecondHand();
     }
@@ -38,8 +39,8 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 등록 */
     @PostMapping("/add")
-    public CustomResponse<SecondHand> addSecondHand(@RequestBody SecondHandRequest request) {
-        return secondHandService.addSecondHand(request);
+    public CustomResponse<SecondHand> addSecondHand(Principal principal, @RequestBody SecondHandRequest request) {
+        return secondHandService.addSecondHand(principal.getName(), request);
     }
 
     /* 상품 검색 */

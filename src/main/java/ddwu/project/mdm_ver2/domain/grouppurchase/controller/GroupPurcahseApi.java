@@ -35,11 +35,6 @@ public interface GroupPurcahseApi {
     @ApiResponse(responseCode = "500", description = "서버 오류")
     CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchase(@PathVariable Long gpId);
 
-    @Operation(summary = "특정 사용자가 참여한 모든 공동구매 조회")
-    @ApiResponse(responseCode = "200", description = "특정 사용자가 참여한 모든 공동구매 조회 성공")
-    @ApiResponse(responseCode = "500", description = "서버 오류")
-    CustomResponse<List<GroupPurchase>> getGroupPurchasesByUser(Principal principal);
-
     @Operation(summary = "공동구매 전체 개수 조회")
     @ApiResponse(responseCode = "200", description = "공동구매 전체 개수 조회 성공")
     @ApiResponse(responseCode = "500", description = "서버 오류")

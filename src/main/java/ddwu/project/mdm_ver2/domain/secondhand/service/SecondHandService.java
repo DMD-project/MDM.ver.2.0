@@ -5,6 +5,7 @@ import ddwu.project.mdm_ver2.domain.favorite.repository.FavoriteRepository;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandBidRepository;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
@@ -31,6 +32,7 @@ public class SecondHandService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final FavoriteRepository favoriteRepository;
+    private final SecondHandBidService secondHandBidService;
 
     /* 전체 상품 */
     public CustomResponse<List<SecondHand>> findAllSecondHand() {
@@ -93,32 +95,7 @@ public class SecondHandService {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-            SecondHandResponse response;
-
-            if(principal == null) {
-                response = setResponse(shId, 'n', 'n');
-
-            } else {
-                String userEmail = principal.getName();
-
-                User user = userRepository.findByEmail(userEmail)
-                        .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-
-                boolean exist = favoriteRepository.existsByUserEmailAndSecondHandId(userEmail, shId);
-                Character favState;
-
-                if(exist) {
-                    favState = 'y';
-                } else {
-                    favState = 'n';
-                }
-
-                if(user.getId() != (secondHand.getUserId())) {
-                    response = setResponse(shId, favState, 'n');
-                } else {
-                    response = setResponse(shId, favState, 'y');
-                }
-            }
+            SecondHandResponse response = setResponse(principal, shId);
 
             return CustomResponse.onSuccess(response);
         } catch (Exception e) {
@@ -127,8 +104,11 @@ public class SecondHandService {
     }
 
     /* 상품 등록 */
-    public CustomResponse<SecondHand> addSecondHand(SecondHandRequest request) {
+    public CustomResponse<SecondHand> addSecondHand(String userEmail, SecondHandRequest request) {
         try {
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
             Category category = categoryRepository.findByCateCode(request.getCateCode());
 
             if (category == null) {
@@ -136,7 +116,7 @@ public class SecondHandService {
             }
 
             SecondHand secondHand = SecondHand.builder()
-                    .userId(request.getUserId())
+                    .userId(user.getId())
                     .name(request.getName())
                     .category(category)
                     .price(request.getPrice())
@@ -184,12 +164,10 @@ public class SecondHandService {
             if(principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 수정할 수 없습니다.");
             } else {
-                String userEmail = principal.getName();
-
-                User user = userRepository.findByEmail(userEmail)
+                User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-                if(user.getId() == request.getUserId()) {
+                if(user.getId() == secondHand.getUserId()) {
                     Category category = categoryRepository.findByCateCode(request.getCateCode());
 
                     secondHand.setCategory(category);
@@ -220,9 +198,7 @@ public class SecondHandService {
             if(principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 삭제할 수 없습니다.");
             } else {
-                String userEmail = principal.getName();
-
-                User user = userRepository.findByEmail(userEmail)
+                User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
                 if(user.getId() == secondHand.getUserId()) {
@@ -237,9 +213,34 @@ public class SecondHandService {
         }
     }
 
-    public SecondHandResponse setResponse(Long shId, Character favState, Character userState) {
+    public SecondHandResponse setResponse(Principal principal, Long shId) {
         SecondHand secondHand = secondHandRepository.findById(shId)
                 .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+
+        Character favState;
+        Character userState;
+
+        if(principal == null) {
+            favState = 'n';
+            userState = 'n';
+        } else {
+            String userEmail = principal.getName();
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+            boolean exist = favoriteRepository.existsByUserEmailAndSecondHandId(userEmail, shId);
+            if(exist) {
+                favState = 'y';
+            } else {
+                favState = 'n';
+            }
+
+            if(user.getId() != (secondHand.getUserId())) {
+                userState = 'n';
+            } else {
+                userState = 'y';
+            }
+        }
 
         SecondHandResponse response =
                 new SecondHandResponse(secondHand.getUserId(),
@@ -248,7 +249,7 @@ public class SecondHandService {
                         secondHand.getPrice(),
                         secondHand.getImgUrl(),
                         secondHand.getContent(),
-                        secondHandBidRepository.findAllBySecondHandId(shId),
+                        secondHandBidService.getSecondHandBidList(secondHandBidRepository.findAllBySecondHandId(shId)),
                         favState,
                         userState);
 

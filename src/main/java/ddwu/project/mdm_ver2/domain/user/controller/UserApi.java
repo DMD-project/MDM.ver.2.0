@@ -9,9 +9,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -19,27 +19,32 @@ import java.util.List;
 @Tag(name = "User", description = "사용자 API")
 public interface UserApi {
 
-    @Operation(summary = "카카오 로그인(사용자 정보 받아오기, jwt token 생성")
+    @Operation(summary = "카카오 로그인(access token 받기, 사용자 정보 받아 오기, jwt token 생성)")
+    @ApiResponse(responseCode = "200", description = "받아온 사용자 정보로 jwt token 생성")
+    public JwtToken login(@Parameter(description = "카카오 인가 코드") @RequestParam String code, Model model);
+
+    @Operation(summary = "카카오 로그인(사용자 정보 받아오기, jwt token 생성)")
     @ApiResponse(responseCode = "200", description = "받아온 사용자 정보로 jwt token 생성")
     public JwtToken loginIos(@Parameter(description = "카카오 access token") @RequestParam String access_token);
 
-    @Operation(summary = "닉네임 중복 확인")
-    @ApiResponse(responseCode = "200", description = "닉네임 중복 여부 확인 성공")
-    public boolean checkNickname(@PathVariable(value = "userNickname", required = true) String nickname, Model model);
-
-    @Operation(summary = "사용자 찜 리스트 조회")
+    @Operation(summary = "jwt token 만료 시 재발급")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "사용자 찜 리스트 불러오기 성공"),
-            @ApiResponse(responseCode = "404", description = "찜 리스트가 없거나 사용자를 찾을 수 없음")
+            @ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
+            @ApiResponse(responseCode = "400", description = "토큰 재발급 실패")
     })
-    public CustomResponse<List<Favorite>> getUserFavorite(@Parameter(description = "현재 사용자 객체") Principal principal);
+    public CustomResponse<JwtToken> reissue(@Parameter(description = "Request 정보") HttpServletRequest request);
 
-    @Operation(summary = "사용자 작성 리뷰 리스트 조회")
+    @Operation(summary = "카카오 계정과 함께 로그아웃")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "사용자 작성 리뷰 리스트 불러오기 성공"),
-            @ApiResponse(responseCode = "404", description = "작성한 리뷰가 없거나 사용자를 찾을 수 없음")
+            @ApiResponse(responseCode = "302", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "500", description = "로그아웃 실패")
     })
-    public CustomResponse<List<Review>> getUserReview(@Parameter(description = "현재 사용자 객체") Principal principal);
+    public CustomResponse<Void> logout(@Parameter(description = "Request 정보") HttpServletRequest request);
 
-//    public void deleteUser(Principal principal);
+    @Operation(summary = "회원 탈퇴/카카오 연결 끊기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "탈퇴 성공"),
+            @ApiResponse(responseCode = "500", description = "탈퇴 실패")
+    })
+    public CustomResponse<Void> withdrawal(@Parameter(description = "Request 정보") HttpServletRequest request);
 }

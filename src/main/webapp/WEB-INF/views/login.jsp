@@ -54,12 +54,9 @@
  function loginWithKakao() {
         Kakao.Auth.authorize({
             redirectUri: 'http://localhost:8080/kakao',
-        }, function (authObj) {
-            console.log('카카오 로그인 성공:', authObj);
-            window.location.href = '/';
-        }, function (err) {
-            console.error('카카오 로그인 실패:', err);
         });
+
+        Kakao.set.AccessToken();
     }
 </script>
 

@@ -1,4 +1,4 @@
-package ddwu.project.mdm_ver2.domain.secondhand.dto.shBid;
+package ddwu.project.mdm_ver2.domain.mypage.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SecondHandBidRequest {
+public class AddressRequest {
 
-    private Long shId;
-    private int price;
+    private String streetAddr;
+    private String detailAddr;
+    private int zipcode;
 }

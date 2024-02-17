@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <title>header</title>
 
+    <script src="https://kit.fontawesome.com/0dff8da39e.js" crossorigin="anonymous"></script>
+
     <style>
         .header {
             background-color: #F9F1E7;
@@ -79,10 +81,10 @@
           list-style: none;
           display: flex;
           margin: 0;
-          padding-left: 0;
+          padding-left: 400px;
         }
-        .navbar_icons li {
-            padding: 0px 10px;
+        .navbar_icons i {
+            padding: 0px 7px;
         }
 
         .navbar_login {
@@ -90,20 +92,20 @@
             display: flex;
         }
         .navbar_login li {
-          padding-right: 20px;
+            padding-right: 50px;
         }
         .navbar_login button {
-        background-color: #FF7500;
-        color: white;
-        font-size: 15px;
-        text-align: center;
+            background-color: #FF7500;
+            color: white;
+            font-size: 15px;
+            text-align: center;
 
-        width: 80px;
-        height: 30px;
+            width: 80px;
+            height: 30px;
 
-        border: none;
-        border-radius: 10px;
-    }
+            border: none;
+            border-radius: 10px;
+        }
 
 
     </style>
@@ -115,37 +117,26 @@
     <nav class="navbar">
 
         <div class="navbar_logo">
-            <a href="#"><b>&nbsp;m2dm</b></a>
+            <a href="/"><b>&nbsp;m2dm</b></a>
         </div>
 
         <ul class="navbar_menu">
             <li><a href="#"><b>커뮤니티</b></a></li>
-            <li><a href="/product/list"><b>쇼핑</b></a></li>
-            <li><a href="#"><b>공동구매</b></a></li>
-            <li><a href="#"><b>중고거래</b></a></li>
-        </ul>
-
-        <ul class="navbar_search">
-            <li>
-                <form action="<c:url value='/product/search'/>" method="GET">
-                    <input type="text" name="keyword" placeholder="검색어를 입력하세요." />
-
-                </form>
-            </li>
+            <li><a href="/product"><b>쇼핑</b></a></li>
+            <li><a href="/gp"><b>공동구매</b></a></li>
+            <li><a href="/secondhand"><b>중고거래</b></a></li>
         </ul>
 
         <ul class="navbar_icons">
-            <li>관심목록</li>
-            <li>장바구니</li>
-            <li>마이페이지</li>
+            <i class="fa-solid fa-heart"></i>
+            <i class="fa-solid fa-cart-shopping"></i>
+            <i class="fa-solid fa-user"></i>
 
         </ul>
 
         <ul class="navbar_login">
             <li>
                 <button onclick="location.href='/login'">로그인</button>
-                <%= request.getAttribute("jwt_access")%>
-
             </li>
         </ul>
     </nav>

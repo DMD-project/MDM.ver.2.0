@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.global.jwt;
 
 import ddwu.project.mdm_ver2.global.jwt.oauth.CustomUserDetails;
 import ddwu.project.mdm_ver2.global.jwt.oauth.CustomUserDetailsService;
+import ddwu.project.mdm_ver2.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,22 +29,27 @@ public class JwtProvider {
     private String SECRET_KEY;
 
     private final CustomUserDetailsService userDetailsService;
+    private final RedisUtil redisUtil;
 
     private static final Long accessTokenValidTime = Duration.ofMinutes(30).toMillis(); // 만료시간 30분
     private static final Long refreshTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 2주
 
     /* access, refresh token 생성 */
-    public String createAccessToken(Long userID) {
-        return createToken(userID, "access", accessTokenValidTime);
+    public String createAccessToken(Long userId, String kakaoAccessToken) {
+        return createToken(userId, kakaoAccessToken, "access", accessTokenValidTime);
     }
 
-    public String createRefreshToken(Long userID) {
-        return createToken(userID, "refresh", refreshTokenValidTime);
+    public String createRefreshToken(Long userId, String kakaoAccessToken) {
+        String refresh_token = createToken(userId, kakaoAccessToken, "refresh", refreshTokenValidTime);
+        redisUtil.setDataExpire(String.valueOf(userId), refresh_token, refreshTokenValidTime);
+
+        return refresh_token;
     }
 
-    public String createToken(Long userId, String type, Long tokenValidTime) {
+    public String createToken(Long userId, String kakaoAccessToken, String type, Long tokenValidTime) {
         Claims claims = Jwts.claims();
         claims.put("userId", userId);
+        claims.put("kakaoAccessToken", kakaoAccessToken);
 
         log.info("create token: {}", type);
         return Jwts.builder()
@@ -117,6 +123,14 @@ public class JwtProvider {
                 .get("userId", Long.class);
     }
 
+    public String getKakaoAccessToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("kakaoAccessToken", String.class);
+    }
+
     private String getRole(String accessToken) {
         return (String) Jwts.parser()
                 .setSigningKey(SECRET_KEY)
@@ -126,7 +140,14 @@ public class JwtProvider {
 
     }
 
-    public void logout() {
-
+    /* 남은 유효 시간 확인 */
+    public Long getAccessTokenValidTime(String accessToken) {
+        Date expiration = Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 }

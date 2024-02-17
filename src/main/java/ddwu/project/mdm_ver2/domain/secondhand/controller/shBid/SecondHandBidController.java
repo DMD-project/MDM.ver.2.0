@@ -1,7 +1,8 @@
 package ddwu.project.mdm_ver2.domain.secondhand.controller.shBid;
 
-import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandBidService;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
@@ -12,22 +13,22 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/secondhand/{shId}/bid")
+@RequestMapping("/shBid/{shId}")
 public class SecondHandBidController implements SecondHandBidApi{
 
     private final SecondHandBidService shBidService;
 
     /* 전체 요청 정렬 */
-    @GetMapping("sort")
-    public CustomResponse<List<SecondHandBid>> getSortedList(@PathVariable("shId") Long shId, @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
+    @GetMapping("/sort")
+    public CustomResponse<List<SecondHandBidResponse>> getSortedList(@PathVariable("shId") Long shId, @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
         return shBidService.sortShBid(shId, sortBy);
     }
 
     /* 가격 제안 등록 (댓글 등록) */
     @PostMapping("/add")
-    public CustomResponse<SecondHandBid> addShBid(@PathVariable("shId") Long shId,
-                                  @RequestBody SecondHandBidRequest request) {
-        return shBidService.addShBid(shId, request);
+    public CustomResponse<SecondHandBid> addShBid(Principal principal, @PathVariable("shId") Long shId,
+                                                  @RequestBody SecondHandBidRequest request) {
+        return shBidService.addShBid(principal, shId, request);
     }
 
     /* 제안 수정 */

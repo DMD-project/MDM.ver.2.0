@@ -1,12 +1,12 @@
 package ddwu.project.mdm_ver2.domain.secondhand.service;
 
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidRequest;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
-import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidRequest;
+import ddwu.project.mdm_ver2.domain.secondhand.dto.shBid.SecondHandBidResponse;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
-import ddwu.project.mdm_ver2.global.exception.ResourceNotFoundException;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandRepository;
 import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandBidRepository;
 import jakarta.transaction.Transactional;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,25 +28,27 @@ public class SecondHandBidService {
     private final UserRepository userRepository;
 
     /* 전체 요청 정렬 */
-    public CustomResponse<List<SecondHandBid>> sortShBid(Long shId, String sort) {
+    public CustomResponse<List<SecondHandBidResponse>> sortShBid(Long shId, String sort) {
         try {
-            List<SecondHandBid> sortedBidList;
-
+            List<SecondHandBidResponse> sortedBidList;
             switch (sort) {
                 case "lowprice":
-                    sortedBidList = shBidRepository.findAllBySecondHandIdOrderByPriceAsc(shId);
+                    sortedBidList =
+                            getSecondHandBidList(shBidRepository.findAllBySecondHandIdOrderByPriceAsc(shId));
                     break;
                 case "highprice":
-                    sortedBidList = shBidRepository.findAllBySecondHandIdOrderByPriceDesc(shId);
+                    sortedBidList =
+                            getSecondHandBidList(shBidRepository.findAllBySecondHandIdOrderByPriceDesc(shId));
                     break;
                 case "newest":
-                    sortedBidList = shBidRepository.findAllBySecondHandIdOrderByIdDesc(shId);
+                    sortedBidList =
+                            getSecondHandBidList(shBidRepository.findAllBySecondHandIdOrderByIdDesc(shId));
                     break;
                 default:
-                    sortedBidList = shBidRepository.findAllBySecondHandId(shId);
+                    sortedBidList =
+                            getSecondHandBidList(shBidRepository.findAllBySecondHandId(shId));
                     break;
             }
-
             return CustomResponse.onSuccess(sortedBidList);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
@@ -53,23 +56,28 @@ public class SecondHandBidService {
     }
 
     /* 가격 제안 등록 (댓글 등록) */
-    public CustomResponse<SecondHandBid> addShBid(Long shId, SecondHandBidRequest request) {
+    public CustomResponse<SecondHandBid> addShBid(Principal principal, Long shId, SecondHandBidRequest request) {
         try {
-            SecondHand secondHand = secondHandRepository.findById(shId)
-                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+            if(principal == null) {
+                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 요청을 할 수 없습니다.");
+            } else {
+                User user = userRepository.findByEmail(principal.getName())
+                        .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-            setSecondHandBidCnt(secondHand, secondHand.getBidCnt(), "add");
+                SecondHand secondHand = secondHandRepository.findById(shId)
+                        .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-            SecondHandBid secondHandBid = SecondHandBid.builder()
-                    .id(request.getId())
-                    .secondHand(secondHand)
-                    .bidUserId(request.getBidUserId())
-                    .price(request.getPrice())
-                    .build();
+                setSecondHandBidCnt(secondHand, secondHand.getBidCnt(), "add");
 
-            shBidRepository.saveAndFlush(secondHandBid);
+                SecondHandBid secondHandBid = SecondHandBid.builder()
+                        .secondHand(secondHand)
+                        .bidUserId(user.getId())
+                        .price(request.getPrice())
+                        .build();
+                shBidRepository.saveAndFlush(secondHandBid);
 
-            return CustomResponse.onSuccess(secondHandBid);
+                return CustomResponse.onSuccess(secondHandBid);
+            }
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -82,7 +90,7 @@ public class SecondHandBidService {
                     .orElseThrow(() -> new NotFoundException("상품 요청을 찾을 수 없습니다."));
 
             if(principal == null) {
-                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 수정할 수 없습니다.");
+                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 요청을 수정할 수 없습니다.");
             } else {
                 User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
@@ -148,5 +156,17 @@ public class SecondHandBidService {
                     break;
             }
         }
+    }
+
+    public List<SecondHandBidResponse> getSecondHandBidList(List<SecondHandBid> tmpList) {
+        List<SecondHandBidResponse> shBidList = new ArrayList<>();
+        for(SecondHandBid bid : tmpList) {
+            SecondHandBidResponse shBidResponse =
+                    new SecondHandBidResponse(bid.getSecondHand().getId(),
+                            bid.getBidUserId(),
+                            bid.getPrice());
+            shBidList.add(shBidResponse);
+        }
+        return shBidList;
     }
 }

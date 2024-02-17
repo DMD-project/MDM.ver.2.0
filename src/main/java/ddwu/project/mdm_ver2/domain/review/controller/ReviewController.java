@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/product/{prodId}/review")
+@RequestMapping("/review/{prodId}")
 public class ReviewController implements ReviewApi{
 
     private ReviewService reviewService;
@@ -39,7 +39,7 @@ public class ReviewController implements ReviewApi{
                                                @PathVariable("prodId") Long prodId,
                                                @PathVariable("reviewId") Long reviewId,
                                                @RequestBody ReviewRequest request) {
-        return reviewService.updateReview(principal.getName(), prodId, reviewId, request);
+        return reviewService.updateReview(principal, prodId, reviewId, request);
 //        return reviewService.updateReview(userEmail, prodId, reviewId, request);
     }
 
@@ -48,6 +48,6 @@ public class ReviewController implements ReviewApi{
     public CustomResponse<Void> deleteReview(Principal principal,
                                              @PathVariable("prodId") Long prodId,
                                              @PathVariable("reviewId") Long reviewId) {
-        return reviewService.deleteReview(principal.getName(), prodId, reviewId);
+        return reviewService.deleteReview(principal, prodId, reviewId);
     }
 }

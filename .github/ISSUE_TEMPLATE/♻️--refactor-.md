@@ -1,8 +1,8 @@
 ---
-name: "♻️REFACTOR"
+name: "♻️ [REFACTOR]"
 about: Refactor 작업 사항을 입력해주세요.
-title: ''
-labels: refactor
+title: "♻️ [REFACTOR] "
+labels: "refactor"
 assignees: ''
 
 ---
@@ -22,5 +22,6 @@ assignees: ''
 ## Todo
 - [ ] todo
 - [ ] todo
+
 
 ## ETC

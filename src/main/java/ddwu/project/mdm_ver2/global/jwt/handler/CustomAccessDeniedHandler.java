@@ -29,9 +29,9 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
         Map<String, String> map = new HashMap<>();
-        map.put("errortype", "Forbidden");
-        map.put("code", "403");
-        map.put("message", "허용하지 않는 권한에 접근하였습니다.");
+        map.put("statusCode", "403");
+        map.put("message", "Forbidden");
+        map.put("content", "허용하지 않는 권한에 접근하였습니다.");
 
         response.getWriter().write(objectMapper.writeValueAsString(map));
     }

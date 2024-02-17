@@ -27,9 +27,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
         Map<String, String> map = new HashMap<>();
-        map.put("errortype", "Forbidden");
-        map.put("code", "403");
-        map.put("message", "잘못된 토큰으로 접근하였습니다. 다시 로그인 해주세요.");
+        map.put("statusCode", "403");
+        map.put("message", "Forbidden");
+        map.put("content", "잘못된 토큰으로 접근하였습니다. 다시 로그인 해주세요.");
 
         response.getWriter().write(objectMapper.writeValueAsString(map));
     }

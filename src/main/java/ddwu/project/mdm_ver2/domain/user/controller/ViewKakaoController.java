@@ -25,11 +25,6 @@ public class ViewKakaoController {
     private UserService ks;
     private JwtProvider jwtProvider;
 
-    @GetMapping("/login")
-    public String reqLogin() {
-        return "login"; //Figma(login)
-    }
-
 //    @GetMapping("/kakao")
 //    public String login(@RequestParam String code, Model model) {
 //

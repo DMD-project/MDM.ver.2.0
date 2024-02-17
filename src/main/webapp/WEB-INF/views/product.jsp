@@ -115,21 +115,47 @@
             </select>
         </div>
     </div>
+    <div id="productList"></div>
 </div>
 
 
 <script>
-    function getCount() {
+    window.onload = function() {
+        getProductList();
+        getCount();
+    };
 
-        const response = await fetch('http://localhost:8080/product/count');
-        const data = await response.json();
-        console.log(data.content);
+     async function getProductList() {
+         try {
+             const response = await fetch('http://localhost:8080/product/list');
+             const data = await response.json();
+             const productListDiv = document.getElementById('productList');
+            data.content.forEach(product => {
+            const productItem = document.createElement('div');
+            productItem.classList.add('product-item');
+            productItem.innerHTML = '<h3>' + product.name + '</h3>' +
+                                    '<p>' + product.content + '</p>' +
+                                    '<p>가격: ' + product.price + '</p>';
+            productListDiv.appendChild(productItem);
+        });
+         } catch (error) {
+             console.error('Error fetching product list:', error);
+         }
+     }
 
-        document.getElementById("count").innerHTML = data.content;
 
+    async function getCount() {
+        try {
+            const response = await fetch('http://localhost:8080/product/count');
+            const data = await response.json();
+            console.log(data.content);
+            document.getElementById("count").innerHTML = data.content;
+        } catch (error) {
+            console.error('Error fetching product count:', error);
+        }
     }
-
 </script>
+
 
 <%@ include file="includes/footer.jsp" %>
 

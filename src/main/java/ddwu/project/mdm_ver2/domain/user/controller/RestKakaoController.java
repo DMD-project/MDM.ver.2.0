@@ -1,29 +1,18 @@
 package ddwu.project.mdm_ver2.domain.user.controller;
-
-import ddwu.project.mdm_ver2.domain.cart.controller.CartApi;
-import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
-import ddwu.project.mdm_ver2.domain.favorite.service.FavoriteService;
-import ddwu.project.mdm_ver2.domain.review.entity.Review;
-import ddwu.project.mdm_ver2.domain.review.service.ReviewService;
-import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtToken;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
-import ddwu.project.mdm_ver2.global.jwt.JwtProvider;
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 import java.util.HashMap;
-import java.util.List;
 
-//@Controller
 @RestController
 @AllArgsConstructor
 public class RestKakaoController implements UserApi {
@@ -33,7 +22,7 @@ public class RestKakaoController implements UserApi {
     private final UserService userService;
 
     @GetMapping("/kakao")
-    public JwtToken login(@RequestParam String code, Model model) {
+    public JwtToken login(@RequestParam String code, Model model, HttpServletResponse response) {
 
         String access_token = userService.getAccessToken(code);
 
@@ -43,8 +32,17 @@ public class RestKakaoController implements UserApi {
 
         JwtToken jwtToken = userService.setToken(userResponse, access_token);
 
-        userService.addUser(userResponse);
+        Cookie accessCookie = new Cookie("access_token", jwtToken.getAccess_token());
+        accessCookie.setMaxAge(30 * 60); // 30분
+        accessCookie.setPath("/");
+        response.addCookie(accessCookie);
 
+        Cookie refreshCookie = new Cookie("refresh_token", jwtToken.getRefresh_token());
+        refreshCookie.setMaxAge(14 * 24 * 60 * 60); // 2주
+        refreshCookie.setPath("/");
+        response.addCookie(refreshCookie);
+
+        userService.addUser(userResponse);
         return jwtToken;
     }
 

@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.domain.favorite.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
@@ -56,9 +57,9 @@ public class Favorite implements Serializable {
     @JoinColumn(name = "sh_id", referencedColumnName = "sh_id")
     private SecondHand secondHand;
 
-//    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-//    @JoinColumn(name = "gp_id", referencedColumnName = "gp_id")
-//    private GroupPurchase groupPurchase;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "gp_id", referencedColumnName = "gp_id")
+    private GroupPurchase groupPurchase;
 
     @Column(name = "fav_state")
     private Character state;
@@ -77,10 +78,10 @@ public class Favorite implements Serializable {
         this.state = state;
     }
 
-//    public Favorite(User user, FavoriteType type, GroupPurchase groupPurchase, Character state) {
-//        this.user = user;
-//        this.type = type;
-//        this.groupPurchase = groupPurchase;
-//        this.state = state;
-//    }
+    public Favorite(User user, FavoriteType type, GroupPurchase groupPurchase, Character state) {
+        this.user = user;
+        this.type = type;
+        this.groupPurchase = groupPurchase;
+        this.state = state;
+    }
 }

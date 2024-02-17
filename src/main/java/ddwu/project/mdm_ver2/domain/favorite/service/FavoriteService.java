@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.domain.favorite.service;
 
 import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
 import ddwu.project.mdm_ver2.domain.favorite.entity.FavoriteType;
+import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseRepository;
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.product.repository.ProductRepository;
@@ -26,7 +27,7 @@ public class FavoriteService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final SecondHandRepository secondHandRepository;
-//    private final GroupPurchaseRepository groupPurchaseRepository;
+    private final GroupPurchaseRepository groupPurchaseRepository;
 
     public CustomResponse<Favorite> setFavoriteState(String userEmail, String type, Long typeId, Character favState) {
         try {
@@ -38,9 +39,9 @@ public class FavoriteService {
                 case "SH":
                     favorite = setSHFavoriteState(userEmail, typeId, favState);
                     break;
-//                case "GP":
-//                    favorite = setGPFavoriteState(userEmail, typeId, favState);
-//                    break;
+                case "GP":
+                    favorite = setGPFavoriteState(userEmail, typeId, favState);
+                    break;
             }
             if (favorite != null) {
                 return CustomResponse.onSuccess(addFavorite(favorite));
@@ -84,20 +85,20 @@ public class FavoriteService {
         }
     }
 
-//    public Favorite setGPFavoriteState(String userEmail, Long gpId, Character favState) {
-//        if(favState.equals('y')) { // 클릭 시 'n' -> 찜 해제(db 삭제)
-//            deleteFavorite(userEmail, FavoriteType.GP.toString(), gpId);
-//            return null;
-//        } else { // 클릭 시 'y' -> 찜 등록(db 추가)
-//            User user = userRepository.findByEmail(userEmail)
-//                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-//
-//            GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
-//                    .orElseThrow(() -> new NotFoundException("중고 거래 상품을 찾을 수 없습니다."));
-//
-//            return new Favorite(user, FavoriteType.GP, groupPurchase, 'y');
-//        }
-//    }
+    public Favorite setGPFavoriteState(String userEmail, Long gpId, Character favState) {
+        if(favState.equals('y')) { // 클릭 시 'n' -> 찜 해제(db 삭제)
+            deleteFavorite(userEmail, FavoriteType.GP.toString(), gpId);
+            return null;
+        } else { // 클릭 시 'y' -> 찜 등록(db 추가)
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+            GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
+                    .orElseThrow(() -> new NotFoundException("공동 구매 상품을 찾을 수 없습니다."));
+
+            return new Favorite(user, FavoriteType.GP, groupPurchase, 'y');
+        }
+    }
 
 //    public boolean getFavoriteState(User user, Product product) {
 //        return favoriteRepository.existsByUserAndProduct(user, product);

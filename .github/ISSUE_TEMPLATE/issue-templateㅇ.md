@@ -1,5 +1,5 @@
 ---
-name: issue template
+name: issue templateㅇ
 about: Describe this issue template's purpose here.
 title: ''
 labels: ''

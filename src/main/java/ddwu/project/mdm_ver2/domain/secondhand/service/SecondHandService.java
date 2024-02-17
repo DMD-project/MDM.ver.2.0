@@ -78,15 +78,15 @@ public class SecondHandService {
 
         switch (sort) {
             case "lowprice":
-                sortedSecondHandList = secondHandRepository.findAllByCategoryCateCodeOrderByPriceAsc(cateCode);
+                return secondHandRepository.findAllByCategoryCateCodeOrderByPriceAsc(cateCode);
             case "highprice":
-                sortedSecondHandList = secondHandRepository.findAllByCategoryCateCodeOrderByPriceDesc(cateCode);
+                return secondHandRepository.findAllByCategoryCateCodeOrderByPriceDesc(cateCode);
             case "newest":
-                sortedSecondHandList = secondHandRepository.findAllByCategoryCateCodeOrderByIdDesc(cateCode);
+                return secondHandRepository.findAllByCategoryCateCodeOrderByIdDesc(cateCode);
             default:
-                sortedSecondHandList = secondHandRepository.findAllByCategoryCateCode(cateCode);
+                return secondHandRepository.findAllByCategoryCateCode(cateCode);
         }
-        return sortedSecondHandList;
+//        return sortedSecondHandList;
     }
 
     /* 상품 상세 정보 */
@@ -122,6 +122,7 @@ public class SecondHandService {
                     .price(request.getPrice())
                     .imgUrl(request.getImgUrl())
                     .content(request.getContent())
+                    .state('n')
                     .build();
 
             SecondHand newSecondHand = secondHandRepository.saveAndFlush(secondHand);
@@ -145,8 +146,10 @@ public class SecondHandService {
            SecondHand secondHand = secondHandRepository.findById(shId)
                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-           if(secondHand != null) {
-               secondHand.setState(state);
+           if(state == 'n') {
+               secondHand.setState('y');
+           } else if(state == 'y') {
+               secondHand.setState('n');
            }
            return CustomResponse.onSuccess(secondHandRepository.saveAndFlush(secondHand));
        } catch (Exception e) {

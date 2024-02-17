@@ -61,14 +61,13 @@ public interface SecondHandApi {
                                                        @Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
                                                        @Parameter(description = "중고 거래 상품 수정 내용") @RequestBody SecondHandRequest request);
 
-
-    @Operation(summary = "현재 사용자의 중고 거래 상품 찜 상태 변경")
+    @Operation(summary = "현재 사용자의 중고 거래 상품 판매 상태 변경")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "찜 상태 변경 성공"),
-            @ApiResponse(responseCode = "500", description = "찜 상태 변경 실패")
+            @ApiResponse(responseCode = "200", description = "판매 상태 변경 성공"),
+            @ApiResponse(responseCode = "500", description = "판매 상태 변경 실패")
     })
     public CustomResponse<SecondHand> updateSecondHandState(@Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
-                                                            @Parameter(description = "현재 사용자의 중고 거래 상품 찜 상태") @PathVariable("state") char state);
+                                                            @Parameter(description = "현재 사용자의 중고 거래 상품 판매 상태") @PathVariable("state") char state);
 
     @Operation(summary = "중고 거래 상품 삭제")
     @ApiResponses(value = {

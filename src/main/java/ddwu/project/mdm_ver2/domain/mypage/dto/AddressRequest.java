@@ -13,5 +13,5 @@ public class AddressRequest {
 
     private String streetAddr;
     private String detailAddr;
-    private int zipcode;
+    private String zipcode;
 }

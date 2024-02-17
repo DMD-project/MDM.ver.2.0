@@ -50,7 +50,7 @@ public class User {
     private String detailAddr;
 
     @Column(name = "user_zipcode")
-    private int zipcode;
+    private String zipcode;
 
     public UserResponse toDTO() {
         return UserResponse.builder()

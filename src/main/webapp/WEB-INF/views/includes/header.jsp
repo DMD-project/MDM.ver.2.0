@@ -8,6 +8,7 @@
     <title>header</title>
 
     <script src="https://kit.fontawesome.com/0dff8da39e.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script> <!-- 외부 스크립트 불러오기 -->
 
     <style>
         .header {
@@ -136,10 +137,56 @@
 
         <ul class="navbar_login">
             <li>
-                <button onclick="location.href='/login'">로그인</button>
+                <button onclick="login()">로그인</button>
+            </li>
+        </ul>
+        <ul class="navbar_login">
+            <li>
+               <button onclick="logout()">로그아웃</button>
             </li>
         </ul>
     </nav>
 </div>
+<script>
+
+    function login() {
+        location.href = '/login';
+    }
+
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+    function logout() {
+         var token = getCookie("access_token");
+         console.log("Token:", token);
+
+        if (!token) {
+            alert("로그인되어 있지 않습니다.");
+            return;
+        }
+
+        var token = getCookie("access_token");
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/kakao/logout", true);
+        xhr.setRequestHeader("Authorization", "Bearer " + token);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    alert("로그아웃되었습니다.");
+                } else {
+                    alert("로그아웃에 실패하였습니다.");
+                }
+            }
+        };
+        xhr.send();
+    }
+</script>
 </body>
 </html>

@@ -79,7 +79,7 @@
 
 
     <div class="category_bar">
-        <button id="category_btn_01" onclick="location.href='<c:url value='/product/list'/>'">
+        <button id="category_btn_01" onclick="location.href='/product'">
             <img src="../../images/category_btn_01.png"><br/>전체
         </button>
         <button id="category_btn_02" onclick="location.href='<c:url value='/product/sort'><c:param name='cateCode' value='FUR'/></c:url>'">

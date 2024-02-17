@@ -12,4 +12,14 @@ public class MappingController {
     public String main() {
         return "main";
     }
+    @GetMapping("/login")
+    public String reqLogin() {return "login"; }
+
+    @GetMapping("/logout")
+    public String logout() {
+        return "logut";
+    }
+
+    @GetMapping("/product")
+    public String product() { return "product";}
 }

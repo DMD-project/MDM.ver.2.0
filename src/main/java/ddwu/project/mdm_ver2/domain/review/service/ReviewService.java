@@ -70,7 +70,7 @@ public class ReviewService {
 
             reviewRepository.saveAndFlush(review);
 
-            setReviewCnt(product, product.getReviewCnt(), "add");
+            product.setReviewCnt(reviewRepository.countByProductId(prodId));
             product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
             productRepository.saveAndFlush(product);
 
@@ -126,9 +126,8 @@ public class ReviewService {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "리뷰를 삭제할 수 없습니다.");
             } else {
                 if((principal.getName()).equals(review.getUser().getEmail())) {
-                    setReviewCnt(product, product.getReviewCnt(), "delete");
-
                     reviewRepository.deleteById(reviewId);
+                    product.setReviewCnt(reviewRepository.countByProductId(prodId));
 
                     if(product.getReviewCnt() == 0) {
                         product.setReviewStarAvg(0);
@@ -157,18 +156,18 @@ public class ReviewService {
         }
     }
 
-    public void setReviewCnt(Product product, int cnt, String calc) {
-        if(product != null) {
-            switch (calc) {
-                case "add":
-                    product.setReviewCnt(cnt + 1);
-                    break;
-                case "delete":
-                    if(product.getReviewCnt() != 0) {
-                        product.setReviewCnt(cnt - 1);
-                    }
-                    break;
-            }
+    public void clearUserData(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        List<Review> reviewList = reviewRepository.findAllByUserEmail(user.getEmail());
+        for(Review review : reviewList) {
+            Product product = productRepository.findById(review.getProduct().getId())
+                    .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
+
+            reviewRepository.deleteById(review.getId());
+            product.setReviewCnt(reviewRepository.countByProductId(product.getId()));
+            product.setReviewStarAvg(reviewRepository.getReviewStarAvg(product.getId()));
         }
     }
 }

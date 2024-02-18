@@ -25,5 +25,9 @@ public interface SecondHandBidRepository extends JpaRepository<SecondHandBid, Lo
 
     SecondHandBid saveAndFlush(SecondHandBid secondHanBid);
 
+    Long countBySecondHandId(Long shId);
+
+    List<SecondHandBid> findAllByBidUserId(Long userId);
+
     void deleteById(Long ShBidId);
 }

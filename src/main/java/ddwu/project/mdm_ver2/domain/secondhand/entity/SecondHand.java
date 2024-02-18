@@ -59,7 +59,7 @@ public class SecondHand {
 
     /* 거래 요청 수 (가격 제안 댓글 수) */
     @Column(name = "sh_bid_cnt")
-    private int bidCnt;
+    private Long bidCnt;
 
 //    @ElementCollection(fetch = FetchType.LAZY)
 //    private List<SecondHandBid> ShBidList;

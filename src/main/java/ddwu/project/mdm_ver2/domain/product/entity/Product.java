@@ -38,7 +38,7 @@ public class Product implements Serializable {
     private String imgUrl;
 
     @Column(name = "review_cnt")
-    private int reviewCnt;
+    private Long reviewCnt;
 
     @Column(name = "review_star_avg")
     private float reviewStarAvg;

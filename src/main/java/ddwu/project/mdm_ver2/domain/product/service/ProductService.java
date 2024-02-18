@@ -243,7 +243,7 @@ public class ProductService {
                         product.getImgUrl(),
                         favState,
                         reviewList,
-                        product.getReviewCnt(),
+                        reviewRepository.countByProductId(prodId),
                         product.getReviewStarAvg());
 
         return response;

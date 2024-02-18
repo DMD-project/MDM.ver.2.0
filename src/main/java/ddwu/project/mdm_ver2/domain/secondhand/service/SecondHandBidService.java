@@ -67,14 +67,15 @@ public class SecondHandBidService {
                 SecondHand secondHand = secondHandRepository.findById(shId)
                         .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-                setSecondHandBidCnt(secondHand, secondHand.getBidCnt(), "add");
-
                 SecondHandBid secondHandBid = SecondHandBid.builder()
                         .secondHand(secondHand)
                         .bidUserId(user.getId())
                         .price(request.getPrice())
                         .build();
                 shBidRepository.saveAndFlush(secondHandBid);
+
+                secondHand.setBidCnt(shBidRepository.countBySecondHandId(shId));
+                secondHandRepository.saveAndFlush(secondHand);
 
                 return CustomResponse.onSuccess(secondHandBid);
             }
@@ -130,8 +131,10 @@ public class SecondHandBidService {
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
                 if((user.getId()) == (secondHandBid.getBidUserId())) {
-                    setSecondHandBidCnt(secondHand, secondHand.getBidCnt(), "delete");
                     shBidRepository.deleteById(shBidId);
+
+                    secondHand.setBidCnt(shBidRepository.countBySecondHandId(shId));
+                    secondHandRepository.saveAndFlush(secondHand);
 
                     return CustomResponse.onSuccess(null);
                 } else {
@@ -140,21 +143,6 @@ public class SecondHandBidService {
             }
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-        }
-    }
-
-    public void setSecondHandBidCnt(SecondHand secondHand, int cnt, String calc) {
-        if(secondHand != null) {
-            switch (calc) {
-                case "add":
-                    secondHand.setBidCnt(cnt + 1);
-                    break;
-                case "delete":
-                    if(secondHand.getBidCnt() != 0) {
-                        secondHand.setBidCnt(cnt - 1);
-                    }
-                    break;
-            }
         }
     }
 
@@ -168,5 +156,19 @@ public class SecondHandBidService {
             shBidList.add(shBidResponse);
         }
         return shBidList;
+    }
+
+    public void clearUserData(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        List<SecondHandBid> shBidList = shBidRepository.findAllByBidUserId(userId);
+        for(SecondHandBid bid: shBidList) {
+            SecondHand secondHand = secondHandRepository.findById(bid.getSecondHand().getId())
+                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+
+            shBidRepository.deleteById(bid.getId());
+            secondHand.setBidCnt(shBidRepository.countBySecondHandId(secondHand.getId()));
+        }
     }
 }

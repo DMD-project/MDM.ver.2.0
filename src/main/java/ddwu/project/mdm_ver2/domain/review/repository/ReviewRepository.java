@@ -28,6 +28,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findAllByUserEmail(String userEmail);
 
+    Long countByProductId(Long prodId);
+
     @Query(value = "select round(avg(review_star), 1) " +
             "from review " +
             "where prod_id=:prodId " +

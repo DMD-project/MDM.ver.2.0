@@ -3,6 +3,13 @@ package ddwu.project.mdm_ver2.domain.user.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
+import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
+import ddwu.project.mdm_ver2.domain.product.entity.Product;
+import ddwu.project.mdm_ver2.domain.review.service.ReviewService;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
+import ddwu.project.mdm_ver2.domain.secondhand.repository.SecondHandRepository;
+import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandBidService;
 import ddwu.project.mdm_ver2.domain.user.entity.Role;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
@@ -24,6 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +47,9 @@ public class UserService {
     private String logoutUri;
 
     private final UserRepository userRepository;
+    private final ReviewService reviewService;
+    private final SecondHandBidService shBidService;
+    private final GroupPurchaseService groupPurchaseService;
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
 
@@ -296,6 +307,11 @@ public class UserService {
             br.close();
 
             redisUtil.deleteData(String.valueOf(id));
+
+            reviewService.clearUserData(id);
+            shBidService.clearUserData(id);
+            groupPurchaseService.clearUserDate(id);
+
             userRepository.deleteById(id);
 
             return CustomResponse.onSuccess(null);

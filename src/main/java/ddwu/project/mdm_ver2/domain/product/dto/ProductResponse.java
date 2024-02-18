@@ -22,6 +22,6 @@ public class ProductResponse {
     private String imgUrl;
     private Character favState;
     private List<Review> reviewList;
-    private int reviewCnt;
+    private Long reviewCnt;
     private float reviewStarAvg;
 }

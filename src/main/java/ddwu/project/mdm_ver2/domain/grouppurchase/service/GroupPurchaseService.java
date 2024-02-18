@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -336,5 +337,20 @@ public class GroupPurchaseService {
 //            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
 //        }
 //    }
+
+    public void clearUserDate(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+        List<GroupPurchaseParticipant> participantList = participantRepository.findByUser(user);
+        for(GroupPurchaseParticipant participant : participantList) {
+            GroupPurchase groupPurchase = groupPurchaseRepository.findById(participant.getGroupPurchase().getId())
+                    .orElseThrow(() -> new NotFoundException("공동구매 상품을 찾을 수 없습니다."));
+
+            int updateQty = groupPurchase.getNowQty() - participant.getPurchasedQty();
+            participantRepository.deleteById(participant.getId());
+            groupPurchase.setNowQty(updateQty);
+        }
+    }
 
 }

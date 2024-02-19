@@ -2,14 +2,15 @@ package ddwu.project.mdm_ver2.domain.mypage.controller;
 
 import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
 import ddwu.project.mdm_ver2.domain.favorite.service.FavoriteService;
-import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
+import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
 import ddwu.project.mdm_ver2.domain.mypage.dto.AddressRequest;
 import ddwu.project.mdm_ver2.domain.mypage.service.MyPageService;
+import ddwu.project.mdm_ver2.domain.order.entity.Order;
+import ddwu.project.mdm_ver2.domain.order.service.OrderService;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.review.service.ReviewService;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
-import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class MyPageController implements MyPageApi {
     private final MyPageService myPageService;
     private final FavoriteService favoriteService;
     private final ReviewService reviewService;
-    private final UserRepository userRepository;
+    private final OrderService orderService;
     private final GroupPurchaseService groupPurchaseService;
 
     /* 닉네임 중복 확인 */
@@ -66,7 +67,12 @@ public class MyPageController implements MyPageApi {
 
     /* 사용자 참여 공동구매 상품 리스트 */
     @GetMapping("/gp")
-    public CustomResponse<List<GroupPurchase>> getGroupPurchasesByUser (Principal principal){
+    public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchasesByUser (Principal principal){
         return groupPurchaseService.getGroupPurchasesByUser(principal.getName());
+    }
+    /* 사용자 주문 조회 리스트 */
+    @GetMapping("/order")
+    public CustomResponse<List<Order>> getOrderByUser(Principal principal) {
+        return orderService.getOrderByUser(principal.getName());
     }
 }

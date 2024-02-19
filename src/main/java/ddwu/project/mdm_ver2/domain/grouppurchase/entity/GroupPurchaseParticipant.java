@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.domain.grouppurchase.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;

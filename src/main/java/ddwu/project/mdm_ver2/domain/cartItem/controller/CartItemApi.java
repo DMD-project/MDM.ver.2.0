@@ -3,7 +3,6 @@ package ddwu.project.mdm_ver2.domain.cartItem.controller;
 import ddwu.project.mdm_ver2.domain.cartItem.entity.Items;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +17,7 @@ public interface CartItemApi {
 
     @Operation(summary = "장바구니 품목 추가")
     @ApiResponse(responseCode = "200", description = "장바구니 품목 추가 성공")
-    CustomResponse<Items> addItemToCart(@Parameter(description = "현재 사용자의 Principal 객체") Principal principal,
+    CustomResponse<Items> addItemToCart(Principal principal,
                                         @PathVariable("prodId") long prodId,
                                         @PathVariable("count") int count);
 

@@ -18,33 +18,10 @@ public class OrderController implements OrderApi{
 
     private final OrderService orderService;
 
-    // 장바구니 항목 구매 추가
-    @PostMapping("/cart/add")
-    public CustomResponse<Order> purchaseItemsFromCart(Principal principal, @RequestBody List<Long> itemIds) {
-        return orderService.purchaseItemsFromCart(principal.getName(), itemIds);
-    }
-
-    // 공동구매 항목 추가
-    @PostMapping("/group/add")
-    public CustomResponse<Order> addGroupPurchaseToOrder(@RequestParam("orderId") Long orderId, @RequestParam("gpParticipantId") Long gpParticipantId) {
-        return orderService.addGroupPurchaseToOrder(orderId, gpParticipantId);
-    }
-    //사용자 주문 조회
-    @GetMapping("/order")
-    public CustomResponse<List<Order>> getOrderByUser(Principal principal) {
-        return orderService.getOrderByUser(principal.getName());
-    }
-
-    //주문 상세 정보 조회
-    @GetMapping("/detail/{orderId}")
-    public CustomResponse<Order> getOrderDetail(@PathVariable("orderId") long orderId) {
-        return orderService.getOrderDetail(orderId);
-    }
-
-    //주문 취소
-    @DeleteMapping("/cancel/{orderId}")
-    public CustomResponse<Void> cancelOrder(@PathVariable("orderId") long orderId) {
-        return orderService.cancelOrder(orderId);
+    // 주문 정보 추가
+    @PostMapping("/add")
+    public CustomResponse<Order> addOrder(@RequestBody OrderDto order) {
+        return orderService.addOrder(order);
     }
 
     // 주문 정보 수정
@@ -53,9 +30,27 @@ public class OrderController implements OrderApi{
         return orderService.updateOrder(orderId, updatedOrder);
     }
 
-    // 주문 정보 추가
-    @PostMapping("/add")
-    public CustomResponse<Order> addOrder(@RequestBody OrderDto order) {
-        return orderService.addOrder(order);
+    //주문 취소
+    @DeleteMapping("/cancel/{orderId}")
+    public CustomResponse<Void> cancelOrder(@PathVariable("orderId") long orderId) {
+        return orderService.cancelOrder(orderId);
+    }
+
+    //주문 상세 정보 조회
+    @GetMapping("/{orderId}")
+    public CustomResponse<Order> getOrderDetail(@PathVariable("orderId") long orderId) {
+        return orderService.getOrderDetail(orderId);
+    }
+
+    // 장바구니 항목 구매 추가
+    @PostMapping("/cart/add")
+    public CustomResponse<Order> purchaseItemsFromCart(Principal principal, @RequestBody List<Long> itemIds) {
+        return orderService.purchaseItemsFromCart(principal.getName(), itemIds);
+    }
+
+    // 공동구매 항목 추가
+    @PostMapping("/gp/add")
+    public CustomResponse<Order> addGroupPurchaseToOrder(@RequestParam("orderId") Long orderId, @RequestParam("gpParticipantId") Long gpParticipantId) {
+        return orderService.addGroupPurchaseToOrder(orderId, gpParticipantId);
     }
 }

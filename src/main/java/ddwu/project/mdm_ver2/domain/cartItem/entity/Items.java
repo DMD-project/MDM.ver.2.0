@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.domain.cartItem.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.cart.entity.Cart;
 import jakarta.persistence.*;
@@ -43,6 +44,12 @@ public class Items {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "prod_id")
     private Product product;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "order_id")
+    @JsonIgnore
+    private Order order;
+
 
     public Items(int count, int price, Cart cart, Product product) {
         this.count = count;

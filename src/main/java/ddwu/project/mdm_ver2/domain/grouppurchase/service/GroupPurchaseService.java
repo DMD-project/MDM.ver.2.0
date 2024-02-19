@@ -8,7 +8,6 @@ import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseParticipantRepository;
 import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseRepository;
-import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
@@ -20,13 +19,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class GroupPurchaseService {
 
     private final GroupPurchaseRepository groupPurchaseRepository;
@@ -35,7 +34,6 @@ public class GroupPurchaseService {
     private final UserRepository userRepository;
 
     // 공동구매상품 등록
-    @Transactional
     public CustomResponse<GroupPurchase> addGroupPurchase(GroupPurchaseRequest request) {
         try {
             GroupPurchase groupPurchase = new GroupPurchase();
@@ -61,7 +59,6 @@ public class GroupPurchaseService {
     }
 
     // 공동구매상품 수정
-    @Transactional
     public CustomResponse<GroupPurchase> updateGroupPurchase(Long gpId,
                                                              GroupPurchaseRequest request) {
         try {
@@ -88,7 +85,6 @@ public class GroupPurchaseService {
     }
 
     // 공동구매상품 삭제
-    @Transactional
     public CustomResponse<String> deleteGroupPurchase(Long gpId) {
         try {
             GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
@@ -103,7 +99,6 @@ public class GroupPurchaseService {
     }
 
     // 공동구매 목록 조회
-    @Transactional
     public CustomResponse<List<GroupPurchase>> findAllGroupPurchases() {
         try {
             List<GroupPurchase> groupPurchaseList = groupPurchaseRepository.findAll();
@@ -115,7 +110,6 @@ public class GroupPurchaseService {
     }
 
     // 공동구매 정렬
-    @Transactional
     public CustomResponse<List<GroupPurchase>> sortGroupPurchase(String sort, String cateCode) {
         try {
             List<GroupPurchase> sortList;
@@ -144,7 +138,6 @@ public class GroupPurchaseService {
     }
 
     // 카테고리 분류 후 공동구매 정렬
-    @Transactional
     public List<GroupPurchase> sortGroupPurchasesByCategory(String sort, String cateCode) {
         List<GroupPurchase> productList;
 
@@ -168,7 +161,6 @@ public class GroupPurchaseService {
 
 
     // 특정 공동구매 총 참여자 조회
-    @Transactional
     public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchase(Long gpId) {
         try {
             List<GroupPurchaseParticipant> participants = participantRepository.findByGroupPurchaseId(gpId);
@@ -178,34 +170,25 @@ public class GroupPurchaseService {
         }
     }
 
-    // 특정 사용자가 참여한 모든 공동구매 조회
-    @Transactional
-    public CustomResponse<List<GroupPurchase>> getGroupPurchasesByUser(String userEmail) {
+    // userEmail에 해당하는 참여자의 정보를 출력하는 메서드
+    public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchasesByUser(String userEmail) {
         try {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new ResourceNotFoundException("User", "email", userEmail));
 
-            List<GroupPurchaseParticipant> userParticipants = participantRepository.findByUser(user);
-            List<GroupPurchase> groupPurchases = new ArrayList<>();
-
-            for (GroupPurchaseParticipant participant : userParticipants) {
-                groupPurchases.add(participant.getGroupPurchase());
-            }
-
-            return CustomResponse.onSuccess(groupPurchases);
+            List<GroupPurchaseParticipant> participants = participantRepository.findByUser(user);
+            return CustomResponse.onSuccess(participants);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
     // 공동구매 전체 개수 조회
-    @Transactional
     public CustomResponse<Long> countAllGroupPurchases() {
         return CustomResponse.onSuccess(groupPurchaseRepository.count());
     }
 
     //공동구매 참여하기
-    @Transactional
     public CustomResponse<String> joinGroupPurchase(Long gpId, String userEmail, int purchasedQty) {
         try {
             User user = userRepository.findByEmail(userEmail)
@@ -258,7 +241,6 @@ public class GroupPurchaseService {
     }
 
     // 공동구매 참여 취소
-    @Transactional
     public CustomResponse<String> cancelGroupPurchase(Long gpId, String userEmail) {
         try {
             User user = userRepository.findByEmail(userEmail)
@@ -294,7 +276,6 @@ public class GroupPurchaseService {
 
 
     //  공동구매 검색
-    @Transactional
     public CustomResponse<List<GroupPurchase>> searchGroupPurchase(String keyword) {
         try {
             if (StringUtils.isBlank(keyword)) {
@@ -308,7 +289,6 @@ public class GroupPurchaseService {
         }
     }
 
-    @Transactional
     public void updateGroupPurchaseStatus() {
         List<GroupPurchase> groupPurchases = groupPurchaseRepository.findAll();
         for (GroupPurchase groupPurchase : groupPurchases) {

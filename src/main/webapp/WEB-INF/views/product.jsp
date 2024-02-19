@@ -58,6 +58,39 @@
         }
     </style>
 
+    <style>
+        .top_wrapper {
+            padding-bottom: 50px;
+        }
+        .count {
+            padding-left: 50px;
+         }
+         .sort {
+            padding-right: 50px;
+        }
+        #product_list ul {
+            list-style: none;
+            width: 1032px;
+
+            display: flex;
+            flex-flow: wrap;
+
+            margin: auto;
+            padding: 0;
+        }
+        #product_list li {
+            list-style: none;
+            text-align: right;
+
+            width: 214px;
+
+            border: 1px solid;
+            padding: 20px;
+            margin: 1px;
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -103,58 +136,64 @@
 <span id="test"></span>
 
 <div class="content_wrapper">
+    <div class="top_wrapper">
+        <div class="count" style="float: left;"><b>총<span id="count" style="padding-left: 8px; padding-right: 3px;">product_count</span>개</b></div>
 
-    <div><h5>총 <span id="count">product_count</span> 개</h5></div>
-
-    <div class="sort">
-        <div class="sort_type">
-            <select id="sortSelect">
-                <option value="newest" selected>최신순</option>
-                <option value="lowprice">낮은 가격순</option>
-                <option value="highprice">높은 가격순</option>
-            </select>
+        <div class="sort" style="float: right;">
+            <div class="sort_type">
+                <select id="sortSelect">
+                    <option value="newest" selected>최신순</option>
+                    <option value="lowprice">낮은 가격순</option>
+                    <option value="highprice">높은 가격순</option>
+                </select>
+            </div>
         </div>
     </div>
-    <div id="productList"></div>
+
+    <div id="product_list">
+    </div>
+
 </div>
 
 
-<script>
-    window.onload = function() {
-        getProductList();
-        getCount();
-    };
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax ({
+                url: 'http://localhost:8080/product/list',
+                success: function(data) {
 
-     async function getProductList() {
-         try {
-             const response = await fetch('http://localhost:8080/product/list');
-             const data = await response.json();
-             const productListDiv = document.getElementById('productList');
-            data.content.forEach(product => {
-            const productItem = document.createElement('div');
-            productItem.classList.add('product-item');
-            productItem.innerHTML = '<h3>' + product.name + '</h3>' +
-                                    '<p>' + product.content + '</p>' +
-                                    '<p>가격: ' + product.price + '</p>';
-            productListDiv.appendChild(productItem);
+                    console.log(data);
+                    console.log(data.content.length);
+                    document.getElementById("count").innerHTML = data.content.length;
+
+                    let product_info = "";
+
+                    product_info += "<ul>";
+
+                    for (let i = 0; i < data.content.length; i++) {
+
+                        product_info += "<li>"
+                                        + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
+                                        + "<span>" + data.content[i].name + "</span>" + "<br/>"
+                                        + "<span><b>" + data.content[i].price + "원</b></span>"
+                                        + "</li>";
+
+                        if (i % 4 == 3) {
+
+                            product_info += "</ul>";
+                            product_info += "<br/><ul>";
+                        }
+
+                    }
+
+                    $("#product_list").html(product_info);
+
+
+                }
+            });
         });
-         } catch (error) {
-             console.error('Error fetching product list:', error);
-         }
-     }
-
-
-    async function getCount() {
-        try {
-            const response = await fetch('http://localhost:8080/product/count');
-            const data = await response.json();
-            console.log(data.content);
-            document.getElementById("count").innerHTML = data.content;
-        } catch (error) {
-            console.error('Error fetching product count:', error);
-        }
-    }
-</script>
+    </script>
 
 
 <%@ include file="includes/footer.jsp" %>

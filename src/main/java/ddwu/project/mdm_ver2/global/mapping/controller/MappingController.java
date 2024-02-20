@@ -1,7 +1,12 @@
 package ddwu.project.mdm_ver2.global.mapping.controller;
 
+import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
+import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
+import ddwu.project.mdm_ver2.domain.product.service.ProductService;
+import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandService;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
+import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtToken;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,15 +14,21 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
 public class MappingController {
 
     private final UserService userService;
+    private final ProductService productService;
+    private final GroupPurchaseService groupPurchaseService;
+    private final SecondHandService secondHandService;
 
     @GetMapping("/")
     public String main() {
@@ -59,18 +70,39 @@ public class MappingController {
         return "logut";
     }
 
-    @GetMapping("/product")
-    public String product() {
+    @GetMapping("/product/list/view")
+    public String getProductList(Model model) {
+        model.addAttribute("prodList", productService.findAllProduct());
         return "product";
     }
 
-    @GetMapping("/gp")
-    public String groupPurchase() {
+    @GetMapping("/product/{prodId}/view")
+    public String getProductDetail(Principal principal, @PathVariable("prodId") Long prodId, Model model) {
+        model.addAttribute("prod", productService.getProduct(principal, prodId));
+        return "productDetails";
+    }
+
+    @GetMapping("/gp/list/view")
+    public String getGroupPurchaseList(Model model) {
+        model.addAttribute("gpList", groupPurchaseService.findAllGroupPurchases());
         return "grouppurchase";
     }
 
-    @GetMapping("/secondhand")
-    public String secondHand() {
+    @GetMapping("/gp/{gpId}/view")
+    public String getGroupPurchaseDetail(@PathVariable Long gpId, Model model){
+        model.addAttribute("gp", groupPurchaseService.getGroupPurchase(gpId));
+        return "grouppurchaseDetails";
+    }
+
+    @GetMapping("/secondhand/list/view")
+    public String getSecondHandList(Model model) {
+        model.addAttribute("shList", secondHandService.findAllSecondHand());
         return "secondhand";
+    }
+
+    @GetMapping("/secondhand/{shId}/view")
+    public String getSecondHandDetail(Principal principal, @PathVariable("shId") Long shId, Model model) {
+        model.addAttribute("sh", secondHandService.getSecondHand(principal, shId));
+        return "secondhandDetails";
     }
 }

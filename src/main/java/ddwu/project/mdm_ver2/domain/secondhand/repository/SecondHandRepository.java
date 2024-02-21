@@ -40,6 +40,8 @@ public interface SecondHandRepository extends JpaRepository<SecondHand, Long> {
 
     void deleteById(Long shId);
 
+    List<SecondHand> findAllByUserId(Long userId);
+
     /* 요청 수 (가격 제안 댓글 수) */
 
 }

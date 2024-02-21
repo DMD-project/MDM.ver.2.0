@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.domain.secondhand.service;
 
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
 import ddwu.project.mdm_ver2.domain.favorite.repository.FavoriteRepository;
+import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandRequest;
@@ -213,6 +214,18 @@ public class SecondHandService {
             }
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
+    }
+
+    /* 특정 사용자 작성 중고거래 상품 가져오기 */
+    public CustomResponse<List<SecondHand>> getSecondHandListByUser (String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+        try {
+            List<SecondHand> secondHandList = secondHandRepository.findAllByUserId(user.getId());
+            return CustomResponse.onSuccess(secondHandList);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
 

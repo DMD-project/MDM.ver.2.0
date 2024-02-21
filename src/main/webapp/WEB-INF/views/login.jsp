@@ -51,12 +51,10 @@
 <script>
     Kakao.init('6e1fedab86d6b96e90375545f2dc62da');
 
- function loginWithKakao() {
-        Kakao.Auth.authorize({
-            redirectUri: 'http://localhost:8080/kakao',
-        });
-
-        Kakao.set.AccessToken();
+    function loginWithKakao() {
+            Kakao.Auth.authorize({
+                redirectUri: 'http://localhost:8080/kakao',
+            });
     }
 </script>
 

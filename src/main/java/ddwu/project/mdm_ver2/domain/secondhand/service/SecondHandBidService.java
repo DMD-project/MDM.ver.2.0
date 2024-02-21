@@ -146,6 +146,18 @@ public class SecondHandBidService {
         }
     }
 
+    /* 특정 사용자 중고거래 요청 가져오기 */
+    public CustomResponse<List<SecondHandBid>> getSecondHandBidListByUser (String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+        try {
+            List<SecondHandBid> secondHandBidList = shBidRepository.findAllByBidUserId(user.getId());
+            return CustomResponse.onSuccess(secondHandBidList);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        }
+    }
+
     public List<SecondHandBidResponse> getSecondHandBidList(List<SecondHandBid> tmpList) {
         List<SecondHandBidResponse> shBidList = new ArrayList<>();
         for(SecondHandBid bid : tmpList) {

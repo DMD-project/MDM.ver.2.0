@@ -10,6 +10,10 @@ import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.order.service.OrderService;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.review.service.ReviewService;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
+import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandBidService;
+import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandService;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
@@ -31,8 +35,11 @@ public class MyPageController implements MyPageApi {
     private final MyPageService myPageService;
     private final FavoriteService favoriteService;
     private final ReviewService reviewService;
-    private final OrderService orderService;
     private final GroupPurchaseService groupPurchaseService;
+    private final SecondHandService secondHandService;
+    private final SecondHandBidService shBidService;
+    private final OrderService orderService;
+
 
     /* 닉네임 중복 확인 */
     @GetMapping("/check/{userNickname}")
@@ -65,11 +72,24 @@ public class MyPageController implements MyPageApi {
         return reviewService.getUserReviewList(principal.getName());
     }
 
-    /* 사용자 참여 공동구매 상품 리스트 */
+    /* 사용자 참여 공동 구매 상품 리스트 */
     @GetMapping("/gp")
-    public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchasesByUser (Principal principal){
+    public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchasesByUser(Principal principal) {
         return groupPurchaseService.getGroupPurchasesByUser(principal.getName());
     }
+
+    /* 사용자 작성 중고 거래 상품 리스트 */
+    @GetMapping("/sh")
+    public CustomResponse<List<SecondHand>> getSecondHandByUser(Principal principal) {
+        return secondHandService.getSecondHandListByUser(principal.getName());
+    }
+
+    /* 사용자 중고 거래 요청(Bid) 리스트 */
+    @GetMapping("/shBid")
+    public CustomResponse<List<SecondHandBid>> getSecondHandBidByUser(Principal principal) {
+        return shBidService.getSecondHandBidListByUser(principal.getName());
+    }
+
     /* 사용자 주문 조회 리스트 */
     @GetMapping("/order")
     public CustomResponse<List<Order>> getOrderByUser(Principal principal) {

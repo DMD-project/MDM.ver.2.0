@@ -4,6 +4,8 @@ import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
+import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,10 +41,24 @@ public interface MyPageApi {
 
     @Operation(summary = "사용자 참여 공동구매 상품 리스트 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "특정 사용자가 참여한 모든 공동구매 조회 성공"),
+            @ApiResponse(responseCode = "200", description = "특정 사용자가 참여한 공동 구매 조회 성공"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchasesByUser(@Parameter(description = "현재 사용자 객체") Principal principal);
+
+    @Operation(summary = "사용자 작성 중고 거래 상품 리스트 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특정 사용자가 작성한 중고 거래 상품 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "중고 거래 상품 리스트를 찾을 수 없음")
+    })
+    public CustomResponse<List<SecondHand>> getSecondHandByUser(@Parameter(description = "현재 사용자 객체") Principal principal);
+
+    @Operation(summary = "사용자 중고 거래 요청 리스트 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특정 사용자의 중고 거래 요청 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "중고 거래 요청 리스트를 찾을 수 없음")
+    })
+    public CustomResponse<List<SecondHandBid>> getSecondHandBidByUser(@Parameter(description = "현재 사용자 객체") Principal principal);
 
     @Operation(summary = "사용자 주문 조회")
     @ApiResponses(value = {

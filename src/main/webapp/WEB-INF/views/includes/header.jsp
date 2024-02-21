@@ -87,6 +87,12 @@
         .navbar_icons i {
             padding: 0px 7px;
         }
+        .navbar_icons a:link {
+            color: black;
+        }
+        .navbar_icons a:visited {
+            color: black;
+        }
 
         .navbar_login {
             list-style: none;
@@ -123,15 +129,15 @@
 
         <ul class="navbar_menu">
             <li><a href="#"><b>커뮤니티</b></a></li>
-            <li><a href="/product"><b>쇼핑</b></a></li>
-            <li><a href="/gp"><b>공동구매</b></a></li>
-            <li><a href="/secondhand"><b>중고거래</b></a></li>
+            <li><a href="/product/list/view"><b>쇼핑</b></a></li>
+            <li><a href="/gp/list/view"><b>공동구매</b></a></li>
+            <li><a href="/secondhand/list/view"><b>중고거래</b></a></li>
         </ul>
 
         <ul class="navbar_icons">
-            <i class="fa-solid fa-heart"></i>
-            <i class="fa-solid fa-cart-shopping"></i>
-            <i class="fa-solid fa-user"></i>
+            <a href="#"><i class="fa-solid fa-heart"></i></a>
+            <a href="/cart/view"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="/mypage/view"><i class="fa-solid fa-user"></i></a>
 
         </ul>
 

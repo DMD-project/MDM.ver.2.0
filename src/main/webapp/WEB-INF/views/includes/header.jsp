@@ -87,10 +87,7 @@
         .navbar_icons i {
             padding: 0px 7px;
         }
-        .navbar_icons a:link {
-            color: black;
-        }
-        .navbar_icons a:visited {
+        .navbar_icons a:link, a:visited {
             color: black;
         }
 

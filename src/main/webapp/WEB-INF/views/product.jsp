@@ -84,11 +84,17 @@
 
             width: 214px;
 
-            border: 1px solid;
             padding: 20px;
             margin: 1px;
         }
 
+    </style>
+
+    <style>
+        a:link, a:visited {
+            text-decoration: none;
+            color: black;
+        }
     </style>
 
 </head>
@@ -165,7 +171,7 @@
 
                     console.log(data);
                     console.log(data.content.length);
-                    document.getElementById("count").innerHTML = data.content.length;
+                    $("#count").html(data.content.length);
 
                     let product_info = "";
 
@@ -174,9 +180,11 @@
                     for (let i = 0; i < data.content.length; i++) {
 
                         product_info += "<li>"
+                                        + "<a href='/product/" + data.content[i].id + "/view'>"
                                         + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
                                         + "<span>" + data.content[i].name + "</span>" + "<br/>"
                                         + "<span><b>" + data.content[i].price + "원</b></span>"
+                                        + "</a>"
                                         + "</li>";
 
                         if (i % 4 == 3) {

@@ -96,10 +96,12 @@
 </head>
 <body>
 
+<%@ include file="includes/header.jsp" %>
+
 <div class="sample">
 
   <div class="product_img">
-    <img src="" alt="sample_img">
+    <img src="" alt="">
   </div>
   <div class="product_info_wrapper">
     <div class="product_info">
@@ -114,14 +116,14 @@
       </div>
       <div>
         <span style="color: #616161; font-size: 15px;">주문수량</span>
-        <input type="number" min="1" max="10" step="1" value="1" style="margin: 10px;">
+        <input type="number" id="prod_count" min="1" max="10" step="1" value="1" style="margin: 10px;">
       </div>
         <br/>
         <br/>
       <div>
         <span style="color: #616161; font-size: 15px;">상품 가격</span><br/>
-        <span id="prod_price" style="font-size: 30px;"><b>prod_price</b></span>
-        <span style="padding-left: 5px;">원</span>
+        <span id="prod_price" style="font-size: 30px; padding-right: 5px;"><b>prod_price</b></span>
+        <span>원</span>
       </div>
     </div>
 
@@ -138,7 +140,9 @@
   <div>리뷰</div>
 </div>
 
-<div style="background-color: white; height:500px;"></div>
+<div style="background-color: white; padding: 50px 160px;">
+    <span id="prod_content"></span>
+</div>
 
 
 <div class="info_nav_bar">
@@ -147,6 +151,41 @@
 </div>
 
 <div style="background-color: white; height:500px;"></div>
+
+<%@ include file="includes/footer.jsp" %>
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+
+            let url = window.location.href;
+            let splitUrl = url.split("/");
+
+            let prodId = splitUrl[splitUrl.length - 2];
+
+            $.ajax ({
+                url: '/product/' + prodId,
+                success: function(data) {
+                    console.log(data);
+                    console.log(data.content.cateCode);
+
+                    let prod_imgUrl = data.content.imgUrl;
+                    let prod_name = data.content.name;
+                    let prod_price = data.content.price;
+                    let prod_content = data.content.content;
+
+                    $("img").attr('src', prod_imgUrl);
+                    $("img").attr('alt', prod_imgUrl);
+                    $("#prod_name").html(prod_name);
+                    $("#prod_price").html(prod_price);
+                    $("#prod_content").html(prod_content);
+
+                }
+            });
+        });
+
+    </script>
 
 </body>
 </html>

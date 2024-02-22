@@ -108,7 +108,6 @@
 
     <script>
         function search() {
-
             const keyword = document.getElementById("keyword").value;
 
             if (keyword == "")
@@ -120,42 +119,15 @@
                         "keyword" : keyword
                     },
                     success: function(data) {
-                        console.log(data);
-
                         if (data.content.length == 0)
                             alert('존재하지 않는 상품입니다.');
                         else {
-
                             $("#count").empty();
                             $("#count").html(data.content.length);
 
                             $("#product_list").empty();
-
-                            let product_info = "";
-                            product_info += "<ul>";
-
-                            for (let i = 0; i < data.content.length; i++) {
-
-                                product_info += "<li>"
-                                                + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
-                                                + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
-                                                + "<span>" + data.content[i].name + "</span>" + "<br/>"
-                                                + "<span><b>" + data.content[i].price + "원</b></span>"
-                                                + "</a>"
-                                                + "</li>";
-
-                                if (i % 4 == 3) {
-
-                                    product_info += "</ul>";
-                                    product_info += "<br/><ul>";
-                                }
-
-                            }
-
-                            $("#product_list").html(product_info);
-
+                            printProduct(data);
                         }
-
                     }
                 });
             }
@@ -164,31 +136,37 @@
 
     </script>
 
-    <button id="category_btn_01" onclick="location.href='<c:url value='/product/list'/>'">
+    <button id="category_btn_01" onclick="javascript:sort()">
         <img src="../../images/category_btn_01.png"><br/>전체
     </button>
-    <button id="category_btn_02" onclick="location.href='<c:url value='/product/sort'><c:param name='cateCode' value='FUR'/></c:url>'">
+    <button id="category_btn_02" onclick="">
         <img src="../../images/category_btn_02.png"><br/>가구
     </button>
-    <button id="category_btn_03" onclick="location.href='<c:url value='/product/sort'><c:param name='cateCode' value='FAB'/></c:url>'">
+    <button id="category_btn_03" onclick="">
         <img src="../../images/category_btn_03.png"><br/>패브릭
     </button>
-    <button id="category_btn_04" onclick="location.href='<c:url value='/product/sort'><c:param name='cateCode' value='AD'/></c:url>'">
+    <button id="category_btn_04" onclick="">
         <img src="../../images/category_btn_04.png"><br/>가전/디지털
     </button>
-    <button id="category_btn_05" onclick="location.href='<c:url value='/product/sort'><c:param name='cateCode' value='STO'/></c:url>'">
+    <button id="category_btn_05" onclick="">
         <img src="../../images/category_btn_05.png"><br/>수납/정리
     </button>
-    <button id="category_btn_06" onclick="location.href='<c:url value='/product/sort'><c:param name='cateCode' value='DEC'/></c:url>'">
+    <button id="category_btn_06" onclick="">
         <img src="../../images/category_btn_06.png"><br/>소품
     </button>
-    <button id="category_btn_07" onclick="location.href='<c:url value='/product/sort'><c:param name='cateCode' value='LIT'/></c:url>'">
+    <button id="category_btn_07" onclick="">
         <img src="../../images/category_btn_07.png"><br/>조명
     </button>
-    <button id="category_btn_08" onclick="location.href='<c:url value='/product/sort'><c:param name='cateCode' value='PLA'/></c:url>'">
+    <button id="category_btn_08" onclick="">
         <img src="../../images/category_btn_08.png"><br/>식물
     </button>
 </div>
+
+<script>
+    function sort() {
+
+    }
+</script>
 
 
 <span id="test"></span>
@@ -200,7 +178,7 @@
         <div class="sort" style="float: right;">
             <div class="sort_type">
                 <select id="sortSelect">
-                    <option value="newest" selected>최신순</option>
+                    <option value="newest">최신순</option>
                     <option value="lowprice">낮은 가격순</option>
                     <option value="highprice">높은 가격순</option>
                 </select>
@@ -220,38 +198,41 @@
             $.ajax ({
                 url: '/product/list',
                 success: function(data) {
-
-                    console.log(data);
-                    console.log(data.content.length);
                     $("#count").html(data.content.length);
-
-                    let product_info = "";
-
-                    product_info += "<ul>";
-
-                    for (let i = 0; i < data.content.length; i++) {
-
-                        product_info += "<li>"
-                                        + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
-                                        + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
-                                        + "<span>" + data.content[i].name + "</span>" + "<br/>"
-                                        + "<span><b>" + data.content[i].price + "원</b></span>"
-                                        + "</a>"
-                                        + "</li>";
-
-                        if (i % 4 == 3) {
-
-                            product_info += "</ul>";
-                            product_info += "<br/><ul>";
-                        }
-
-                    }
-
-                    $("#product_list").html(product_info);
-
+                    printProduct(data);
                 }
             });
         });
+
+        function printProduct(data) {
+            let product_info = "";
+
+            product_info += "<ul>";
+
+            for (let i = 0; i < data.content.length; i++) {
+
+                product_info += "<li>"
+                                + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
+                                + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
+                                + "<span>" + data.content[i].name + "</span>" + "<br/>"
+                                + "<span><b>" + data.content[i].price + "원</b></span>"
+                                + "</a>"
+                                + "</li>";
+
+                if (i % 4 == 3) {
+                    product_info += "</ul>";
+                    product_info += "<br/><ul>";
+                }
+
+            }
+
+            $("#product_list").html(product_info);
+
+        }
+
+
+
+
 
 
     </script>

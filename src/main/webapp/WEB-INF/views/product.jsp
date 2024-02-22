@@ -11,9 +11,6 @@
         body {
             background-color: #F9F1E7;
         }
-    </style>
-
-    <style>
         .category_bar {
             background-color: #F9F1E7;
             text-align: center;
@@ -22,21 +19,21 @@
 
             padding: 10px 50px 10px 50px;
         }
-        .category_bar button {
-                    background-color: white;
+        #category_btn_01, #category_btn_02, #category_btn_03, #category_btn_04,
+        #category_btn_05, #category_btn_06, #category_btn_07, #category_btn_08 {
+            background-color: white;
 
-                    width: 90px;
-                    height: 90px;
+            width: 90px;
+            height: 90px;
 
-                    border: none;
-                    border-radius: 50%;
-                    margin: 20px;
+            border: none;
+            border-radius: 50%;
+            margin: 20px;
         }
         .category_bar img {
             width: 50px;
             height: 50px;
         }
-
         .search_bar input {
             width: 50%;
             height: 40px;
@@ -48,7 +45,6 @@
             margin-top: 10px;
             margin-bottom: 10px;
         }
-
         .content_wrapper {
             background-color: #FFFFFF;
 
@@ -56,17 +52,8 @@
             padding-left: 150px;
             padding-right: 150px;
         }
-    </style>
-
-    <style>
         .top_wrapper {
-            padding-bottom: 50px;
-        }
-        .count {
-            padding-left: 50px;
-         }
-         .sort {
-            padding-right: 50px;
+            padding: 0 80px 50px 80px;
         }
         #product_list ul {
             list-style: none;
@@ -87,13 +74,21 @@
             padding: 20px;
             margin: 1px;
         }
-
-    </style>
-
-    <style>
         a:link, a:visited {
             text-decoration: none;
             color: black;
+        }
+        #search_btn {
+            width: 50px;
+            height: 30px;
+
+            background-color: #FFAB64;
+            color: white;
+            text-align: center;
+
+            border: none;
+            border-radius: 15px;
+            margin-left: 10px;
         }
     </style>
 
@@ -107,10 +102,67 @@
     <div><h3>쇼핑</h3></div>
 
     <div class="search_bar">
-        <form action="<c:url value='/product/search'/>" method="GET">
-            <input type="text" name="keyword" placeholder="검색어를 입력하세요." />
-        </form>
+        <input type="text" id="keyword" placeholder="검색어를 입력하세요." />
+        <button id="search_btn" onclick="javascript:search()">검색</button>
     </div>
+
+    <script>
+        function search() {
+
+            const keyword = document.getElementById("keyword").value;
+
+            if (keyword == "")
+                alert('검색어를 입력하세요.');
+            else {
+                $.ajax ({
+                    url: '/product/search/' + keyword,
+                    data: {
+                        "keyword" : keyword
+                    },
+                    success: function(data) {
+                        console.log(data);
+
+                        if (data.content.length == 0)
+                            alert('존재하지 않는 상품입니다.');
+                        else {
+
+                            $("#count").empty();
+                            $("#count").html(data.content.length);
+
+                            $("#product_list").empty();
+
+                            let product_info = "";
+                            product_info += "<ul>";
+
+                            for (let i = 0; i < data.content.length; i++) {
+
+                                product_info += "<li>"
+                                                + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
+                                                + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
+                                                + "<span>" + data.content[i].name + "</span>" + "<br/>"
+                                                + "<span><b>" + data.content[i].price + "원</b></span>"
+                                                + "</a>"
+                                                + "</li>";
+
+                                if (i % 4 == 3) {
+
+                                    product_info += "</ul>";
+                                    product_info += "<br/><ul>";
+                                }
+
+                            }
+
+                            $("#product_list").html(product_info);
+
+                        }
+
+                    }
+                });
+            }
+
+        }
+
+    </script>
 
     <button id="category_btn_01" onclick="location.href='<c:url value='/product/list'/>'">
         <img src="../../images/category_btn_01.png"><br/>전체
@@ -166,7 +218,7 @@
     <script>
         $(document).ready(function() {
             $.ajax ({
-                url: 'http://localhost:8080/product/list',
+                url: '/product/list',
                 success: function(data) {
 
                     console.log(data);
@@ -180,7 +232,7 @@
                     for (let i = 0; i < data.content.length; i++) {
 
                         product_info += "<li>"
-                                        + "<a href='/product/" + data.content[i].id + "/view'>"
+                                        + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
                                         + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
                                         + "<span>" + data.content[i].name + "</span>" + "<br/>"
                                         + "<span><b>" + data.content[i].price + "원</b></span>"
@@ -197,10 +249,11 @@
 
                     $("#product_list").html(product_info);
 
-
                 }
             });
         });
+
+
     </script>
 
 

@@ -93,6 +93,34 @@
         border-bottom: 3px solid #FF7500;
     }
   </style>
+  <style>
+      .review_avg {
+          background-color: #FFF6EA;
+          text-align: center;
+
+          width: 600px;
+          height: 80px;
+
+          border-radius: 10px;
+          padding: 30px 50px;
+          margin-top: 10px;
+          margin-bottom: 30px;
+      }
+      textarea {
+          border: 1px solid #B0B0B0;
+          margin: 10px 0;
+      }
+      .review_submit {
+          background-color: #FF7500;
+          color: #FFFFFF;
+
+          padding: 6px 13px;
+          border: none;
+          border-radius: 10px;
+
+      }
+
+  </style>
 </head>
 <body>
 
@@ -150,7 +178,36 @@
   <div class="info_nav_bar_border">리뷰</div>
 </div>
 
-<div style="background-color: white; height:500px;"></div>
+<div style="background-color: white; padding: 50px 160px;">
+    <div class="review_wrapper" style="width: 700px; margin: auto;">
+      <div><span style="color: #616161;"><b>후기</span><span style="color: #FF7500; padding-left: 5px;">review_count</span></b></div>
+      <div class="review_avg">
+        <span style="color: #FF7500; font-size: 30px;"><b>review_avg</b></span>
+      </div>
+
+      <div style="margin-bottom: 50px;">
+        <span style="color: #616161;"><b>후기 작성</b></span>
+        <textarea style="width:700px;height: 100px; padding: 20px;" placeholder="후기를 작성해주세요."></textarea>
+        <button class="review_submit" onclick="" style="float: right; margin-right: 10px;">등록</button>
+      </div>
+
+      <div>
+        <div>
+          <span style="padding-right: 10px; font-size: 15px;">최신순</span>
+          <span style="padding-right: 10px; font-size: 15px;">평점 높은순</span>
+          <span style="font-size: 15px;">평점 낮은순</span>
+        </div>
+
+        <div>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+</div>
 
 <%@ include file="includes/footer.jsp" %>
 

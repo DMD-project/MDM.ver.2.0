@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.global.mapping.controller;
 
+import ddwu.project.mdm_ver2.domain.cart.service.CartService;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
 import ddwu.project.mdm_ver2.domain.product.service.ProductService;
@@ -27,6 +28,7 @@ public class MappingController {
 
     private final UserService userService;
     private final ProductService productService;
+    private final CartService cartService;
     private final GroupPurchaseService groupPurchaseService;
     private final SecondHandService secondHandService;
 
@@ -82,6 +84,12 @@ public class MappingController {
         return "productDetails";
     }
 
+    @GetMapping("/cart/view")
+    public String getCart(Principal principal, Model model) {
+        model.addAttribute("cart", cartService.getCartByUser(principal.getName()));
+        return "cart";
+    }
+
     @GetMapping("/gp/list/view")
     public String getGroupPurchaseList(Model model) {
         model.addAttribute("gpList", groupPurchaseService.findAllGroupPurchases());
@@ -104,5 +112,16 @@ public class MappingController {
     public String getSecondHandDetail(Principal principal, @PathVariable("shId") Long shId, Model model) {
         model.addAttribute("sh", secondHandService.getSecondHand(principal, shId));
         return "secondhandDetails";
+    }
+
+    @GetMapping("/secondHand/add/view")
+    public String addSecondHand() {
+        return "addSecondHand";
+    }
+
+    @GetMapping("/mypage/view")
+    public String getMypage(Principal principal, Model model) {
+        model.addAttribute("user", userService.getUser(principal.getName()));
+        return "mypage";
     }
 }

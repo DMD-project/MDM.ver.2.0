@@ -47,6 +47,7 @@ public class ProductService {
                     .price(request.getPrice())
                     .content(request.getContent())
                     .imgUrl(request.getProdImgUrl())
+                    .reviewCnt(0L)
                     .build();
 
             Product addProduct = productRepository.save(product);

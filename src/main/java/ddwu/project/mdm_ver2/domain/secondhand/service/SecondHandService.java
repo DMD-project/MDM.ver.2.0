@@ -125,6 +125,7 @@ public class SecondHandService {
                     .imgUrl(request.getImgUrl())
                     .content(request.getContent())
                     .state('n')
+                    .bidCnt(0L)
                     .build();
 
             SecondHand newSecondHand = secondHandRepository.saveAndFlush(secondHand);

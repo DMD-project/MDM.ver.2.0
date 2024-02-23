@@ -44,12 +44,13 @@ public class Product implements Serializable {
     private float reviewStarAvg;
 
     @Builder
-    public Product(Category category, String name, int price, String content, String imgUrl) {
+    public Product(Category category, String name, int price, String content, String imgUrl, Long reviewCnt) {
         this.category = category;
         this.name = name;
         this.price = price;
         this.content = content;
         this.imgUrl = imgUrl;
+        this.reviewCnt = reviewCnt;
     }
 
     public Product(Category category, String name, int price, String content) {

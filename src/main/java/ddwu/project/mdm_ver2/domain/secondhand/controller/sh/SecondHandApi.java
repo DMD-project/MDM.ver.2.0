@@ -50,7 +50,12 @@ public interface SecondHandApi {
     public CustomResponse<SecondHand> addSecondHand(@Parameter(description = "현재 사용자 객체") Principal principal,
                                                     @Parameter(description = "새 중고 거래 상품 내용") @RequestBody SecondHandRequest request);
 
-    public List<SecondHand> searchSecondHand(@Parameter(description = "검색 키워드") @PathVariable("keyword") String keyword);
+    @Operation(summary = "중고 거래 상품 검색")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "검색 성공"),
+            @ApiResponse(responseCode = "500", description = "검색 실패")
+    })
+    public CustomResponse<List<SecondHand>> searchSecondHand(@Parameter(description = "검색 키워드") @PathVariable("keyword") String keyword);
 
     @Operation(summary = "중고 거래 상품 수정")
     @ApiResponses(value = {

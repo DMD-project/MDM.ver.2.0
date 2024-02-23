@@ -45,7 +45,7 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 검색 */
     @GetMapping("/search/{keyword}")
-    public List<SecondHand> searchSecondHand(@PathVariable("keyword") String keyword) {
+    public CustomResponse<List<SecondHand>> searchSecondHand(@PathVariable("keyword") String keyword) {
         return secondHandService.searchSecondHand(keyword);
     }
 

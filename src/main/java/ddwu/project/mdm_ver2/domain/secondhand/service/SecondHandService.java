@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.domain.secondhand.service;
 
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
 import ddwu.project.mdm_ver2.domain.favorite.repository.FavoriteRepository;
+import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.secondhand.dto.sh.SecondHandResponse;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
@@ -134,11 +135,17 @@ public class SecondHandService {
     }
 
     /* 상품 검색 */
-    public List<SecondHand> searchSecondHand(String keyword) {
-        if(StringUtils.isBlank(keyword)) {
-            return Collections.emptyList();
+    public CustomResponse<List<SecondHand>> searchSecondHand(String keyword) {
+        try {
+            if (StringUtils.isBlank(keyword)) {
+                return CustomResponse.onSuccess(Collections.emptyList());
+            }
+            List<SecondHand> searchResults = secondHandRepository.findByNameContainingIgnoreCase(keyword);
+
+            return CustomResponse.onSuccess(searchResults);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
-        return secondHandRepository.findByNameContainingIgnoreCase(keyword);
     }
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */

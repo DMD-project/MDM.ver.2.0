@@ -19,8 +19,7 @@
 
             padding: 10px 50px 10px 50px;
         }
-        #category_btn_01, #category_btn_02, #category_btn_03, #category_btn_04,
-        #category_btn_05, #category_btn_06, #category_btn_07, #category_btn_08 {
+        #category_btn {
             background-color: white;
 
             width: 90px;
@@ -78,18 +77,7 @@
             text-decoration: none;
             color: black;
         }
-        #search_btn {
-            width: 50px;
-            height: 30px;
 
-            background-color: #FFAB64;
-            color: white;
-            text-align: center;
-
-            border: none;
-            border-radius: 15px;
-            margin-left: 10px;
-        }
     </style>
 
 </head>
@@ -103,71 +91,33 @@
 
     <div class="search_bar">
         <input type="text" id="keyword" placeholder="검색어를 입력하세요." />
-        <button id="search_btn" onclick="javascript:search()">검색</button>
     </div>
 
-    <script>
-        function search() {
-            const keyword = document.getElementById("keyword").value;
-
-            if (keyword == "")
-                alert('검색어를 입력하세요.');
-            else {
-                $.ajax ({
-                    url: '/product/search/' + keyword,
-                    data: {
-                        "keyword" : keyword
-                    },
-                    success: function(data) {
-                        if (data.content.length == 0)
-                            alert('존재하지 않는 상품입니다.');
-                        else {
-                            $("#count").empty();
-                            $("#count").html(data.content.length);
-
-                            $("#product_list").empty();
-                            printProduct(data);
-                        }
-                    }
-                });
-            }
-
-        }
-
-    </script>
-
-    <button id="category_btn_01" onclick="javascript:sort()">
+    <button id="category_btn" value="">
         <img src="../../images/category_btn_01.png"><br/>전체
     </button>
-    <button id="category_btn_02" onclick="">
+    <button id="category_btn" value="FUR">
         <img src="../../images/category_btn_02.png"><br/>가구
     </button>
-    <button id="category_btn_03" onclick="">
+    <button id="category_btn" value="FAB">
         <img src="../../images/category_btn_03.png"><br/>패브릭
     </button>
-    <button id="category_btn_04" onclick="">
+    <button id="category_btn" value="AD">
         <img src="../../images/category_btn_04.png"><br/>가전/디지털
     </button>
-    <button id="category_btn_05" onclick="">
-        <img src="../../images/category_btn_05.png"><br/>수납/정리
+    <button id="category_btn" value="STO">
+        <img class="../../images/category_btn_05.png"><br/>수납/정리
     </button>
-    <button id="category_btn_06" onclick="">
+    <button id="category_btn" value="DEC">
         <img src="../../images/category_btn_06.png"><br/>소품
     </button>
-    <button id="category_btn_07" onclick="">
+    <button id="category_btn" value="LIT">
         <img src="../../images/category_btn_07.png"><br/>조명
     </button>
-    <button id="category_btn_08" onclick="">
+    <button id="category_btn" value="PLA">
         <img src="../../images/category_btn_08.png"><br/>식물
     </button>
 </div>
-
-<script>
-    function sort() {
-
-    }
-</script>
-
 
 <span id="test"></span>
 
@@ -187,6 +137,8 @@
     </div>
 
     <div id="product_list">
+
+
     </div>
 
 </div>
@@ -195,51 +147,114 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function() {
-            $.ajax ({
-                url: '/product/list',
-                success: function(data) {
-                    $("#count").html(data.content.length);
-                    printProduct(data);
+            printProduct();
+
+            $("#keyword").keydown(function(e) {
+                if (e.keyCode == 13) {
+                    let keyword = $(this).val();
+                    console.log(keyword);
+
+                    if (keyword == "")
+                        alert('상품명을 입력해주세요.');
+                    else {
+                        $.ajax ({
+                            url: '/product/search/' + keyword,
+                            data: {
+                                "keyword" : keyword
+                            },
+                            success:function(data) {
+                                if (data.content.length == 0)
+                                    alert('존재하지 않는 상품입니다.');
+                                else {
+                                    console.log(data);
+                                    $("#count").html(data.content.length);
+
+                                    let product_info = "";
+                                    product_info += "<ul>";
+                                    for (let i = 0; i < data.content.length; i++) {
+
+                                        product_info += "<li>"
+                                                        + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
+                                                        + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
+                                                        + "<span>" + data.content[i].name + "</span>" + "<br/>"
+                                                        + "<span><b>" + data.content[i].price + "원</b></span>"
+                                                        + "</a>"
+                                                        + "</li>";
+
+                                        if (i % 4 == 3) {
+                                            product_info += "</ul>";
+                                            product_info += "<br/><ul>";
+                                        }
+                                    }
+                                    $("#product_list").empty();
+                                    $("#product_list").html(product_info);
+                                }
+
+                            }
+                        });
+
+                    }
                 }
-            });
+
+
+                });
+
         });
 
-        function printProduct(data) {
-            let product_info = "";
+        $(document).on('click', '#category_btn', function() {
+            let cateCode = $(this).val();
+            console.log(cateCode);
 
-            product_info += "<ul>";
+            let sortBy = $("option:selected", this).val();
 
-            for (let i = 0; i < data.content.length; i++) {
+            printProduct(sortBy, cateCode);
+        });
 
-                product_info += "<li>"
-                                + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
-                                + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
-                                + "<span>" + data.content[i].name + "</span>" + "<br/>"
-                                + "<span><b>" + data.content[i].price + "원</b></span>"
-                                + "</a>"
-                                + "</li>";
+        $("#sortSelect").change(function() {
+            let sortBy = $("option:selected", this).val();
+            printProduct(sortBy);
+        });
 
-                if (i % 4 == 3) {
-                    product_info += "</ul>";
-                    product_info += "<br/><ul>";
+
+
+        function printProduct(sortBy, cateCode) {
+            $.ajax ({
+                url: '/product/sort/category',
+                data: {
+                    "sortBy" : sortBy,
+                    "cateCode" : cateCode
+                },
+                success: function(data) {
+                    console.log(data);
+                    $("#count").html(data.content.length);
+
+                    let product_info = "";
+
+                    product_info += "<ul>";
+                    for (let i = 0; i < data.content.length; i++) {
+
+                        product_info += "<li>"
+                                        + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
+                                        + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
+                                        + "<span>" + data.content[i].name + "</span>" + "<br/>"
+                                        + "<span><b>" + data.content[i].price + "원</b></span>"
+                                        + "</a>"
+                                        + "</li>";
+
+                        if (i % 4 == 3) {
+                            product_info += "</ul>";
+                            product_info += "<br/><ul>";
+                        }
+                    }
+                    $("product_list").empty();
+                    $("#product_list").html(product_info);
                 }
-
-            }
-
-            $("#product_list").html(product_info);
-
+            });
         }
-
-
-
-
-
 
     </script>
 
-
 <%@ include file="includes/footer.jsp" %>
-
 
 
 </body>

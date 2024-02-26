@@ -73,26 +73,22 @@ public class MappingController {
     }
 
     @GetMapping("/product/list/view")
-    public String getProductList(Model model) {
-        model.addAttribute("prodList", productService.findAllProduct());
+    public String getProductList() {
         return "product";
     }
 
     @GetMapping("/product/{prodId}/view")
-    public String getProductDetail(Principal principal, @PathVariable("prodId") Long prodId, Model model) {
-        model.addAttribute("prod", productService.getProduct(principal, prodId));
+    public String getProductDetail() {
         return "productDetails";
     }
 
     @GetMapping("/cart/view")
-    public String getCart(Principal principal, Model model) {
-        model.addAttribute("cart", cartService.getCartByUser(principal.getName()));
+    public String getCart() {
         return "cart";
     }
 
     @GetMapping("/gp/list/view")
-    public String getGroupPurchaseList(Model model) {
-        model.addAttribute("gpList", groupPurchaseService.findAllGroupPurchases());
+    public String getGroupPurchaseList() {
         return "grouppurchase";
     }
 

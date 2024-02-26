@@ -60,6 +60,7 @@ public interface SecondHandApi {
     @Operation(summary = "중고 거래 상품 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 수정 성공"),
+            @ApiResponse(responseCode = "405", description = "상품 삭제 권한 없음"),
             @ApiResponse(responseCode = "500", description = "상품 수정 실패")
     })
     public CustomResponse<SecondHand> updateSecondHand(@Parameter(description = "현재 사용자 객체") Principal principal,
@@ -77,6 +78,7 @@ public interface SecondHandApi {
     @Operation(summary = "중고 거래 상품 삭제")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 삭제 성공"),
+            @ApiResponse(responseCode = "405", description = "상품 삭제 권한 없음"),
             @ApiResponse(responseCode = "500", description = "상품 삭제 실패")
     })
     public CustomResponse<Void> deleteSecondHand(@Parameter(description = "현재 사용자 객체") Principal principal,

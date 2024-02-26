@@ -129,8 +129,8 @@
             <div class="sort_type">
                 <select id="sortSelect">
                     <option value="newest">최신순</option>
-                    <option value="lowprice">낮은 가격순</option>
                     <option value="highprice">높은 가격순</option>
+                    <option value="lowprice">낮은 가격순</option>
                 </select>
             </div>
         </div>
@@ -249,7 +249,7 @@
                             product_info += "<br/><ul>";
                         }
                     }
-                    $("product_list").empty();
+                    $("#product_list").empty();
                     $("#product_list").html(product_info);
                 }
             });

@@ -17,6 +17,9 @@
         .content_wrapper {
             display : flex;
             justify-content: center;
+
+            margin-top: 50px;
+            margin-bottom: 70px;
         }
         .content_left {
             width: 600px;
@@ -76,7 +79,7 @@
                 <div class="secondhand_prod_category">
                     <span style="color: #868686;">카테고리</span><br/>
                     <select style="width: auto; padding: 5px 20px 5px 5px;">
-                        <option value="null" selected>카테고리 선택</option>
+                        <option value="" selected>카테고리 선택</option>
                         <option value="FUR">가구</option>
                         <option value="FAB">패브릭</option>
                         <option value="AD">가전/디지털</option>

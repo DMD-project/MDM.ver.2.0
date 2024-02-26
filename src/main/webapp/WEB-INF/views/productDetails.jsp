@@ -110,7 +110,7 @@
           border: 1px solid #B0B0B0;
           margin: 10px 0;
       }
-      .review_submit {
+      #review_submit {
           background-color: #FF7500;
           color: #FFFFFF;
 
@@ -168,7 +168,7 @@
   <div>리뷰</div>
 </div>
 
-<div style="background-color: white; padding: 50px 160px;">
+<div style="background-color: #FFFFFF; padding: 50px 160px;">
     <span id="prod_content"></span>
 </div>
 
@@ -187,8 +187,8 @@
 
       <div style="margin-bottom: 50px;">
         <span style="color: #616161;"><b>후기 작성</b></span>
-        <textarea style="width:650px;height: 100px; padding: 20px;" placeholder="후기를 작성해주세요."></textarea>
-        <button class="review_submit" onclick="" style="float: right; margin-right: 10px;">등록</button>
+        <textarea id="textarea" style="width:650px;height: 100px; padding: 20px;" placeholder="후기를 작성해주세요."></textarea>
+        <button id="review_submit" style="float: right; margin-right: 10px;">등록</button>
       </div>
 
       <div>
@@ -244,11 +244,59 @@
                     $("#review_count").html(review_count);
                     $("#review_avg").html(review_avg);
 
+                    let arr_review = data.content.reviewList;
+                    console.log(data.content.reviewList);
 
+                    for (let i = 0; i < arr_review.length; i++) {
+                        console.log(arr_review[i].star);
+                        console.log(arr_review[i].content);
+                    }
 
                 }
             });
         });
+
+        $(document).on('click', '#review_submit', function() {
+            let url = window.location.href;
+            let splitUrl = url.split("/");
+
+            let prodId = splitUrl[splitUrl.length - 2];
+
+            let content = $('#textarea').val();
+            console.log(content);
+
+            let today = new Date();
+
+            $.ajax({
+                type: 'POST',
+                url: '/review/' + prodId + '/add',
+                beforeSend: function(xhr) {
+                    var token = getCookie("access_token");
+                    console.log("Token:", token);
+
+                    if (!token) {
+                        alert("로그인이 필요합니다.");
+                        return;
+                    }
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                data: JSON.stringify(
+                    {
+                        "prodId" : prodId,
+                        "star" : 3,
+                        "date" : today,
+                        "content" : content
+                    }
+                ),
+                contentType: 'application/json',
+                success: function(result) {
+                    console.log(result);
+                }
+            });
+
+
+        });
+
 
     </script>
 

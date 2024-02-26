@@ -166,6 +166,7 @@
         }
         return null;
     }
+
     function logout() {
          var token = getCookie("access_token");
          console.log("Token:", token);

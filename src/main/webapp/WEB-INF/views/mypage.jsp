@@ -8,6 +8,7 @@
     <title>mypage</title>
 
     <script src="https://kit.fontawesome.com/0dff8da39e.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
 
     <style>
         a:link {
@@ -101,8 +102,52 @@
           </div>
       </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script>
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+            return null;
+        }
 
-      <%@ include file="includes/footer.jsp" %>
+        $(document).ready(function() {
+            $.ajax ({
+                type: 'GET',
+                url: '/mypage',
+                beforeSend: function(xhr) {
+                    var token = getCookie("access_token");
+                    console.log("Token:", token);
+
+                    if (!token) {
+                        alert("로그인이 필요합니다.");
+                        return;
+                    }
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                error: function(xhr, status, error){
+                    if(status == 404) {
+                        alert("존재하지 않는 사용자입니다.");
+                        location.href="http://localhost:8080";
+                    } else {
+                        alert("로그인이 필요합니다.");
+                        location.href="http://localhost:8080/login";
+                    }
+                },
+                success: function(data) {
+                    $("#user_nickname").html(data.content.nickname);
+                    $("#user_email").html(data.content.email);
+                }
+            });
+        });
+
+    </script>
+
+    <%@ include file="includes/footer.jsp" %>
 
 </body>
 </html>

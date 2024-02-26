@@ -22,7 +22,7 @@
 
             padding: 10px 50px 10px 50px;
         }
-        .category_bar button {
+        #category_btn {
                     background-color: white;
 
                     width: 90px;
@@ -145,9 +145,9 @@
         <div class="sort" style="float: right;">
             <div class="sort_type">
                 <select id="sortSelect">
-                    <option value="newest" selected>최신순</option>
-                    <option value="lowprice">낮은 가격순</option>
+                    <option value="newest">최신순</option>
                     <option value="highprice">높은 가격순</option>
+                    <option value="lowprice">낮은 가격순</option>
                 </select>
             </div>
         </div>

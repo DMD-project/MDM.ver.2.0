@@ -119,8 +119,6 @@
     </button>
 </div>
 
-<span id="test"></span>
-
 <div class="content_wrapper">
     <div class="top_wrapper">
         <div class="count" style="float: left;"><b>총<span id="count" style="padding-left: 8px; padding-right: 3px;">product_count</span>개</b></div>

@@ -93,20 +93,17 @@ public class MappingController {
     }
 
     @GetMapping("/gp/{gpId}/view")
-    public String getGroupPurchaseDetail(@PathVariable Long gpId, Model model){
-        model.addAttribute("gp", groupPurchaseService.getGroupPurchase(gpId));
+    public String getGroupPurchaseDetail(){
         return "grouppurchaseDetails";
     }
 
     @GetMapping("/secondhand/list/view")
-    public String getSecondHandList(Model model) {
-        model.addAttribute("shList", secondHandService.findAllSecondHand());
+    public String getSecondHandList() {
         return "secondhand";
     }
 
     @GetMapping("/secondhand/{shId}/view")
-    public String getSecondHandDetail(Principal principal, @PathVariable("shId") Long shId, Model model) {
-        model.addAttribute("sh", secondHandService.getSecondHand(principal, shId));
+    public String getSecondHandDetail() {
         return "secondhandDetails";
     }
 

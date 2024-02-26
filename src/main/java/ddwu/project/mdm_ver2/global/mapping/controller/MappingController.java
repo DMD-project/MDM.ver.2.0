@@ -107,9 +107,9 @@ public class MappingController {
         return "secondhandDetails";
     }
 
-    @GetMapping("/secondHand/add/view")
+    @GetMapping("/secondhand/add/view")
     public String addSecondHand() {
-        return "addSecondHand";
+        return "addSecondhand";
     }
 
     @GetMapping("/mypage/view")

@@ -15,6 +15,7 @@ import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandBidService;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandService;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
+import ddwu.project.mdm_ver2.domain.user.service.UserService;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -41,10 +42,15 @@ public class MyPageController implements MyPageApi {
     private final OrderService orderService;
 
 
+    @GetMapping
+    public CustomResponse<User> getUser(Principal principal) {
+        return myPageService.getUser(principal.getName());
+    }
+
     /* 닉네임 중복 확인 */
     @GetMapping("/check/{userNickname}")
     public boolean checkNickname(@PathVariable(value="userNickname", required=true) String nickname, Model model) {
-        model.addAttribute("nicknameDup", myPageService.checkNicknameDup(nickname)); // 중복 -> true, 중복X -> false
+        // 중복 -> true, 중복X -> false
         return myPageService.checkNicknameDup(nickname);
     }
 

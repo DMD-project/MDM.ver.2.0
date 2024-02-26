@@ -116,8 +116,7 @@ public class MappingController {
     }
 
     @GetMapping("/mypage/view")
-    public String getMypage(Principal principal, Model model) {
-        model.addAttribute("user", userService.getUser(principal.getName()));
+    public String getMypage() {
         return "mypage";
     }
 }

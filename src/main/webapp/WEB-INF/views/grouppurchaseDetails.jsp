@@ -95,6 +95,8 @@
 </head>
 <body>
 
+<%@ include file="includes/footer.jsp" %>
+
 <div class="sample">
 
     <div class="product_img">
@@ -103,7 +105,7 @@
     <div class="product_info_wrapper">
         <div class="product_info">
 
-            <h1><span id="prod_name">prod_name</span></h1>
+            <h1><span id="gp_prod_name">gp_prod_name</span></h1>
 
             <div class="limit_info_wrapper">
                 <div class="limit_info_date">
@@ -143,7 +145,7 @@
             <br/>
             <div>
                 <span style="color: #616161; font-size: 15px;">상품 가격</span><br/>
-                <span id="prod_price" style="font-size: 30px;"><b>prod_price</b></span>
+                <span id="prod_price" style="font-size: 30px;"><b>gp_prod_price</b></span>
                 <span style="padding-left: 5px;">원</span>
             </div>
         </div>
@@ -159,10 +161,29 @@
     <div class="info_nav_bar_border">상품 정보</div>
 </div>
 
-<div style="background-color: white; height:500px;"></div>
+<div style="background-color: #FFFFFF; padding: 50px 160px;">
+    <span id="gp_prod_content"></span>
+</div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function() {
+    let url = window.location.href;
+    let splitUrl = url.split("/");
 
+    let gpId = splitUrl[splitUrl.length - 2];
 
+    $.ajax ({
+        url: '/gp/' + gpId,
+        success: function(data) {
+            console.log(data);
+        }
+    });
+});
+
+</script>
+
+<%@ include file="includes/footer.jsp" %>
 
 </body>
 </html>

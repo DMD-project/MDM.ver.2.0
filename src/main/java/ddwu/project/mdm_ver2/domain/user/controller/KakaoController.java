@@ -3,19 +3,16 @@ import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtToken;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 
 @RestController
 @AllArgsConstructor
-public class RestKakaoController implements UserApi {
+public class KakaoController implements UserApi {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 

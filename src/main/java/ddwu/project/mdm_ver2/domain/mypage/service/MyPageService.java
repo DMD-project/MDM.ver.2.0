@@ -15,6 +15,17 @@ public class MyPageService {
 
     private final UserRepository userRepository;
 
+    public CustomResponse<User> getUser(String userEmail) {
+        try {
+            User user = userRepository.findByEmail(userEmail)
+                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+            return CustomResponse.onSuccess(user);
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
+    }
+
     public boolean checkNicknameDup(String nickname) {
         return userRepository.existsByNickname(nickname);
     }

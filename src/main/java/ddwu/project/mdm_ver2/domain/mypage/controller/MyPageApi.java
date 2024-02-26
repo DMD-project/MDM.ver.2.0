@@ -6,6 +6,7 @@ import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
+import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,6 +21,14 @@ import java.util.List;
 
 @Tag(name = "MyPage", description = "마이페이지 API")
 public interface MyPageApi {
+
+    @Operation(summary = "사용자 정보 불러오기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "사용자 정보 불러오기 성공"),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "사용자 정보를 불러올 수 없음")
+    })
+    public CustomResponse<User> getUser(@Parameter(description = "현재 사용자 객체") Principal principal);
 
     @Operation(summary = "닉네임 중복 확인")
     @ApiResponse(responseCode = "200", description = "닉네임 중복 여부 확인 성공")

@@ -205,13 +205,16 @@
             let cateCode = $(this).val();
             console.log(cateCode);
 
-            let sortBy = $("option:selected", this).val();
+            let sortBy = $("#sortSelect option:selected").val();
+            console.log(sortBy);
 
             printProduct(sortBy, cateCode);
         });
 
         $("#sortSelect").change(function() {
             let sortBy = $("option:selected", this).val();
+            console.log(sortBy);
+
             printProduct(sortBy);
         });
 

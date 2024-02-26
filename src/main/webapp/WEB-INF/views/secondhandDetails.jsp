@@ -101,15 +101,17 @@
 </head>
 <body>
 
+<%@ include file="includes/header.jsp" %>
+
 <div class="sample">
 
     <div class="product_img">
-        <img src="" alt="sample_img">
+        <img src="" alt="">
     </div>
     <div class="product_info_wrapper">
         <div class="product_info">
 
-            <h1><span id="prod_name">prod_name</span></h1>
+            <h1><span id="sh_prod_name">sh_prod_name</span></h1>
             <br/>
             <br/>
             <br/>
@@ -119,7 +121,7 @@
             <div>
                 <span style="color: #616161; font-size: 15px;">상품 가격</span><br/>
 
-                <span id="prod_price" style="font-size: 30px;"><b>prod_price</b></span>
+                <span id="sh_prod_price" style="font-size: 30px;"><b>sh_prod_price</b></span>
                 <span style="padding-left: 5px;">원</span>
             </div>
 
@@ -143,12 +145,40 @@
     <div class="info_nav_bar_border">상품 정보</div>
 </div>
 
-<div style="background-color: white; height:500px;"></div>
+<div style="background-color: #FFFFFF; padding: 50px 160px;">
+    <span id="sh_prod_content"></span>
+</div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function() {
+    let url = window.location.href;
+    let splitUrl = url.split("/");
 
+    let shId = splitUrl[splitUrl.length - 2];
 
+    $.ajax ({
+        url: '/secondhand/' + shId,
+        success: function(data) {
+            console.log(data);
 
+            let sh_prod_imgUrl = data.content.imgUrl;
+            let sh_prod_name = data.content.name;
+            let sh_prod_price = data.content.price;
+            let sh_prod_content = data.content.content;
 
+            $("img").attr('src', sh_prod_imgUrl);
+            $("img").attr('alt', sh_prod_imgUrl);
+            $("#sh_prod_name").html(sh_prod_name);
+            $("#sh_prod_price").html(sh_prod_price);
+            $("#sh_prod_content").html(sh_prod_content);
+
+        }
+    });
+});
+</script>
+
+<%@ include file="includes/footer.jsp" %>
 
 </body>
 </html>

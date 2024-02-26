@@ -57,7 +57,7 @@
             padding-right: 150px;
         }
 
-        .addSecondhand {
+        #addSecondhand {
             background-color: #FF7500;
             color: white;
             font-size: 13px;
@@ -69,6 +69,34 @@
             border: none;
             border-radius: 10px;
         }
+
+        .top_wrapper {
+            padding: 0 80px 50px 80px;
+        }
+        #secondhand_list ul {
+            list-style: none;
+            width: 1032px;
+
+            display: flex;
+            flex-flow: wrap;
+
+            margin: auto;
+            padding: 0;
+        }
+        #secondhand_list li {
+            list-style: none;
+            text-align: right;
+
+            width: 214px;
+
+            padding: 20px;
+            margin: 1px;
+        }
+        a:link, a:visited {
+            text-decoration: none;
+            color: black;
+        }
+
     </style>
 
 </head>
@@ -110,25 +138,26 @@
     </button>
 </div>
 
-
-${data.content[1].name}
-<span id="test"></span>
-
 <div class="content_wrapper">
+    <div class="top_wrapper">
+        <div class="count" style="float: left;"><b>총<span id="count" style="padding-left: 8px; padding-right: 3px;">product_count</span>개</b></div>
 
-    <div class="sort">
-        <div class="sort_type">
-            <select id="sortSelect">
-                <option value="newest" selected>최신순</option>
-                <option value="lowprice">낮은 가격순</option>
-                <option value="highprice">높은 가격순</option>
-            </select>
+        <div class="sort" style="float: right;">
+            <div class="sort_type">
+                <select id="sortSelect">
+                    <option value="newest" selected>최신순</option>
+                    <option value="lowprice">낮은 가격순</option>
+                    <option value="highprice">높은 가격순</option>
+                </select>
+            </div>
         </div>
+
+        <button id="addSecondhand" onclick="location.href='/secondhand/add/view'" style="float: right; margin-right: 15px;">상품 등록</button>
     </div>
 
-    <button class="addSecondhand" onclick="">상품 등록</button>
-
     <div id="secondhand_list">
+
+    </div>
 
 </div>
 
@@ -165,6 +194,7 @@ ${data.content[1].name}
                                 for(let i = 0; i < data.content.length; i++) {
                                     secondhand_info += "<li>"
                                                     + "<a href='/secondhand/" + data.content[i].id + "/view'>" + "<p>"
+                                                    + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
                                                     + "<span>" + data.content[i].name + "</span>" + "<br/>"
                                                     + "<span><b>" + data.content[i].price + "원</b></span>"
                                                     + "</a>"
@@ -189,7 +219,7 @@ ${data.content[1].name}
         let cateCode = $(this).val();
         console.log(cateCode);
 
-        let sortBy = $("option:selected", this).val();
+        let sortBy = $("#sortSelect option:selected", this).val();
 
         printSecondHand(sortBy, cateCode);
     });
@@ -216,6 +246,7 @@ ${data.content[1].name}
                 for(let i = 0; i < data.content.length; i++) {
                     secondhand_info += "<li>"
                                         + "<a href='/secondhand/" + data.content[i].id + "/view'>" + "<p>"
+                                        + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
                                         + "<span>" + data.content[i].name + "</span>" + "<br/>"
                                         + "<span><b>" + data.content[i].price + "원</b></span>"
                                         + "</a>"
@@ -228,7 +259,7 @@ ${data.content[1].name}
                         secondhand_info += "<br/><ul>";
                     }
                 }
-                $("secondhand_list").empty();
+                $("#secondhand_list").empty();
                 $("#secondhand_list").html(secondhand_info);
 
             }

@@ -30,7 +30,7 @@ public class SecondHandBidService {
     /* 전체 요청 정렬 */
     public CustomResponse<List<SecondHandBidResponse>> sortShBid(Principal principal, Long shId, String sort) {
         try {
-            List<SecondHandBidResponse> sortedBidList;
+            List<SecondHandBidResponse> sortedBidList = new ArrayList<SecondHandBidResponse>();
             switch (sort) {
                 case "lowprice":
                     sortedBidList =
@@ -43,10 +43,6 @@ public class SecondHandBidService {
                 case "newest":
                     sortedBidList =
                             getSecondHandBidList(principal, shBidRepository.findAllBySecondHandIdOrderByIdDesc(shId));
-                    break;
-                default:
-                    sortedBidList =
-                            getSecondHandBidList(principal, shBidRepository.findAllBySecondHandId(shId));
                     break;
             }
             return CustomResponse.onSuccess(sortedBidList);

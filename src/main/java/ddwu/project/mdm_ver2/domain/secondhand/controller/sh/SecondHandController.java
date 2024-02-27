@@ -26,7 +26,7 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 정렬 */
     @GetMapping("/sort/category")
-    public CustomResponse<List<SecondHand>> getSortedList(@RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy,
+    public CustomResponse<List<SecondHand>> getSortedList(@RequestParam(name = "sortBy", required = false, defaultValue = "newest") String sortBy,
                                                           @RequestParam(name = "cateCode", required = false, defaultValue = "") String cateCode) {
         return secondHandService.sortSecondHand(sortBy, cateCode);
     }

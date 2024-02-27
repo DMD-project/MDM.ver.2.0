@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class SecondHandService {
     /* 상품 정렬 */
     public CustomResponse<List<SecondHand>> sortSecondHand(String sort, String cateCode) {
         try {
-            List<SecondHand> sortedSecondHandList;
+            List<SecondHand> sortedSecondHandList = new ArrayList<SecondHand>();
             if(cateCode != null && !cateCode.isEmpty()) {
                 sortedSecondHandList = sortSecondHandsByCategory(sort, cateCode);
             } else {
@@ -63,9 +64,6 @@ public class SecondHandService {
                     case "newest":
                         sortedSecondHandList = secondHandRepository.findAllByOrderByIdDesc();
                         break;
-                    default:
-                        sortedSecondHandList = secondHandRepository.findAll();
-                        break;
                 }
             }
             return CustomResponse.onSuccess(sortedSecondHandList);
@@ -76,19 +74,19 @@ public class SecondHandService {
 
     /* 카테고리 내 상품 정렬 */
     public List<SecondHand> sortSecondHandsByCategory(String sort, String cateCode) {
-        List<SecondHand> sortedSecondHandList;
-
+        List<SecondHand> secondHandList = new ArrayList<SecondHand>();
         switch (sort) {
             case "lowprice":
-                return secondHandRepository.findAllByCategoryCateCodeOrderByPriceAsc(cateCode);
+                secondHandList = secondHandRepository.findAllByCategoryCateCodeOrderByPriceAsc(cateCode);
+                break;
             case "highprice":
-                return secondHandRepository.findAllByCategoryCateCodeOrderByPriceDesc(cateCode);
+                secondHandList = secondHandRepository.findAllByCategoryCateCodeOrderByPriceDesc(cateCode);
+                break;
             case "newest":
-                return secondHandRepository.findAllByCategoryCateCodeOrderByIdDesc(cateCode);
-            default:
-                return secondHandRepository.findAllByCategoryCateCode(cateCode);
+                secondHandList = secondHandRepository.findAllByCategoryCateCodeOrderByIdDesc(cateCode);
+                break;
         }
-//        return sortedSecondHandList;
+        return secondHandList;
     }
 
     /* 상품 상세 정보 */

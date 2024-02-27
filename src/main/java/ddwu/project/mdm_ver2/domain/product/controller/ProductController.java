@@ -26,7 +26,8 @@ public class ProductController implements ProductApi { //상품은 관리자만 
 
     // 상품 정렬
     @GetMapping("/sort/category")
-    public CustomResponse<List<Product>> getSortedList(@RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy, @RequestParam(name = "cateCode", required = false, defaultValue = "") String cateCode) {
+    public CustomResponse<List<Product>> getSortedList(@RequestParam(name = "sortBy", required = false, defaultValue = "newest") String sortBy,
+                                                       @RequestParam(name = "cateCode", required = false, defaultValue = "") String cateCode) {
         return productService.SortProduct(sortBy, cateCode);
     }
 

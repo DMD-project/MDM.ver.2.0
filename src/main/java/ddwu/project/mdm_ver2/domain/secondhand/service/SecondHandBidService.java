@@ -164,7 +164,8 @@ public class SecondHandBidService {
         if(principal == null) {
             for(SecondHandBid bid : tmpList) {
                 SecondHandBidResponse shBidResponse =
-                        new SecondHandBidResponse(bid.getSecondHand().getId(),
+                        new SecondHandBidResponse(bid.getId(),
+                                bid.getSecondHand().getId(),
                                 bid.getBidUserId(),
                                 bid.getPrice(),
                                 'n');
@@ -182,7 +183,8 @@ public class SecondHandBidService {
                     bidUserState = 'n';
                 }
                 SecondHandBidResponse shBidResponse =
-                        new SecondHandBidResponse(bid.getSecondHand().getId(),
+                        new SecondHandBidResponse(bid.getId(),
+                                bid.getSecondHand().getId(),
                                 bid.getBidUserId(),
                                 bid.getPrice(),
                                 bidUserState);

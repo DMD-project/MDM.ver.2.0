@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SecondHandResponse {
 
+    private Long shId;
     private Long userId; /* 중고거래 요청자 (가격 제안) */
     private String name;
     private String cateCode;

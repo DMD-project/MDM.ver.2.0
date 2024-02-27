@@ -267,7 +267,8 @@ public class SecondHandService {
         }
 
         SecondHandResponse response =
-                new SecondHandResponse(secondHand.getUserId(),
+                new SecondHandResponse(secondHand.getId(),
+                        secondHand.getUserId(),
                         secondHand.getName(),
                         secondHand.getCategory().getCateCode(),
                         secondHand.getPrice(),

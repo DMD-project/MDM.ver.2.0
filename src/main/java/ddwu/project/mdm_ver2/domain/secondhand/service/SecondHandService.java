@@ -259,7 +259,7 @@ public class SecondHandService {
                 favState = 'n';
             }
 
-            if(user.getId() != (secondHand.getUserId())) {
+            if(user.getId() != secondHand.getUserId()) {
                 userState = 'n';
             } else {
                 userState = 'y';
@@ -273,7 +273,7 @@ public class SecondHandService {
                         secondHand.getPrice(),
                         secondHand.getImgUrl(),
                         secondHand.getContent(),
-                        secondHandBidService.getSecondHandBidList(secondHandBidRepository.findAllBySecondHandId(shId)),
+                        secondHandBidService.getSecondHandBidList(principal, secondHandBidRepository.findAllBySecondHandId(shId)),
                         favState,
                         userState);
 

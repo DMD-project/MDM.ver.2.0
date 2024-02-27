@@ -20,8 +20,8 @@ public class SecondHandBidController implements SecondHandBidApi{
 
     /* 전체 요청 정렬 */
     @GetMapping("/sort")
-    public CustomResponse<List<SecondHandBidResponse>> getSortedList(@PathVariable("shId") Long shId, @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
-        return shBidService.sortShBid(shId, sortBy);
+    public CustomResponse<List<SecondHandBidResponse>> getSortedList(Principal principal, @PathVariable("shId") Long shId, @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy) {
+        return shBidService.sortShBid(principal, shId, sortBy);
     }
 
     /* 가격 제안 등록 (댓글 등록) */

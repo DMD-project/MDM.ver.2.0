@@ -28,25 +28,25 @@ public class SecondHandBidService {
     private final UserRepository userRepository;
 
     /* 전체 요청 정렬 */
-    public CustomResponse<List<SecondHandBidResponse>> sortShBid(Long shId, String sort) {
+    public CustomResponse<List<SecondHandBidResponse>> sortShBid(Principal principal, Long shId, String sort) {
         try {
             List<SecondHandBidResponse> sortedBidList;
             switch (sort) {
                 case "lowprice":
                     sortedBidList =
-                            getSecondHandBidList(shBidRepository.findAllBySecondHandIdOrderByPriceAsc(shId));
+                            getSecondHandBidList(principal, shBidRepository.findAllBySecondHandIdOrderByPriceAsc(shId));
                     break;
                 case "highprice":
                     sortedBidList =
-                            getSecondHandBidList(shBidRepository.findAllBySecondHandIdOrderByPriceDesc(shId));
+                            getSecondHandBidList(principal, shBidRepository.findAllBySecondHandIdOrderByPriceDesc(shId));
                     break;
                 case "newest":
                     sortedBidList =
-                            getSecondHandBidList(shBidRepository.findAllBySecondHandIdOrderByIdDesc(shId));
+                            getSecondHandBidList(principal, shBidRepository.findAllBySecondHandIdOrderByIdDesc(shId));
                     break;
                 default:
                     sortedBidList =
-                            getSecondHandBidList(shBidRepository.findAllBySecondHandId(shId));
+                            getSecondHandBidList(principal, shBidRepository.findAllBySecondHandId(shId));
                     break;
             }
             return CustomResponse.onSuccess(sortedBidList);
@@ -158,14 +158,36 @@ public class SecondHandBidService {
         }
     }
 
-    public List<SecondHandBidResponse> getSecondHandBidList(List<SecondHandBid> tmpList) {
+    public List<SecondHandBidResponse> getSecondHandBidList(Principal principal, List<SecondHandBid> tmpList) {
         List<SecondHandBidResponse> shBidList = new ArrayList<>();
-        for(SecondHandBid bid : tmpList) {
-            SecondHandBidResponse shBidResponse =
-                    new SecondHandBidResponse(bid.getSecondHand().getId(),
-                            bid.getBidUserId(),
-                            bid.getPrice());
-            shBidList.add(shBidResponse);
+
+        if(principal == null) {
+            for(SecondHandBid bid : tmpList) {
+                SecondHandBidResponse shBidResponse =
+                        new SecondHandBidResponse(bid.getSecondHand().getId(),
+                                bid.getBidUserId(),
+                                bid.getPrice(),
+                                'n');
+                shBidList.add(shBidResponse);
+            }
+        } else {
+            User user = userRepository.findByEmail(principal.getName())
+                    .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+            for(SecondHandBid bid : tmpList) {
+                Character bidUserState;
+                if(user.getId() == bid.getBidUserId()) {
+                    bidUserState = 'y';
+                } else {
+                    bidUserState = 'n';
+                }
+                SecondHandBidResponse shBidResponse =
+                        new SecondHandBidResponse(bid.getSecondHand().getId(),
+                                bid.getBidUserId(),
+                                bid.getPrice(),
+                                bidUserState);
+                shBidList.add(shBidResponse);
+            }
         }
         return shBidList;
     }

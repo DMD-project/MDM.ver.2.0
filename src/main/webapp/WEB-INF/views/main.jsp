@@ -5,17 +5,12 @@
 <head>
     <title>Main</title>
 
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+
     <style>
         body {
             background-color: #F9F1E7;
         }
-    </style>
-
-    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
-    <style>
         .photo_banner {
             background-color: #FFFFFF;
             height: 400px;
@@ -69,6 +64,9 @@
             <img src="" alt="배너_이미지_03"/>
         </div>
     </div>
+
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     <script>
         $('.slick').slick({

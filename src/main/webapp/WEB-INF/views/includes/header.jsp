@@ -140,17 +140,28 @@
 
         <ul class="navbar_login">
             <li>
-                <button onclick="login()">로그인</button>
-            </li>
-        </ul>
-        <ul class="navbar_login">
-            <li>
-               <button onclick="logout()">로그아웃</button>
+                <span id="login_btn">
+
+                    <button onclick='logout()'>로그아웃</button>
+                </span>
             </li>
         </ul>
     </nav>
 </div>
 <script>
+
+    $(document).ready(function() {
+        var token = getCookie("access_token");
+
+        let login_btn = "<button onclick='login()'>로그인</button>";
+        let logout_btn = "<button onclick='logout()>로그아웃</button>";
+
+        if (token == null)
+            $("#login_btn").html(login_btn);
+        else
+            $("#logout_btn").html(logout_btn);
+
+    });
 
     function login() {
         location.href = '/login';
@@ -165,6 +176,10 @@
             }
         }
         return null;
+    }
+
+    function deleteCookie(name) {
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
 
     function logout() {
@@ -183,7 +198,12 @@
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
+                    deleteCookie("access_token");
+                    deleteCookie("refresh_token");
+
                     alert("로그아웃되었습니다.");
+
+                    location.reload();
                 } else {
                     alert("로그아웃에 실패하였습니다.");
                 }

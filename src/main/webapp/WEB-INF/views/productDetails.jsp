@@ -48,7 +48,7 @@
       margin-top: 30px;
     }
 
-    .cart {
+    #add_cart {
           background-color: #F9F1E7;
           color: #FF7500;
           font-size: 20px;
@@ -60,7 +60,7 @@
           border: 1px solid #FF7500;
           border-radius: 10px;
     }
-    .order {
+    #order {
           background-color: #FF7500;
           color: white;
           font-size: 20px;
@@ -93,7 +93,7 @@
         border-bottom: 3px solid #FF7500;
     }
   </style>
-  <style>
+<style>
       .review_avg {
           background-color: #FFF6EA;
           text-align: center;
@@ -120,7 +120,23 @@
 
       }
 
-  </style>
+    .count_wrapper {
+        margin-top: 10px;
+    }
+    .count_wrapper button {
+        background-color: #FF7500;
+        color: #FFFFFF;
+        width: 25px;
+        height: 25px;
+        border: none;
+    }
+    .count_wrapper input {
+        width: 25px;
+        font-size: 15px;
+        text-align: center;
+        border: none;
+    }
+</style>
 </head>
 <body>
 
@@ -142,9 +158,13 @@
         <span style="padding-left: 10px;"><b>3000원</b></span>
         <span style="padding-left: 5px;">(50,000원 이상 구매시 무료배송)</span>
       </div>
-      <div>
+      <div style="margin-top: 5px;">
         <span style="color: #616161; font-size: 15px;">주문수량</span>
-        <input type="number" id="prod_count" min="1" max="10" step="1" value="1" style="margin: 10px;">
+        <div class="count_wrapper">
+            <button type="button" id="count_minus">-</button>
+            <input type="text" id="count_value" value="1">
+            <button type="button" id="count_plus">+</button>
+        </div>
       </div>
         <br/>
         <br/>
@@ -156,8 +176,8 @@
     </div>
 
     <div class="button_wrapper">
-      <button class="cart" onclick=""><b>장바구니</b></button>
-      <button class="order" onclick=""><b>결제하기</b></button>
+      <button id="add_cart"><b>장바구니</b></button>
+      <button id="order"><b>결제하기</b></button>
     </div>
 
   </div>
@@ -253,6 +273,56 @@
                     }
 
                 }
+            });
+        });
+
+        $(document).on('click', '#count_minus', function() {
+            let count_value = $('#count_value').val();
+            console.log(count_value);
+
+            if (count_value == 1)
+                alert('최소 수량 입니다.');
+            else
+                count_value--;
+
+            console.log(count_value);
+            $("#count_value").attr('value', count_value);
+        });
+
+        $(document).on('click', '#count_plus', function() {
+            let count_value = $('#count_value').val();
+            console.log(count_value);
+
+            count_value++;
+            console.log(count_value);
+
+            $("#count_value").attr('value', count_value);
+        });
+
+        $(document).on('click', '#add_cart', function() {
+            let url = window.location.href;
+            let splitUrl = url.split("/");
+
+            let prodId = splitUrl[splitUrl.length - 2];
+            let count = $('#count_value').val();
+            $.ajax ({
+                type: 'POST',
+                url: '/cartItem/add/' + prodId + '/' + count,
+                beforeSend: function(xhr) {
+                    var token = getCookie("access_token");
+                    console.log("Token:", token);
+
+                    if (!token) {
+                        alert("로그인이 필요합니다.");
+                        return;
+                    }
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                success: function(result) {
+                    console.log(result);
+                    alert('장바구니에 상품이 추가되었습니다.');
+                }
+
             });
         });
 

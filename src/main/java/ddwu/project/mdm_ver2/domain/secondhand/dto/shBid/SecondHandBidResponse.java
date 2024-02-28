@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SecondHandBidResponse {
 
+    private Long bidId;
     private Long shId;
     private Long bidUserId;
     private int price;
+    private Character bidUserState;
 
 }

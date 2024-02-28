@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 
 import ddwu.project.mdm_ver2.domain.grouppurchase.controller.GroupPurcahseApi;
+import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseResponse;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
@@ -34,7 +35,7 @@ public class GroupPurchaseController implements GroupPurcahseApi {
 
     // 특정 공동구매 상품 조회
     @GetMapping("/{gpId}")
-    public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchase (@PathVariable Long gpId){
+    public CustomResponse<GroupPurchaseResponse> getGroupPurchase (@PathVariable Long gpId){
         return groupPurchaseService.getGroupPurchase(gpId);
     }
 
@@ -46,9 +47,9 @@ public class GroupPurchaseController implements GroupPurcahseApi {
 
     // 공동구매 참여
     @PostMapping("/order/{gpId}/{purchasedQty}")
-    public CustomResponse<String> joinGroupPurchase (@PathVariable Long gpId,
-                                                     @PathVariable int purchasedQty, Principal principal){
-        return groupPurchaseService.joinGroupPurchase(gpId, principal.getName(), purchasedQty);
+    public CustomResponse<String> joinGroupPurchase (Principal principal,@PathVariable Long gpId,
+                                                     @PathVariable int purchasedQty){
+        return groupPurchaseService.joinGroupPurchase(principal, gpId, purchasedQty);
     }
 
     // 공동구매 취소

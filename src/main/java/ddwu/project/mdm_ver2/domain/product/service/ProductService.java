@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class ProductService {
     @Transactional
     public CustomResponse<List<Product>> SortProduct(String sort, String cateCode) {
         try {
-            List<Product> sortedProductList;
+            List<Product> sortedProductList = new ArrayList<Product>();
             if (cateCode != null && !cateCode.isEmpty()) {
                 sortedProductList = sortProductsByCategory(sort, cateCode);
             } else {
@@ -128,9 +129,6 @@ public class ProductService {
                     case "newest":
                         sortedProductList = productRepository.findAllByOrderByIdDesc();
                         break;
-                    default:
-                        sortedProductList = productRepository.findAll();
-                        break;
                 }
             }
             return CustomResponse.onSuccess(sortedProductList);
@@ -143,7 +141,7 @@ public class ProductService {
     // 카테고리 분류 후 일반상품 정렬
     @Transactional
     public List<Product> sortProductsByCategory(String sort, String cateCode) {
-        List<Product> productList;
+        List<Product> productList = new ArrayList<Product>();
 
         switch (sort) {
             case "lowprice":
@@ -155,11 +153,7 @@ public class ProductService {
             case "newest":
                 productList = productRepository.findAllByCategoryCateCodeOrderByIdDesc(cateCode);
                 break;
-            default:
-                productList = productRepository.findAllByCategoryCateCode(cateCode);
-                break;
         }
-
         return productList;
     }
 

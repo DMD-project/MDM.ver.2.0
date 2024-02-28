@@ -3,6 +3,7 @@ package ddwu.project.mdm_ver2.domain.grouppurchase.service;
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
 import ddwu.project.mdm_ver2.domain.category.repository.CategoryRepository;
 import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseRequest;
+import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseResponse;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GPStatus;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -160,11 +162,17 @@ public class GroupPurchaseService {
     }
 
 
-    // 특정 공동구매 총 참여자 조회
-    public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchase(Long gpId) {
+    // 특정 공동구매 상품 조회
+    public CustomResponse<GroupPurchaseResponse> getGroupPurchase(Long gpId) {
         try {
-            List<GroupPurchaseParticipant> participants = participantRepository.findByGroupPurchaseId(gpId);
-            return CustomResponse.onSuccess(participants);
+            GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
+                    .orElseThrow(() -> new NotFoundException("공동구매 상품을 찾을 수 없습니다."));
+
+            GroupPurchaseResponse response =
+                    new GroupPurchaseResponse(groupPurchase,
+                            participantRepository.countByGroupPurchaseId(gpId));
+
+            return CustomResponse.onSuccess(response);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -189,38 +197,42 @@ public class GroupPurchaseService {
     }
 
     //공동구매 참여하기
-    public CustomResponse<String> joinGroupPurchase(Long gpId, String userEmail, int purchasedQty) {
+    public CustomResponse<String> joinGroupPurchase(Principal principal, Long gpId, int purchasedQty) {
         try {
-            User user = userRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new ResourceNotFoundException("User", "email", userEmail));
-
-            if (isUserAlreadyJoined(gpId, user)) {
-                return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "이미 공동구매에 참여한 사용자입니다.");
-            }
-            GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
-                    .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
-
-            if (groupPurchase.getState() == GPStatus.ONGOING || groupPurchase.getState() == GPStatus.URGENT) {
-                if(purchasedQty > groupPurchase.getMaxQty()) {
-                    return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "주문 수량이 최대 구매 가능 수량을 초과했습니다.");
-                }
-
-                int now = groupPurchase.getNowQty();
-                groupPurchase.setNowQty(now + purchasedQty);
-
-                GroupPurchaseParticipant participant = new GroupPurchaseParticipant();
-                participant.setGroupPurchase(groupPurchase);
-                participant.setUser(user);
-                participant.setPurchasedQty(purchasedQty);
-
-                GroupPurchaseParticipant savedParticipant = participantRepository.save(participant);
-                groupPurchase.getParticipants().add(savedParticipant);
-                groupPurchaseRepository.save(groupPurchase);
-
-                return CustomResponse.onSuccess("공동구매 참여가 완료되었습니다.");
-
+            if(principal == null) {
+                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "공동구매에 참여할 수 없습니다.");
             } else {
-                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "공동구매에 참여 가능한 기간이 아닙니다.");
+                User user = userRepository.findByEmail(principal.getName())
+                        .orElseThrow(() -> new ResourceNotFoundException("User", "email", principal.getName()));
+
+                if (isUserAlreadyJoined(gpId, user)) {
+                    return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "이미 공동구매에 참여한 사용자입니다.");
+                }
+                GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
+                        .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
+
+                if (groupPurchase.getState() == GPStatus.ONGOING || groupPurchase.getState() == GPStatus.URGENT) {
+                    if(purchasedQty > groupPurchase.getMaxQty()) {
+                        return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "주문 수량이 최대 구매 가능 수량을 초과했습니다.");
+                    }
+
+                    int now = groupPurchase.getNowQty();
+                    groupPurchase.setNowQty(now + purchasedQty);
+
+                    GroupPurchaseParticipant participant = new GroupPurchaseParticipant();
+                    participant.setGroupPurchase(groupPurchase);
+                    participant.setUser(user);
+                    participant.setPurchasedQty(purchasedQty);
+
+                    GroupPurchaseParticipant savedParticipant = participantRepository.save(participant);
+                    groupPurchase.getParticipants().add(savedParticipant);
+                    groupPurchaseRepository.save(groupPurchase);
+
+                    return CustomResponse.onSuccess("공동구매 참여가 완료되었습니다.");
+
+                } else {
+                    return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "공동구매에 참여 가능한 기간이 아닙니다.");
+                }
             }
         } catch (
                 Exception e) {

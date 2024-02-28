@@ -24,7 +24,8 @@ public interface SecondHandBidApi {
             @ApiResponse(responseCode = "200", description = "요청 조회 및 정렬 성공"),
             @ApiResponse(responseCode = "404", description = "요청이 없거나 찾을 수 없음")
     })
-    public CustomResponse<List<SecondHandBidResponse>> getSortedList(@Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
+    public CustomResponse<List<SecondHandBidResponse>> getSortedList(@Parameter(description = "현재 사용자 객체") Principal principal,
+                                                                     @Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
                                                                      @Parameter(description = "요청 정렬 방식") @RequestParam(name = "sortBy", required = false, defaultValue = "") String sortBy);
 
     @Operation(summary = "중고 거래 요청 추가")

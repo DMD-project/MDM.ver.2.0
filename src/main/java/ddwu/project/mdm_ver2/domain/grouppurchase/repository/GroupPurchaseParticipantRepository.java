@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface GroupPurchaseParticipantRepository  extends JpaRepository<GroupPurchaseParticipant, Long> {
-    List<GroupPurchaseParticipant> findByGroupPurchaseId(Long gpId);
+    Long countByGroupPurchaseId(Long gpId);
     List<GroupPurchaseParticipant> findByUser(User user);
+
 }

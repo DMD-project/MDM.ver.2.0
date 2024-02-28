@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 
+import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseResponse;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
@@ -32,13 +33,13 @@ public interface GroupPurcahseApi {
             @Parameter(description = "정렬 방법", required = false, schema = @Schema(allowableValues = {"lowprice", "highprice", "newest"})) @RequestParam(name = "sortBy") String sortBy,
             @Parameter(description = "카테고리 코드", required = false, schema = @Schema(allowableValues = {"FUR", "FAB", "AD", "STO", "DEC", "LIT", "PLA"})) @RequestParam(name = "cateCode", required = false, defaultValue = "") String cateCode);
 
-    @Operation(summary = "특정 공동구매상품 조회")
+    @Operation(summary = "특정 공동구매 상품 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "특정 공동구매상품 조회 성공"),
-            @ApiResponse(responseCode = "404", description = "공동구매를 찾을 수 없음"),
+            @ApiResponse(responseCode = "200", description = "공동구매 상품 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "공동구매 상품을 찾을 수 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchase(@PathVariable Long gpId);
+    CustomResponse<GroupPurchaseResponse> getGroupPurchase(@PathVariable Long gpId);
 
     @Operation(summary = "공동구매 전체 개수 조회")
     @ApiResponses(value = {
@@ -52,10 +53,11 @@ public interface GroupPurcahseApi {
             @ApiResponse(responseCode = "400", description = "이미 공동구매에 참여한 사용자입니다."),
             @ApiResponse(responseCode = "400", description = "주문 수량이 최대 구매 수량을 초과"),
             @ApiResponse(responseCode = "404", description = "공동구매를 찾을 수 없음"),
+            @ApiResponse(responseCode = "405", description = "공동구매에 참여할 수 없습니다."),
             @ApiResponse(responseCode = "405", description = "공동구매 참여 가능한 기간이 아님"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    CustomResponse<String> joinGroupPurchase(@PathVariable Long gpId, @PathVariable int purchasedQty, Principal principal);
+    CustomResponse<String> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty);
 
     @Operation(summary = "공동구매 취소")
     @ApiResponses(value = {

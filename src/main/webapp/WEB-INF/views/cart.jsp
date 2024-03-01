@@ -22,14 +22,11 @@
             justify-content: center;
         }
         .content_left {
-            background-color: #FFFFFF;
-
             width: 600px;
             padding: 25px;
         }
         .content_right {
             margin-left: 50px;
-
             display: inline;
         }
         input[type="checkbox"] {
@@ -58,6 +55,28 @@
             border: none;
             border-radius: 10px;
         }
+        .cartItem_wrapper {
+            background-color: #FFFFFF;
+            display: flex;
+            float: left;
+            width: 570px;
+            height: 130px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .count_wrapper button {
+            background-color: #FF7500;
+            color: #FFFFFF;
+            width: 25px;
+            height: 25px;
+            border: none;
+        }
+        .count_wrapper input {
+            width: 25px;
+            font-size: 15px;
+            text-align: center;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -68,20 +87,13 @@
     <div class="content_wrapper">
 
         <div class="content_left">
-            <div class="cart_header">
+            <div class="cart_header" style="padding: 0 15px;">
                 <div style="float: left; color: #616161;">
-                    <input type="checkbox"><span>모두 선택</span>
+                    <input type="checkbox" class="check_all" checked><span>모두 선택</span>
                 </div>
-                <div style="float: right; color: #616161;">선택 삭제</div>
+                <div class="delete_item" style="float: right; color: #616161;">선택 삭제</div>
             </div>
             <div class="cart_content" id="cartItem_list">
-
-
-
-
-
-
-
 
 
             </div>
@@ -96,7 +108,7 @@
                 <br/>
                 <div class="shipping_fee" style="padding-bottom: 10px;">
                     <div style="float: left;">배송비</div>
-                    <div style="float: right;"><span style="padding-right: 5px;">shipping_fee</span>원</div>
+                    <div style="float: right;"><span id="shipping_fee" style="padding-right: 5px;">shipping_fee</span>원</div>
                 </div>
                 <br/>
                 <div class="product_qty" style="padding-bottom: 80px;">
@@ -106,7 +118,7 @@
 
                 <div class="total_price">
                     <div style="float: left; font-size: 18px;"><b>결제 금액</b></div>
-                    <div style="float: right;"><span style="font-size: 25px; padding-right: 5px;"><b>total_price</b></span>원</div>
+                    <div style="float: right;"><span id="total_price" style="font-size: 25px; padding-right: 5px;"><b>total_price</b></span>원</div>
                 </div>
             </div>
 
@@ -118,7 +130,6 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
-
         function getCookie(name) {
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
@@ -131,6 +142,10 @@
         }
 
         $(document).ready(function() {
+            printCartItems();
+        });
+
+        function printCartItems() {
             $.ajax ({
                 type: 'GET',
                 url: '/cart',
@@ -140,7 +155,7 @@
 
                     if (!token) {
                         alert("로그인이 필요합니다.");
-                        return;
+                        location.href="http://localhost:8080/login";
                     }
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
@@ -148,101 +163,147 @@
                     if(status == 404) {
                         alert("장바구니 불러오기에 실패하였습니다.");
                         location.href="http://localhost:8080";
-                    } else {
-                        alert("로그인이 필요합니다.");
-                        location.href="http://localhost:8080/login";
                     }
                 },
                 success: function(data) {
-                    $("#count").html(data.content.cartItems.length);
-                    printCartItems(data);
+                    console.log(data);
+
+                    let product_price = data.content.price;
+                    let shipping_fee = 3000;
+                    let product_qty = data.content.count;
+
+                    if (50000 <= product_price)
+                        shipping_fee = 0;
+
+                    let total_price = product_price + shipping_fee;
+
+                    $("#product_price").html(product_price);
+                    $("#shipping_fee").html(shipping_fee);
+                    $("#product_qty").html(product_qty);
+                    $("#total_price").html(total_price);
+
+                    let cart_item_info = "";
+                    for(let i = 0; i < data.content.cartItems.length; i++) { $('.cartItem_checkvox').siblings(div)
+                        cart_item_info += "<div class='cartItem_wrapper' value='" + data.content.cartItems[i].id +"'>"
+                                            + "<input type='checkbox' class='cartItem_checkbox' style='margin-right: 15px;' checked='checked' value='" + data.content.cartItems[i].id + "'>"
+                                            + "<img src='" + data.content.cartItems[i].product.imgUrl + "style='width: 110px; height: 130px; margin-right: 30px;'>"
+                                            + "<div style='display: flex; flex-direction: column;'>"
+                                                + "<div style='font-size: 22px; margin-top: 20px;'><b>" + data.content.cartItems[i].product.name + "</b></div>"
+                                                + "<div class='setPriceInfo' style='width: 380px; margin-top: 35px;'>"
+                                                    + "<div class='count_wrapper' style='float:left;'>"
+                                                        + "<button type='button' id='count_minus' value='" + data.content.cartItems[i].id + "'> - </button>"
+                                                        + "<input type='text' id='count_value' value='" + data.content.cartItems[i].count + "' readonly>"
+                                                        + "<button type='button' id='count_plus' value='" + data.content.cartItems[i].id + "'> + </button>"
+                                                    + "</div>"
+                                                    + "<div id='product_price' style='float: right; margin-left: 0; font-size: 25px;'><b>" + data.content.cartItems[i].price + "</b></div>"
+                                                +"</div>"
+                                            + "</div>"
+                                        + "</div>";
+                    }
+                    $("#cartItem_list").html(cart_item_info);
                 }
             });
+        }
+
+        function setPriceInfo() {
+
+        }
+
+        $(document).on('click', '.check_all', function() {
+            if ($('.check_all').is(':checked'))
+                $('.cartItem_checkbox').prop('checked', true);
+            else
+                $('.cartItem_checkbox').prop('checked', false);
         });
 
-        function printCartItems(data) {
-            let product_price = data.content.price;
-            let product_qty = data.content.count;
-            let cart_item_info = "";
+        $(document).on('click', '.cartItem_checkbox', function() {
+            let selected_count = $(".cartItem_checkbox:checked").length;
+            let checkbox_count = $(".cartItem_checkbox").length;
 
-            cart_item_info += "<ul>";
+            if (selected_count == checkbox_count)
+                $('.check_all').prop('checked', true);
+            else
+                $('.check_all').prop('checked', false);
+        });
 
-            for(let i = 0; i < data.content.cartItems.length; i++) {
-                cart_item_info += "<li>"
-                            + "<img src='" + data.content.cartItems[i].product.imgUrl + " style='width: 50%; height: 100px;'>" + "<br/>"
-                            + "<span>" + data.content.cartItems[i].product.name + "</span>" + "<br/>"
-                            + "<a href='/cart/view' onclick='decrease_count(" + data.content.cartItems[i].id + ")'> - </a>"
-                            + "<span id='item_qty'>" + data.content.cartItems[i].count + "</span>" + "<br/>"
-                            + "<a href='/cart/view' onclick='increase_count(" + data.content.cartItems[i].id + ")'> + </a>"
-                            + "<span><b>" + data.content.cartItems[i].price + "원</b></span>"
-                            + "</li>";
+        $(document).on('click', '.delete_item', function() {
+            let itemsId = [];
+            $(".cartItem_checkbox:checked").each(function(){
+                itemsId.push($(this).val());
+            });
+
+            if (itemsId.length == 0)
+                alert('삭제할 상품을 선택해 주세요.');
+            else {
+                $.ajax ({
+                    type: 'DELETE',
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        console.log(token);
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    url: '/cartItem/delete/selected',
+                    data: {
+                        "itemsId" : itemsId,
+                    },
+                    success: function() {
+                        printCartItems();
+                    }
+                });
             }
+        });
 
+        $(document).on('click', '#count_minus', function() {
+            let id = $(this).val();
+            let count_value = $(this).next().val();
 
-            $("#product_price").html(product_price);
-            $("#product_qty").html(product_qty);
-            $("#cartItem_list").html(cart_item_info);
-        }
+            if (count_value == 1)
+                alert('최소 수량 입니다.');
+            else {
+                count_value--;
+                $(this).next().attr('value', count_value);
 
-        function increase_count(id) {
+                $.ajax ({
+                    type: 'PUT',
+                    url: '/cartItem/decrease/' + id,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        console.log("Token:", token);
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    error: function(xhr, status, error){
+                        alert("상품 개수 변경에 실패하였습니다.");
+                    },
+                    success: function(data) {
+                        printCartItems();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '#count_plus', function() {
+            let id = $(this).val();
+            let count_value = $(this).prev().val();
+
+            count_value++;
+            $(this).prev().attr('value', count_value);
+
             $.ajax ({
                 type: 'PUT',
-                url: '/cartItem/increase/'+id,
+                url: '/cartItem/increase/' + id,
                 beforeSend: function(xhr) {
                     var token = getCookie("access_token");
                     console.log("Token:", token);
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
-                error: function(xhr, status, error){
+                 error: function(xhr, status, error){
                     alert("상품 개수 변경에 실패하였습니다.");
-                },
-                success: function(data) {
-                    $("#item_qty").html(data.count);
-                }
+                 },
+                 success: function(data) {
+                    printCartItems();
+                 }
             });
-        }
-
-        function decrease_count(id) {
-            $.ajax ({
-                type: 'PUT',
-                url: '/cartItem/decrease/'+id,
-                beforeSend: function(xhr) {
-                    var token = getCookie("access_token");
-                    console.log("Token:", token);
-                    xhr.setRequestHeader("Authorization", "Bearer " + token);
-                },
-                error: function(xhr, status, error){
-                    alert("상품 개수 변경에 실패하였습니다.");
-                },
-                success: function(data) {
-                    $("#item_qty").html(data.count);
-                }
-            });
-        }
-
-        function delete_selected() {
-            $.ajax ({
-
-            });
-        }
-
-        function delete_all() {
-            $.ajax ({
-                type: 'DELETE',
-                url: '/cart/delete/',
-                beforeSend: function(xhr) {
-                    var token = getCookie("access_token");
-                    console.log("Token:", token);
-                    xhr.setRequestHeader("Authorization", "Bearer " + token);
-                },
-                error: function(xhr, status, error){
-                    alert("장바구니 비우기에 실패하였습니다.");
-                },
-                success: function(data) {
-
-                }
-            });
-        }
+        });
 
     </script>
 

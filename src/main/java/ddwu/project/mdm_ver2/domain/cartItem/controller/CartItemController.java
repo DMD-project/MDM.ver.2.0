@@ -57,7 +57,7 @@ public class CartItemController implements CartItemApi {
     // 장바구니 선택한 품목들 삭제
     @Transactional
     @DeleteMapping("/delete/selected")
-    public CustomResponse<Void> deleteCartItems(@RequestParam(name = "itemsId") List<Long> itemsId) {
+    public CustomResponse<Void> deleteCartItems(@RequestParam(name = "itemsId[]") List<Long> itemsId) {
         return cartItemService.deleteCartItems(itemsId);
     }
 

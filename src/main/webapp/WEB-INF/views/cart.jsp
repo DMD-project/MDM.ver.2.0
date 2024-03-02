@@ -101,9 +101,9 @@
 
         <div class="content_right">
             <div class="price_info">
-                <div class="product_price" style="padding-bottom: 10px;">
+                <div class="product_total" style="padding-bottom: 10px;">
                     <div style="float: left;">총 상품 금액</div>
-                    <div style="float: right;"><span id="product_price" style="padding-right: 5px;">product_price</span>원</div>
+                    <div style="float: right;"><span id="product_total" style="padding-right: 5px;">product_total</span>원</div>
                 </div>
                 <br/>
                 <div class="shipping_fee" style="padding-bottom: 10px;">
@@ -168,22 +168,22 @@
                 success: function(data) {
                     console.log(data);
 
-                    let product_price = data.content.price;
-                    let shipping_fee = 3000;
+                    let product_total = data.content.price;
                     let product_qty = data.content.count;
+                    let shipping_fee = 3000;
 
-                    if (50000 <= product_price)
+                    if (50000 <= product_total)
                         shipping_fee = 0;
 
-                    let total_price = product_price + shipping_fee;
+                    let total_price = product_total + shipping_fee;
 
-                    $("#product_price").html(product_price);
+                    $("#product_total").html(product_total);
                     $("#shipping_fee").html(shipping_fee);
                     $("#product_qty").html(product_qty);
                     $("#total_price").html(total_price);
 
                     let cart_item_info = "";
-                    for(let i = 0; i < data.content.cartItems.length; i++) { $('.cartItem_checkvox').siblings(div)
+                    for(let i = 0; i < data.content.cartItems.length; i++) {
                         cart_item_info += "<div class='cartItem_wrapper' value='" + data.content.cartItems[i].id +"'>"
                                             + "<input type='checkbox' class='cartItem_checkbox' style='margin-right: 15px;' checked='checked' value='" + data.content.cartItems[i].id + "'>"
                                             + "<img src='" + data.content.cartItems[i].product.imgUrl + "style='width: 110px; height: 130px; margin-right: 30px;'>"
@@ -205,15 +205,13 @@
             });
         }
 
-        function setPriceInfo() {
-
-        }
-
         $(document).on('click', '.check_all', function() {
             if ($('.check_all').is(':checked'))
                 $('.cartItem_checkbox').prop('checked', true);
             else
                 $('.cartItem_checkbox').prop('checked', false);
+
+            setPriceInfo();
         });
 
         $(document).on('click', '.cartItem_checkbox', function() {
@@ -224,7 +222,35 @@
                 $('.check_all').prop('checked', true);
             else
                 $('.check_all').prop('checked', false);
+
+            setPriceInfo();
         });
+
+        function setPriceInfo() {
+            let product_total = 0;
+            let product_qty = 0;
+            let shipping_fee = 3000;
+
+            $(".cartItem_wrapper").each(function(idx, element) {
+                if ($(element).find('input').is(':checked')) {
+                    let price = parseInt($(element).find('#product_price').text());
+                    let count_value = parseInt($(element).find('#count_value').val());
+
+                    product_total += price;
+                    product_qty += count_value;
+                }
+            });
+
+            if (50000 <= product_total)
+                shipping_fee = 0;
+
+            let total_price = product_total + shipping_fee;
+
+            $("#product_total").html(product_total);
+            $("#shipping_fee").html(shipping_fee);
+            $("#product_qty").html(product_qty);
+            $("#total_price").html(total_price);
+        }
 
         $(document).on('click', '.delete_item', function() {
             let itemsId = [];

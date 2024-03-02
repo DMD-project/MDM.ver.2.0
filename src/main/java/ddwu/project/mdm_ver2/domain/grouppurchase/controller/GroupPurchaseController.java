@@ -1,9 +1,6 @@
 package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 
-import ddwu.project.mdm_ver2.domain.grouppurchase.controller.GroupPurcahseApi;
-import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseResponse;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
-import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
@@ -35,7 +32,7 @@ public class GroupPurchaseController implements GroupPurcahseApi {
 
     // 특정 공동구매 상품 조회
     @GetMapping("/{gpId}")
-    public CustomResponse<GroupPurchaseResponse> getGroupPurchase (@PathVariable Long gpId){
+    public CustomResponse<GroupPurchase> getGroupPurchase (@PathVariable Long gpId){
         return groupPurchaseService.getGroupPurchase(gpId);
     }
 
@@ -52,22 +49,9 @@ public class GroupPurchaseController implements GroupPurcahseApi {
         return groupPurchaseService.joinGroupPurchase(principal, gpId, purchasedQty);
     }
 
-    // 공동구매 취소
-    @DeleteMapping("/cancel/{gpId}")
-    public CustomResponse<String> cancelGroupPurchase (@PathVariable Long gpId, Principal principal){
-        return groupPurchaseService.cancelGroupPurchase(gpId, principal.getName());
-    }
-
     //  공동구매 검색
     @GetMapping("/search/{keyword}")
     public CustomResponse<List<GroupPurchase>> searchGroupPurchase (@RequestParam(name = "keyword") String keyword){
         return groupPurchaseService.searchGroupPurchase(keyword);
     }
-
-    // 공동구매 결제
-//    @PostMapping("/pay/{gpId}")
-//    public CustomResponse<Void> payGroupPurchase(@PathVariable Long gpId, Principal principal) {
-//        return groupPurchaseService.payGroupPurchase(gpId, principal.getName());
-//    }
-
 }

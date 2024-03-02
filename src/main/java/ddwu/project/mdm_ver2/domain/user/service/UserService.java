@@ -310,7 +310,6 @@ public class UserService {
 
             reviewService.clearUserData(id);
             shBidService.clearUserData(id);
-            groupPurchaseService.clearUserDate(id);
 
             userRepository.deleteById(id);
 

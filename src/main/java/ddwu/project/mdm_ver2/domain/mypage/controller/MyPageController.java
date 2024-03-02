@@ -2,7 +2,6 @@ package ddwu.project.mdm_ver2.domain.mypage.controller;
 
 import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
 import ddwu.project.mdm_ver2.domain.favorite.service.FavoriteService;
-import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
 import ddwu.project.mdm_ver2.domain.mypage.dto.AddressRequest;
 import ddwu.project.mdm_ver2.domain.mypage.service.MyPageService;
@@ -15,7 +14,6 @@ import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHandBid;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandBidService;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandService;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
-import ddwu.project.mdm_ver2.domain.user.service.UserService;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -80,8 +78,8 @@ public class MyPageController implements MyPageApi {
 
     /* 사용자 참여 공동 구매 상품 리스트 */
     @GetMapping("/gp")
-    public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchasesByUser(Principal principal) {
-        return groupPurchaseService.getGroupPurchasesByUser(principal.getName());
+    public CustomResponse<List<Order>> getGroupPurchasesByUser(Principal principal) {
+        return groupPurchaseService.getGroupPurchasesByUser(principal);
     }
 
     /* 사용자 작성 중고 거래 상품 리스트 */

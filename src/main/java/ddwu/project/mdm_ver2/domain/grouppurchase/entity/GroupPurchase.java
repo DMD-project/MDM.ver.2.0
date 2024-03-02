@@ -8,8 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -50,14 +50,10 @@ public class GroupPurchase implements Serializable {
     private int goalQty;
 
     @Column(name = "gp_start")
-    private Date start;
+    private LocalDate start;
 
     @Column(name = "gp_end")
-    private Date end;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "groupPurchase", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<GroupPurchaseParticipant> participants = new ArrayList<>();
+    private LocalDate end;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "cate_id", referencedColumnName = "cate_id")

@@ -1,10 +1,10 @@
 package ddwu.project.mdm_ver2.domain.order.service;
 
+import ddwu.project.mdm_ver2.domain.cart.entity.Cart;
 import ddwu.project.mdm_ver2.domain.cartItem.entity.Items;
 import ddwu.project.mdm_ver2.domain.cartItem.repository.ItemsRepository;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
-import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
-import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseParticipantRepository;
+import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseRepository;
 import ddwu.project.mdm_ver2.domain.order.dto.OrderDto;
 import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.order.repository.OrderRepository;
@@ -24,20 +24,8 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ItemsRepository itemsRepository;
-    private final GroupPurchaseParticipantRepository groupPurchaseParticipantRepository;
+    private final GroupPurchaseRepository groupPurchaseRepository;
 
-    public CustomResponse<Order> addOrder(OrderDto orderDto) {
-        Order order = new Order();
-        order.setName(orderDto.getName());
-        order.setContact(orderDto.getContact());
-        order.setEmail(orderDto.getEmail());
-        order.setZipcode(orderDto.getZipcode());
-        order.setStreetAddr(orderDto.getStreetAddr());
-        order.setDetailAddr(orderDto.getDetailAddr());
-
-        Order savedOrder = orderRepository.save(order);
-        return CustomResponse.onSuccess(savedOrder);
-    }
 
     public CustomResponse<Order> updateOrder(long orderId, OrderDto updatedOrder) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
@@ -45,7 +33,6 @@ public class OrderService {
             Order existingOrder = optionalOrder.get();
             existingOrder.setName(updatedOrder.getName());
             existingOrder.setContact(updatedOrder.getContact());
-            existingOrder.setEmail(updatedOrder.getEmail());
             existingOrder.setZipcode(updatedOrder.getZipcode());
             existingOrder.setStreetAddr(updatedOrder.getStreetAddr());
             existingOrder.setDetailAddr(updatedOrder.getDetailAddr());
@@ -58,7 +45,18 @@ public class OrderService {
     }
 
     public CustomResponse<Void> cancelOrder(long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        GroupPurchase groupPurchase = order.getGroupPurchase();
+
+        if (groupPurchase != null) {
+            int qtyToRemove = order.getQty();
+            int currentQty = groupPurchase.getNowQty();
+            groupPurchase.setNowQty(currentQty - qtyToRemove);
+            groupPurchaseRepository.save(groupPurchase);
+        }
+
         orderRepository.deleteById(orderId);
+
         return CustomResponse.onSuccess(null);
     }
 
@@ -79,42 +77,29 @@ public class OrderService {
 
     public CustomResponse<Order> purchaseItemsFromCart(String userEmail, List<Long> itemIds) {
         Order order = new Order();
-        order.setEmail(userEmail);
-
         int totalPrice = 0;
+        int totalQty = 0;
 
         for (Long itemId : itemIds) {
             Items item = itemsRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
+
+            Cart cart = item.getCart();
+            cart.getCartItems().remove(item);
+            cart.setPrice(cart.getPrice() - item.getPrice());
+            cart.setCount(cart.getCount() - item.getCount());
+
+            item.setCart(null);
             item.setOrder(order);
             order.getCartItems().add(item);
             totalPrice += item.getPrice();
+            totalQty += item.getCount();
         }
         order.setPrice(totalPrice);
+        order.setQty(totalQty);
+        order.setEmail(userEmail);
 
         Order savedOrder = orderRepository.save(order);
 
         return CustomResponse.onSuccess(savedOrder);
-    }
-
-    public CustomResponse<Order> addGroupPurchaseToOrder(Long orderId, Long gpParticipantId) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderId);
-        if (optionalOrder.isPresent()) {
-            Order order = optionalOrder.get();
-
-            Optional<GroupPurchaseParticipant> optionalParticipant = groupPurchaseParticipantRepository.findById(gpParticipantId);
-            if (optionalParticipant.isPresent()) {
-                GroupPurchaseParticipant participant = optionalParticipant.get();
-                GroupPurchase groupPurchase = participant.getGroupPurchase();
-
-                order.setGroupPurchase(groupPurchase);
-                orderRepository.save(order);
-
-                return CustomResponse.onSuccess(order);
-            } else {
-                return CustomResponse.onFailure(404, "해당 공동구매 참여자를 찾을 수 없습니다.");
-            }
-        } else {
-            return CustomResponse.onFailure(404, "주문을 찾을 수 없습니다.");
-        }
     }
 }

@@ -4,7 +4,6 @@ import ddwu.project.mdm_ver2.domain.order.dto.OrderDto;
 import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.order.service.OrderService;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +16,6 @@ import java.util.List;
 public class OrderController implements OrderApi{
 
     private final OrderService orderService;
-
-    // 주문 정보 추가
-    @PostMapping("/add")
-    public CustomResponse<Order> addOrder(@RequestBody OrderDto order) {
-        return orderService.addOrder(order);
-    }
 
     // 주문 정보 수정
     @PutMapping("/update/{orderId}")
@@ -46,11 +39,5 @@ public class OrderController implements OrderApi{
     @PostMapping("/cart/add")
     public CustomResponse<Order> purchaseItemsFromCart(Principal principal, @RequestBody List<Long> itemIds) {
         return orderService.purchaseItemsFromCart(principal.getName(), itemIds);
-    }
-
-    // 공동구매 항목 추가
-    @PostMapping("/gp/add")
-    public CustomResponse<Order> addGroupPurchaseToOrder(@RequestParam("orderId") Long orderId, @RequestParam("gpParticipantId") Long gpParticipantId) {
-        return orderService.addGroupPurchaseToOrder(orderId, gpParticipantId);
     }
 }

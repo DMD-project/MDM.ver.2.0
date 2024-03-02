@@ -3,12 +3,11 @@ package ddwu.project.mdm_ver2.domain.grouppurchase.service;
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
 import ddwu.project.mdm_ver2.domain.category.repository.CategoryRepository;
 import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseRequest;
-import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseResponse;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GPStatus;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
-import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
-import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseParticipantRepository;
 import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseRepository;
+import ddwu.project.mdm_ver2.domain.order.entity.Order;
+import ddwu.project.mdm_ver2.domain.order.repository.OrderRepository;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
@@ -21,8 +20,8 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -31,9 +30,10 @@ import java.util.List;
 public class GroupPurchaseService {
 
     private final GroupPurchaseRepository groupPurchaseRepository;
-    private final GroupPurchaseParticipantRepository participantRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+
 
     // 공동구매상품 등록
     public CustomResponse<GroupPurchase> addGroupPurchase(GroupPurchaseRequest request) {
@@ -163,29 +163,31 @@ public class GroupPurchaseService {
 
 
     // 특정 공동구매 상품 조회
-    public CustomResponse<GroupPurchaseResponse> getGroupPurchase(Long gpId) {
+    public CustomResponse<GroupPurchase> getGroupPurchase(Long gpId) {
         try {
             GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
                     .orElseThrow(() -> new NotFoundException("공동구매 상품을 찾을 수 없습니다."));
 
-            GroupPurchaseResponse response =
-                    new GroupPurchaseResponse(groupPurchase,
-                            participantRepository.countByGroupPurchaseId(gpId));
-
-            return CustomResponse.onSuccess(response);
+            return CustomResponse.onSuccess(groupPurchase);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-    // userEmail에 해당하는 참여자의 정보를 출력하는 메서드
-    public CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchasesByUser(String userEmail) {
+
+    // userEmail에 해당하는 주문 정보를 출력하는 메서드
+    public CustomResponse<List<Order>> getGroupPurchasesByUser(Principal principal) {
         try {
+            if (principal == null) {
+                return CustomResponse.onFailure(HttpStatus.UNAUTHORIZED.value(), "로그인이 필요합니다.");
+            }
+
+            String userEmail = principal.getName(); // Get the email of the currently authenticated user
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new ResourceNotFoundException("User", "email", userEmail));
 
-            List<GroupPurchaseParticipant> participants = participantRepository.findByUser(user);
-            return CustomResponse.onSuccess(participants);
+            List<Order> orders = orderRepository.findByEmailAndGroupPurchaseIsNotNull(userEmail); // Find orders associated with the user's email where groupPurchase is not null
+            return CustomResponse.onSuccess(orders);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -196,36 +198,38 @@ public class GroupPurchaseService {
         return CustomResponse.onSuccess(groupPurchaseRepository.count());
     }
 
-    //공동구매 참여하기
+    // 공동구매 참여하기 - 주문
     public CustomResponse<String> joinGroupPurchase(Principal principal, Long gpId, int purchasedQty) {
         try {
-            if(principal == null) {
+            if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "공동구매에 참여할 수 없습니다.");
             } else {
                 User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new ResourceNotFoundException("User", "email", principal.getName()));
 
-                if (isUserAlreadyJoined(gpId, user)) {
-                    return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "이미 공동구매에 참여한 사용자입니다.");
-                }
                 GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
                         .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
 
+                boolean alreadyJoined = orderRepository.existsByEmailAndGroupPurchase(user.getEmail(), groupPurchase);
+                if (alreadyJoined) {
+                    return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "이미 해당 공동구매에 참여하였습니다.");
+                }
+
                 if (groupPurchase.getState() == GPStatus.ONGOING || groupPurchase.getState() == GPStatus.URGENT) {
-                    if(purchasedQty > groupPurchase.getMaxQty()) {
+                    if (purchasedQty > groupPurchase.getMaxQty()) {
                         return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "주문 수량이 최대 구매 가능 수량을 초과했습니다.");
                     }
 
-                    int now = groupPurchase.getNowQty();
-                    groupPurchase.setNowQty(now + purchasedQty);
+                    Order order = new Order();
+                    order.setEmail(user.getEmail());
+                    order.setGroupPurchase(groupPurchase);
+                    order.setPrice(groupPurchase.getPrice() * purchasedQty);
+                    order.setQty(purchasedQty);
 
-                    GroupPurchaseParticipant participant = new GroupPurchaseParticipant();
-                    participant.setGroupPurchase(groupPurchase);
-                    participant.setUser(user);
-                    participant.setPurchasedQty(purchasedQty);
+                    orderRepository.save(order);
 
-                    GroupPurchaseParticipant savedParticipant = participantRepository.save(participant);
-                    groupPurchase.getParticipants().add(savedParticipant);
+                    int nowQty = groupPurchase.getNowQty() + purchasedQty;
+                    groupPurchase.setNowQty(nowQty);
                     groupPurchaseRepository.save(groupPurchase);
 
                     return CustomResponse.onSuccess("공동구매 참여가 완료되었습니다.");
@@ -234,58 +238,10 @@ public class GroupPurchaseService {
                     return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "공동구매에 참여 가능한 기간이 아닙니다.");
                 }
             }
-        } catch (
-                Exception e) {
-            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-        }
-    }
-
-    private boolean isUserAlreadyJoined(Long gpId, User user) {
-        GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
-                .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
-
-        for (GroupPurchaseParticipant participant : groupPurchase.getParticipants()) {
-            if (participant.getUser().equals(user)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // 공동구매 참여 취소
-    public CustomResponse<String> cancelGroupPurchase(Long gpId, String userEmail) {
-        try {
-            User user = userRepository.findByEmail(userEmail)
-                    .orElseThrow(() -> new ResourceNotFoundException("User", "email", userEmail));
-
-            GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
-                    .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
-
-            // 참여자 목록에서 해당 사용자 찾기
-            GroupPurchaseParticipant participantToRemove = null;
-            for (GroupPurchaseParticipant participant : groupPurchase.getParticipants()) {
-                if (participant.getUser().equals(user)) {
-                    participantToRemove = participant;
-                    break;
-                }
-            }
-
-            if (participantToRemove != null) {
-                groupPurchase.setNowQty(groupPurchase.getNowQty() - participantToRemove.getPurchasedQty());
-                participantRepository.delete(participantToRemove);
-                groupPurchase.getParticipants().remove(participantToRemove);
-
-                groupPurchaseRepository.save(groupPurchase);
-
-                return CustomResponse.onSuccess("공동구매 참여가 취소되었습니다.");
-            } else {
-                return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "사용자가 공동구매에 참여하지 않았거나 취소 권한이 없습니다.");
-            }
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
-
 
     //  공동구매 검색
     public CustomResponse<List<GroupPurchase>> searchGroupPurchase(String keyword) {
@@ -304,44 +260,16 @@ public class GroupPurchaseService {
     public void updateGroupPurchaseStatus() {
         List<GroupPurchase> groupPurchases = groupPurchaseRepository.findAll();
         for (GroupPurchase groupPurchase : groupPurchases) {
-            Date currentDate = new Date();
-            if (groupPurchase.getNowQty() >= groupPurchase.getGoalQty() && currentDate.after(groupPurchase.getEnd())) {
+            LocalDate currentDate = LocalDate.now();
+            LocalDate endDate = groupPurchase.getEnd();
+
+            if (groupPurchase.getNowQty() >= groupPurchase.getGoalQty() && currentDate.isAfter(endDate)) {
                 groupPurchase.setState(GPStatus.ACHIEVED);
-            } else if (currentDate.after(new Date(groupPurchase.getEnd().getTime() - 3 * 24 * 60 * 60 * 1000))) {
+            } else if (currentDate.isAfter(endDate.minusDays(3))) {
                 groupPurchase.setState(GPStatus.URGENT);
             } else {
                 groupPurchase.setState(GPStatus.ONGOING);
             }
-        }
-    }
-
-    // 공동구매 결제
-//    @Transactional
-//    public CustomResponse<Void> payGroupPurchase(Long gpId, String userEmail) {
-//        try {
-//            GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
-//                    .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
-//
-//            // 결제 로직 추가
-//
-//            return CustomResponse.onSuccess(null);
-//        } catch (Exception e) {
-//            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-//        }
-//    }
-
-    public void clearUserDate(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-
-        List<GroupPurchaseParticipant> participantList = participantRepository.findByUser(user);
-        for(GroupPurchaseParticipant participant : participantList) {
-            GroupPurchase groupPurchase = groupPurchaseRepository.findById(participant.getGroupPurchase().getId())
-                    .orElseThrow(() -> new NotFoundException("공동구매 상품을 찾을 수 없습니다."));
-
-            int updateQty = groupPurchase.getNowQty() - participant.getPurchasedQty();
-            participantRepository.deleteById(participant.getId());
-            groupPurchase.setNowQty(updateQty);
         }
     }
 

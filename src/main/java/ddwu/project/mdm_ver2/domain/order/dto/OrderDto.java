@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class OrderDto {
     private String name;
     private String contact;
-    private String email;
     private String zipcode;
     private String streetAddr;
     private String detailAddr;

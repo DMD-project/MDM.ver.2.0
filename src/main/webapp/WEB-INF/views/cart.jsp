@@ -195,7 +195,8 @@
                                                         + "<input type='text' id='count_value' value='" + data.content.cartItems[i].count + "' readonly>"
                                                         + "<button type='button' id='count_plus' value='" + data.content.cartItems[i].id + "'> + </button>"
                                                     + "</div>"
-                                                    + "<div id='product_price' style='float: right; margin-left: 0; font-size: 25px;'><b>" + data.content.cartItems[i].price + "</b></div>"
+                                                    + "<div style='float: right; margin-left: 0; font-size: 25px;'><b>원</b></div>"
+                                                    + "<div id='product_price' style='float: right; font-size: 25px;'><b>" + data.content.cartItems[i].price + "</b></div>"
                                                 +"</div>"
                                             + "</div>"
                                         + "</div>";

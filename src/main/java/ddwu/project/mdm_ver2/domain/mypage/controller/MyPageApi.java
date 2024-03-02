@@ -1,7 +1,6 @@
 package ddwu.project.mdm_ver2.domain.mypage.controller;
 
 import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
-import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
@@ -53,7 +52,7 @@ public interface MyPageApi {
             @ApiResponse(responseCode = "200", description = "특정 사용자가 참여한 공동 구매 조회 성공"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    CustomResponse<List<GroupPurchaseParticipant>> getGroupPurchasesByUser(@Parameter(description = "현재 사용자 객체") Principal principal);
+    CustomResponse<List<Order>> getGroupPurchasesByUser(@Parameter(description = "현재 사용자 객체") Principal principal);
 
     @Operation(summary = "사용자 작성 중고 거래 상품 리스트 조회")
     @ApiResponses(value = {

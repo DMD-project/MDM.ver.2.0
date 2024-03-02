@@ -45,10 +45,13 @@ public class Order { //일반상품(장바구니) 결제, 공동구매 결제
     @Column(name = "order_price")
     private Integer price; // 주문 총 가격
 
+    @Column(name = "order_qty")
+    private Integer qty; // 주문 수량
+
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Items> cartItems = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gp_id")
     private GroupPurchase groupPurchase; // 공동구매
 
@@ -61,12 +64,4 @@ public class Order { //일반상품(장바구니) 결제, 공동구매 결제
         this.streetAddr = streetAder;
         this.detailAddr = detailAddr;
     }
-
-//    public void calculateTotalPrice() {
-//        int totalPrice = 0;
-//        for (Items item : cartItems) {
-//            totalPrice += item.getPrice();
-//        }
-//        this.price = totalPrice;
-//    }
 }

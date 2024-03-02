@@ -17,12 +17,6 @@ import java.util.List;
 
 @Tag(name = "Order", description = "주문 API")
 public interface OrderApi {
-    @Operation(summary = "주문 정보 추가")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "주문 정보 추가 성공"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")})
-    CustomResponse<Order> addOrder(@Parameter(description = "주문 정보") @RequestBody OrderDto order);
-
     @Operation(summary = "주문 정보 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "주문 정보 수정 성공"),
@@ -52,10 +46,10 @@ public interface OrderApi {
     CustomResponse<Order> purchaseItemsFromCart(@Parameter(description = "현재 사용자 정보") Principal principal,
                                                 @Parameter(description = "상품 ID 목록") @RequestBody List<Long> itemIds);
 
-    @Operation(summary = "공동구매 항목 추가")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "공동구매 항목 추가 성공"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")})
-    CustomResponse<Order> addGroupPurchaseToOrder(@Parameter(description = "주문 ID") @RequestParam("orderId") Long orderId,
-                                                  @Parameter(description = "공동구매 참여자 ID") @RequestParam("gpParticipantId") Long gpParticipantId);
+//    @Operation(summary = "공동구매 항목 추가")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "공동구매 항목 추가 성공"),
+//            @ApiResponse(responseCode = "500", description = "서버 오류")})
+//    CustomResponse<Order> addGroupPurchaseToOrder(@Parameter(description = "현재 사용자 정보") Principal principal,
+//                                                  @Parameter(description = "공동구매 참여자 ID") @RequestParam("gpParticipantId") Long gpParticipantId);
 }

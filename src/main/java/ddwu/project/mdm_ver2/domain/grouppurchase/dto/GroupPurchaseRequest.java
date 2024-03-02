@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -18,7 +18,7 @@ public class GroupPurchaseRequest {
     private String imgUrl;     // 공동구매 이미지 URL
     private int maxQty;        //공동구매 최대 구매 가능 수량
     private int goalQty;       // 공동구매 목표 수량
-    private Date start;      // 공동구매 시작일
-    private Date end;        // 공동구매 종료일
+    private LocalDate start;      // 공동구매 시작일
+    private LocalDate end;        // 공동구매 종료일
     private String cateCode;    // 카테고리 코드
 }

@@ -1,8 +1,6 @@
 package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 
-import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseResponse;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
-import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,7 +37,7 @@ public interface GroupPurcahseApi {
             @ApiResponse(responseCode = "404", description = "공동구매 상품을 찾을 수 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    CustomResponse<GroupPurchaseResponse> getGroupPurchase(@PathVariable Long gpId);
+    CustomResponse<GroupPurchase> getGroupPurchase(@PathVariable Long gpId);
 
     @Operation(summary = "공동구매 전체 개수 조회")
     @ApiResponses(value = {
@@ -58,14 +56,6 @@ public interface GroupPurcahseApi {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     CustomResponse<String> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty);
-
-    @Operation(summary = "공동구매 취소")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "공동구매 취소 성공"),
-            @ApiResponse(responseCode = "400", description = "사용자가 공동구매에 참여하지 않았거나 취소 권한이 없습니다."),
-            @ApiResponse(responseCode = "404", description = "공동구매를 찾을 수 없음"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")})
-    CustomResponse<String> cancelGroupPurchase(@PathVariable Long gpId, Principal principal);
 
     @Operation(summary = "공동구매 검색")
     @ApiResponses(value = {

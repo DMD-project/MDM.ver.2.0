@@ -1,13 +1,11 @@
 package ddwu.project.mdm_ver2.global.mapping.controller;
 
 import ddwu.project.mdm_ver2.domain.cart.service.CartService;
-import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchaseParticipant;
 import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
 import ddwu.project.mdm_ver2.domain.product.service.ProductService;
 import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandService;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
-import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtToken;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,12 +13,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
 import java.util.HashMap;
-import java.util.List;
 
 @Controller
 @AllArgsConstructor

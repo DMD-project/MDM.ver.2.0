@@ -148,21 +148,31 @@ public class SecondHandService {
     }
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */
-    public CustomResponse<SecondHand> updateSecondHandState(Long shId, char state) {
+    public CustomResponse<SecondHand> updateSecondHandState(Principal principal, Long shId, char state) {
        try {
            SecondHand secondHand = secondHandRepository.findById(shId)
                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-           if(state == 'n') {
-               secondHand.setState('y');
-           } else if(state == 'y') {
-               secondHand.setState('n');
+           if(principal == null) {
+               return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 거래할 수 없습니다.");
+           } else {
+               User user = userRepository.findByEmail(principal.getName())
+                       .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+
+               if(user.getId() == secondHand.getUserId()) {
+                   if(state == 'n') {
+                       secondHand.setState('y');
+                   } else if(state == 'y') {
+                       secondHand.setState('n');
+                   }
+                   return CustomResponse.onSuccess(secondHandRepository.saveAndFlush(secondHand));
+               } else {
+                   return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 거래할 수 없습니다.");
+               }
            }
-           return CustomResponse.onSuccess(secondHandRepository.saveAndFlush(secondHand));
        } catch (Exception e) {
            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
        }
-
     }
 
     /* 상품 수정 */

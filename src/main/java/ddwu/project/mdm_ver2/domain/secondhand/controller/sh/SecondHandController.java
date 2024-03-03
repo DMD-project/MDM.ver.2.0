@@ -57,8 +57,8 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */
     @PostMapping("/update/{shId}/state/{state}")
-    public CustomResponse<SecondHand> updateSecondHandState(@PathVariable("shId") Long shId, @PathVariable("state") char state) {
-        return secondHandService.updateSecondHandState(shId, state);
+    public CustomResponse<SecondHand> updateSecondHandState(Principal principal, @PathVariable("shId") Long shId, @PathVariable("state") char state) {
+        return secondHandService.updateSecondHandState(principal, shId, state);
     }
 
     /* 상품 삭제 */

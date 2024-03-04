@@ -77,6 +77,10 @@
             text-align: center;
             border: none;
         }
+        a {
+            color: black;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -123,7 +127,7 @@
             </div>
 
             <div class="button_wrapper">
-                <button class="submit" onclick=""><b>주문하기</b></button>
+                <button class="submit"><b>주문하기</b></button>
             </div>
         </div>
     </div>
@@ -166,8 +170,6 @@
                     }
                 },
                 success: function(data) {
-                    console.log(data);
-
                     let product_total = data.content.price;
                     let product_qty = data.content.count;
                     let shipping_fee = 3000;
@@ -186,9 +188,11 @@
                     for(let i = 0; i < data.content.cartItems.length; i++) {
                         cart_item_info += "<div class='cartItem_wrapper' value='" + data.content.cartItems[i].id +"'>"
                                             + "<input type='checkbox' class='cartItem_checkbox' style='margin-right: 15px;' checked='checked' value='" + data.content.cartItems[i].id + "'>"
+                                            + "<a href='/product/" + data.content.cartItems[i].product.id + "/view'>"
                                             + "<img src='" + data.content.cartItems[i].product.imgUrl + "style='width: 110px; height: 130px; margin-right: 30px;'>"
                                             + "<div style='display: flex; flex-direction: column;'>"
                                                 + "<div style='font-size: 22px; margin-top: 20px;'><b>" + data.content.cartItems[i].product.name + "</b></div>"
+                                                + "</a>"
                                                 + "<div class='setPriceInfo' style='width: 380px; margin-top: 35px;'>"
                                                     + "<div class='count_wrapper' style='float:left;'>"
                                                         + "<button type='button' id='count_minus' value='" + data.content.cartItems[i].id + "'> - </button>"

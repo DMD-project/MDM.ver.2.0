@@ -109,21 +109,21 @@
             border: 1px solid #B0B0B0;
             margin: 10px 0;
         }
-        .ratingStar {
+        .ratingStar, .update_ratingStar {
             display: inline-block;
             width: 20px;
             height: 20px;
             color: transparent;
-            text-shadow: 0 0 0 #f0f0f0;
+            text-shadow: 0 0 0 #F0F0F0;
             font-size: 1.5em;
             box-sizing: border-box;
             cursor: pointer;
         }
-        .ratingStar .star:hover {
-            text-shadow: 0 0 0 #ccc;
+        .ratingStar .star:hover, .update_ratingStar .star:hover {
+            text-shadow: 0 0 0 #CCC;
         }
-        .star.on{
-            text-shadow: 0 0 0 #ffbc00;
+        .ratingStar .star.on, .update_ratingStar .star.on {
+            text-shadow: 0 0 0 #FFBC00;
         }
         #review_submit {
             background-color: #FF7500;
@@ -139,8 +139,7 @@
         .review_box {
             width:650px;
             height: 80px;
-
-            padding: 20px 25px;
+            padding: 10px 20px 20px 20px;
             margin-bottom: 20px;
 
             border: 1px solid #EE842A;
@@ -339,11 +338,19 @@
         });
 
         let star = 0;
-        $('.ratingStar span').click(function() {
+        $(document).on('click', '.ratingStar span', function() {
             $(this).parent().children('span').removeClass('on');
             $(this).addClass('on').prevAll('span').addClass('on');
 
             star = $(this).data('value');
+        });
+
+        let update_star = 0;
+        $(document).on('click', '.update_ratingStar span', function() {
+            $(this).parent().children('span').removeClass('on');
+            $(this).addClass('on').prevAll('span').addClass('on');
+
+            update_star = $(this).data('value');
         });
 
         $(document).on('click', '#review_submit', function() {
@@ -409,6 +416,8 @@
                     let review_box = "";
                     $.each(review_arr, function(idx, value) {
                         review_box += "<div class='review_box' value='" + value.id +"'>"
+                                        + "<div id='delete_review' style='float: right; margin-left: 10px; color: #FF7500;'><i class='fa-solid fa-xmark'></i></div>"
+                                        + "<div id='update_review' style='float: right; font-size: 14px; color: #FF7500;'>수정</div>"
                                         + "<div>" + printStar(value.star) + "</div>"
                                         + "<div style='color: #B0B0B0; font-size: 13px;'>작성일자 " + value.date + "</div>"
                                         + "<div>" + value.content + "</div>"
@@ -454,7 +463,10 @@
                     let review_arr = data.content.reviewList;
                     let review_box = "";
                     $.each(review_arr, function(idx, value) {
-                        review_box += "<div class='review_box' value='" + value.id +"'>"
+                        console.log(value);
+                        review_box += "<div class='review_box' data-value='" + value.id +"'>"
+                                        + "<div id='delete_review' style='float: right; margin-left: 10px; color: #FF7500;'><i class='fa-solid fa-xmark'></i></div>"
+                                        + "<div id='update_review' style='float: right; font-size: 14px; color: #FF7500;'>수정</div>"
                                         + "<div>" + printStar(value.star) + "</div>"
                                         + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 5px;'>작성일자 " + value.date + "</div>"
                                         + "<div style='margin-top: 10px;'>" + value.content + "</div>"
@@ -465,6 +477,93 @@
                 }
             });
         }
+
+        $(document).on('click', '#update_review', function() {
+            $(this).parent().css('height', '115px');
+
+            let update_review_box = "";
+            update_review_box += "<div class='update_ratingStar' style='float: left; width:650px; font-size: 15px;'>"
+                                    + "<span class='star' data-value='1'>⭐</span>"
+                                    + "<span class='star' data-value='2'>⭐</span>"
+                                    + "<span class='star' data-value='3'>⭐</span>"
+                                    + "<span class='star' data-value='4'>⭐</span>"
+                                    + "<span class='star' data-value='5'>⭐</span>"
+                                + "</div>"
+                                + "<textarea id='update_review_content' style='width: 100%; height: 60px; margin: 10px 0 5px 0;'></textarea>"
+                                + "<div id='update_review_submit' style='float: right; font-size: 14px; margin-right: 5px; color: #FF7500;'>등록</div>";
+
+            $(this).parent().html(update_review_box);
+        });
+
+        $(document).on('click', '#update_review_submit', function() {
+            let url = window.location.href;
+            let splitUrl = url.split("/");
+
+            let prodId = splitUrl[splitUrl.length - 2];
+            let reviewId = $(this).parent().data('value');
+            let content = $('#update_review_content').val();
+
+            if (update_star == 0) {
+                alert('별점을 수정해 주세요.');
+            } else if (content == "") {
+                alert('후기를 수정해 주세요.');
+            } else {
+                $.ajax ({
+                    type: 'POST',
+                    url: '/review/' + prodId + '/update/' + reviewId,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        console.log("Token:", token);
+
+                        if (!token) {
+                            alert("로그인이 필요합니다.");
+                        }
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    contentType: 'application/json',
+                    data: JSON.stringify(
+                        {
+                            "star" : update_star,
+                            "content" : content
+                        }
+                    ),
+                    success: function(data) {
+                        if (data.statusCode == 405)
+                            alert('해당 리뷰를 수정할 수 없는 사용자입니다.');
+                        else
+                            printProductDetails();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '#delete_review', function() {
+            let url = window.location.href;
+            let splitUrl = url.split("/");
+
+            let prodId = splitUrl[splitUrl.length - 2];
+            let reviewId = $(this).parent().data('value');
+
+            $.ajax ({
+                type: 'DELETE',
+                url: '/review/' + prodId + '/delete/' + reviewId,
+                beforeSend: function(xhr) {
+                    var token = getCookie("access_token");
+                    console.log("Token:", token);
+
+                    if (!token) {
+                        alert("로그인이 필요합니다.");
+                    }
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                success: function(data) {
+                    if (data.statusCode == 405)
+                        alert('해당 리뷰를 삭제할 수 없는 사용자입니다.');
+                    else
+                        printProductDetails();
+                }
+            })
+        });
 
         function printStar(star) {
             let total = 5;
@@ -478,7 +577,6 @@
 
             return star_print;
         }
-
 
     </script>
 

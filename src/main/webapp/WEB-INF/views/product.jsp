@@ -77,69 +77,65 @@
             text-decoration: none;
             color: black;
         }
-
     </style>
-
 </head>
 
 <body>
 
-<%@ include file="includes/header.jsp" %>
+    <%@ include file="includes/header.jsp" %>
 
-<div class="category_bar">
-    <div><h3>쇼핑</h3></div>
+    <div class="category_bar">
+        <div><h3>쇼핑</h3></div>
 
-    <div class="search_bar">
-        <input type="text" id="keyword" placeholder="검색어를 입력하세요." />
+        <div class="search_bar">
+            <input type="text" id="keyword" placeholder="검색어를 입력하세요." />
+        </div>
+
+        <button id="category_btn" value="">
+            <img src="../../images/category_btn_01.png"><br/>전체
+        </button>
+        <button id="category_btn" value="FUR">
+            <img src="../../images/category_btn_02.png"><br/>가구
+        </button>
+        <button id="category_btn" value="FAB">
+            <img src="../../images/category_btn_03.png"><br/>패브릭
+        </button>
+        <button id="category_btn" value="AD">
+            <img src="../../images/category_btn_04.png"><br/>가전/디지털
+        </button>
+        <button id="category_btn" value="STO">
+            <img class="../../images/category_btn_05.png"><br/>수납/정리
+        </button>
+        <button id="category_btn" value="DEC">
+            <img src="../../images/category_btn_06.png"><br/>소품
+        </button>
+        <button id="category_btn" value="LIT">
+            <img src="../../images/category_btn_07.png"><br/>조명
+        </button>
+        <button id="category_btn" value="PLA">
+            <img src="../../images/category_btn_08.png"><br/>식물
+        </button>
     </div>
 
-    <button id="category_btn" value="">
-        <img src="../../images/category_btn_01.png"><br/>전체
-    </button>
-    <button id="category_btn" value="FUR">
-        <img src="../../images/category_btn_02.png"><br/>가구
-    </button>
-    <button id="category_btn" value="FAB">
-        <img src="../../images/category_btn_03.png"><br/>패브릭
-    </button>
-    <button id="category_btn" value="AD">
-        <img src="../../images/category_btn_04.png"><br/>가전/디지털
-    </button>
-    <button id="category_btn" value="STO">
-        <img class="../../images/category_btn_05.png"><br/>수납/정리
-    </button>
-    <button id="category_btn" value="DEC">
-        <img src="../../images/category_btn_06.png"><br/>소품
-    </button>
-    <button id="category_btn" value="LIT">
-        <img src="../../images/category_btn_07.png"><br/>조명
-    </button>
-    <button id="category_btn" value="PLA">
-        <img src="../../images/category_btn_08.png"><br/>식물
-    </button>
-</div>
+    <div class="content_wrapper">
+        <div class="top_wrapper">
+            <div class="count" style="float: left;"><b>총<span id="count" style="padding-left: 8px; padding-right: 3px;">product_count</span>개</b></div>
 
-<div class="content_wrapper">
-    <div class="top_wrapper">
-        <div class="count" style="float: left;"><b>총<span id="count" style="padding-left: 8px; padding-right: 3px;">product_count</span>개</b></div>
-
-        <div class="sort" style="float: right;">
-            <div class="sort_type">
-                <select id="sortSelect">
-                    <option value="newest">최신순</option>
-                    <option value="highprice">높은 가격순</option>
-                    <option value="lowprice">낮은 가격순</option>
-                </select>
+            <div class="sort" style="float: right;">
+                <div class="sort_type">
+                    <select id="sortSelect">
+                        <option value="newest">최신순</option>
+                        <option value="highprice">높은 가격순</option>
+                        <option value="lowprice">낮은 가격순</option>
+                    </select>
+                </div>
             </div>
         </div>
+
+        <div id="product_list">
+
+        </div>
     </div>
-
-    <div id="product_list">
-
-
-    </div>
-
-</div>
 
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -150,7 +146,6 @@
             $("#keyword").keydown(function(e) {
                 if (e.keyCode == 13) {
                     let keyword = $(this).val();
-                    console.log(keyword);
 
                     if (keyword == "")
                         alert('상품명을 입력해주세요.');
@@ -164,7 +159,6 @@
                                 if (data.content.length == 0)
                                     alert('존재하지 않는 상품입니다.');
                                 else {
-                                    console.log(data);
                                     $("#count").html(data.content.length);
 
                                     let product_info = "";
@@ -187,36 +181,25 @@
                                     $("#product_list").empty();
                                     $("#product_list").html(product_info);
                                 }
-
                             }
                         });
-
                     }
                 }
-
-
-                });
-
+            });
         });
 
+        let cateCode = "";
         $(document).on('click', '#category_btn', function() {
-            let cateCode = $(this).val();
-            console.log(cateCode);
-
+            cateCode = $(this).val();
             let sortBy = $("#sortSelect option:selected").val();
-            console.log(sortBy);
 
             printProduct(sortBy, cateCode);
         });
 
         $("#sortSelect").change(function() {
             let sortBy = $("option:selected", this).val();
-            console.log(sortBy);
-
-            printProduct(sortBy);
+            printProduct(sortBy, cateCode);
         });
-
-
 
         function printProduct(sortBy, cateCode) {
             $.ajax ({
@@ -226,7 +209,6 @@
                     "cateCode" : cateCode
                 },
                 success: function(data) {
-                    console.log(data);
                     $("#count").html(data.content.length);
 
                     let product_info = "";
@@ -255,7 +237,7 @@
 
     </script>
 
-<%@ include file="includes/footer.jsp" %>
+    <%@ include file="includes/footer.jsp" %>
 
 
 </body>

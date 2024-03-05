@@ -111,4 +111,34 @@ public class MappingController {
     public String getMypage() {
         return "mypage";
     }
+
+    @GetMapping("/mypage/nickname/view")
+    public String updateNickname() {
+        return "mypage_nickname";
+    }
+
+    @GetMapping("/mypage/review/view")
+    public String getReviewByUser() {
+        return "mypage_review";
+    }
+
+    @GetMapping("/mypage/gp/view")
+    public String getGroupPurchasesByUser() {
+        return "mypage_gp";
+    }
+
+    @GetMapping("/mypage/sh/view")
+    public String getSecondHandByUser() {
+        return "mypage_sh";
+    }
+
+    @GetMapping("/mypage/shBid/view")
+    public String getSecondHandBidByUser() {
+        return "mypage_shBid";
+    }
+
+    @GetMapping("/mypage/faq/view")
+    public String getFAQ() {
+        return "mypage_FAQ";
+    }
 }

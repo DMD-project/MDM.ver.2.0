@@ -16,5 +16,6 @@ public class SecondHandBidResponse {
     private Long bidUserId;
     private int price;
     private Character bidUserState;
+    private Character bidState;
 
 }

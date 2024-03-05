@@ -42,4 +42,7 @@ public class SecondHandBid {
 
     @Column(name="sh_bid_price")
     private int price;
+
+    @Column(name="bid_state")
+    private Character bidState;
 }

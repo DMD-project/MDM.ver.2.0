@@ -164,7 +164,8 @@ public class SecondHandBidService {
                                 bid.getSecondHand().getId(),
                                 bid.getBidUserId(),
                                 bid.getPrice(),
-                                'n');
+                                'n',
+                                bid.getBidState());
                 shBidList.add(shBidResponse);
             }
         } else {
@@ -183,7 +184,8 @@ public class SecondHandBidService {
                                 bid.getSecondHand().getId(),
                                 bid.getBidUserId(),
                                 bid.getPrice(),
-                                bidUserState);
+                                bidUserState,
+                                bid.getBidState());
                 shBidList.add(shBidResponse);
             }
         }

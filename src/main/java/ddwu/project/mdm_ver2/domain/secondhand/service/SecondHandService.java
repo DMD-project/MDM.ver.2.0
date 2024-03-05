@@ -148,10 +148,13 @@ public class SecondHandService {
     }
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */
-    public CustomResponse<SecondHand> updateSecondHandState(Principal principal, Long shId, char state) {
+    public CustomResponse<SecondHand> updateSecondHandState(Principal principal, Long shId, char state, Long shBidId) {
        try {
            SecondHand secondHand = secondHandRepository.findById(shId)
                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+
+           SecondHandBid shBid = secondHandBidRepository.findById(shBidId)
+                   .orElseThrow(() -> new NotFoundException("중고거래 요청을 찾을 수 없습니다."));
 
            if(principal == null) {
                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 거래할 수 없습니다.");
@@ -162,8 +165,12 @@ public class SecondHandService {
                if(user.getId() == secondHand.getUserId()) {
                    if(state == 'n') {
                        secondHand.setState('y');
+                       secondHand.setSelectBidId(shBidId);
+                       shBid.setBidState('y');
                    } else if(state == 'y') {
                        secondHand.setState('n');
+                       secondHand.setSelectBidId(null);
+                       shBid.setBidState('n');
                    }
                    return CustomResponse.onSuccess(secondHandRepository.saveAndFlush(secondHand));
                } else {
@@ -284,7 +291,8 @@ public class SecondHandService {
                         secondHand.getContent(),
                         secondHandBidService.getSecondHandBidList(principal, secondHandBidRepository.findAllBySecondHandId(shId)),
                         favState,
-                        userState);
+                        userState,
+                        secondHand.getSelectBidId());
 
         return response;
     }

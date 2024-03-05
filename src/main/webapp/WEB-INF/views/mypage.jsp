@@ -8,7 +8,7 @@
 
     <script src="https://kit.fontawesome.com/0dff8da39e.js" crossorigin="anonymous"></script>
     <style>
-        span {
+        .link {
             cursor: pointer;
         }
         .mypage_content {
@@ -47,6 +47,26 @@
             width: 80%;
             padding: 30px;
         }
+        #submit_user_nickname {
+            background-color: #FF7500;
+            color: #FFFFFF;
+            font-size: 14px;
+            margin-left: 10px;
+            display: inline-block;
+            height: 25px;
+            border-radius: 10px;
+            vertical-align: middle;
+            text-align: center;
+            line-height: 25px;
+        }
+        #new_user_nickname {
+            width: 260px;
+            height: 38px;
+            font-size: 30px;
+            margin-bottom: 4px;
+            color: #333333;
+            outline: none;
+        }
     </style>
 </head>
 <body>
@@ -63,9 +83,13 @@
         <div class="mypage_content_main">
             <div style="float: left;">
                 <div class="user_profile_img" style="float:left; padding-left: 10px; padding-right: 30px;"><i class="fa-solid fa-circle-user fa-6x"></i></div>
-                <div style="float:left; padding-top: 20px;">
-                    <span id="user_nickname" style="font-size: 40px; margin-top:200px; font-weight: bold;">user_nickname</span>
+                <div style="float:left; padding-top: 8px;">
+                    <span id="user_nickname" style="font-size: 40px; font-weight: bold;">user_nickname</span>
                     <span id="update_user_info" style="font-size: 13px; margin-left: 10px;">회원정보변경</span>
+                    <br/>
+                    <span class="nickname_empty" style="font-size: 14px; margin-left: 5px; color: #FF7171; display: none;">변경할 닉네임을 입력해 주세요.</span>
+                    <span class="nickname_used" style="font-size: 14px; margin-left: 5px; color: #FF7171; display: none;">이미 존재하는 닉네임입니다.</span>
+                    <span class="nickname_possible" style="font-size: 14px; margin-left: 5px; color: #12DB1A; display: none;">사용 가능한 닉네임입니다. </span>
                     <br/>
                     <span id="user_email" style="margin-left: 5px;">user_email@gmail.com</span>
                 </div>
@@ -123,7 +147,7 @@
 
                     if (!token) {
                         alert("로그인이 필요합니다.");
-                        return;
+                        location.href="/login";
                     }
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
@@ -131,9 +155,6 @@
                     if(status == 404) {
                         alert("존재하지 않는 사용자입니다.");
                         location.href="http://localhost:8080";
-                    } else {
-                        alert("로그인이 필요합니다.");
-                        location.href="http://localhost:8080/login";
                     }
                 },
                 success: function(data) {
@@ -143,6 +164,72 @@
             });
         });
 
+        $(document).on('click', '#update_user_info', function() {
+            let new_content = "";
+            new_content += "<input id='new_user_nickname' type='text' onInput='javascript:check_nickname()' style='width: 260px; height: 38px; font-size: 30px; margin-bottom: 4px; color: #333333;'>"
+                            + "<span id='submit_user_nickname' class='link' style='width: 40px;'>등록</span>"
+                            + "<span id='cancel' class='link' style='font-size: 13px; margin-left: 10px;'>취소</span>";
+
+            $(this).prev().remove();
+            $(this).before(new_content);
+            $(this).remove();
+        });
+
+        function check_nickname() {
+            let userNickname = $('#new_user_nickname').val();
+
+            if (userNickname == "") {
+                $('#new_user_nickname').css('border', '1.5px solid #FF7171');
+                $('.nickname_empty').css('display', 'inline-block');
+                $('.nickname_used').css('display', 'none');
+                $('.nickname_possible').css('display', 'none');
+            } else {
+                $.ajax ({
+                    url: '/mypage/check/' + userNickname,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        console.log("Token:", token);
+
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    success: function(data) {
+                        if (data) {
+                            $('#new_user_nickname').css('border', '1.5px solid #FF7171');
+                            $('.nickname_empty').css('display', 'none');
+                            $('.nickname_used').css('display', 'inline-block');
+                            $('.nickname_possible').css('display', 'none');
+                        } else {
+                            $('#new_user_nickname').css('border', '1.5px solid #12DB1A');
+                            $('.nickname_empty').css('display', 'none');
+                            $('.nickname_used').css('display', 'none');
+                            $('.nickname_possible').css('display', 'inline-block');
+                        }
+                    }
+                });
+            }
+        }
+
+        $(document).on('click', '#submit_user_nickname', function() {
+            if ($('.nickname_possible').css('display') == "inline-block") {
+                let userNickname = $('#new_user_nickname').val();
+
+                $.ajax ({
+                    type: 'POST',
+                    url: '/mypage/nickname/' + userNickname,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    success: function(data) {
+                        location.reload();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '#cancel', function() {
+            location.reload();
+        });
 
     </script>
 </body>

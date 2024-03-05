@@ -104,7 +104,7 @@
             <img src="../../images/category_btn_04.png"><br/>가전/디지털
         </button>
         <button id="category_btn" value="STO">
-            <img class="../../images/category_btn_05.png"><br/>수납/정리
+            <img src="../../images/category_btn_05.png"><br/>수납/정리
         </button>
         <button id="category_btn" value="DEC">
             <img src="../../images/category_btn_06.png"><br/>소품

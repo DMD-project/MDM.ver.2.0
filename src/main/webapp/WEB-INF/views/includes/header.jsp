@@ -179,10 +179,6 @@
         return null;
     }
 
-    function deleteCookie(name) {
-        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    }
-
     function logout() {
          var token = getCookie("access_token");
          console.log("Token:", token);
@@ -199,8 +195,8 @@
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
-                    deleteCookie("access_token");
-                    deleteCookie("refresh_token");
+                    Cookies.remove("access_token");
+                    Cookies.remove("refresh_token");
 
                     alert("로그아웃되었습니다.");
 

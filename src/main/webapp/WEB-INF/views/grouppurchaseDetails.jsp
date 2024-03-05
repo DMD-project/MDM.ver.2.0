@@ -170,16 +170,6 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(name + '=')) {
-                return cookie.substring(name.length + 1);
-            }
-        }
-        return null;
-    }
 
     $(document).ready(function() {
         let url = window.location.href;
@@ -190,17 +180,12 @@
         $.ajax ({
             url: '/gp/' + gpId,
             success: function(data) {
-                console.log(data);
 
-                let gp_imgUrl = data.content.groupPurchase.imgUrl;
-                let gp_name = data.content.groupPurchase.name;
+                let gp_imgUrl = data.content.imgUrl;
+                let gp_name = data.content.name;
                 let gp_participants_qty = data.content.participantsQty;
-                let gp_goal_qty = data.content.groupPurchase.goalQty;
-                let gp_now_qty = data.content.groupPurchase.nowQty;
-                let gp_start = data.content.groupPurchase.start;
-                let gp_end = data.content.groupPurchase.end;
-                let gp_price = data.content.groupPurchase.price;
-                let gp_content = data.content.groupPurchase.content;
+                let gp_goal_qty = data.content.goalQty;
+                let gp_now_qty = data.content.nowQty;
 
                 $("img").attr('src', gp_imgUrl);
                 $("img").attr('alt', gp_imgUrl);
@@ -208,6 +193,12 @@
                 $("#gp_participants").html(gp_participants_qty);
                 $("#goal_qty").html(gp_goal_qty);
                 $("#qty").html(gp_now_qty);
+
+                let gp_start = data.content.start;
+                let gp_end = data.content.end;
+                let gp_price = data.content.price;
+                let gp_content = data.content.content;
+
                 $("#start_date").html(gp_start);
                 $("#end_date").html(gp_end);
                 $("#gp_price").html(gp_price);
@@ -249,7 +240,7 @@
                 }
                 else {
                     if(confirm("참여가 완료되었습니다.\n마이페이지에서 확인하기") == true) {
-                        location.href="http://localhost:8080/mypage/gp";
+                        location.href="http://localhost:8080/mypage/gp/view";
                     } else {
                         console.log("취소되었습니다");
                     }

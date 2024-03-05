@@ -13,16 +13,15 @@
     <style>
         .header {
             background-color: #F9F1E7;
+            padding: 10px 0;
         }
-
         .navbar {
+            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             background-color: var(--background-color);
-
         }
-
         .navbar_logo {
             display: flex;
             font-size: 35px;

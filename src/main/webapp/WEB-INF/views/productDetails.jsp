@@ -183,6 +183,11 @@
             color: transparent;
             text-shadow: 0 0 0 #FFBC00;
         }
+        button, .review_sortBy span,
+        #update_review, #update_review_submit,
+        #delete_review {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -210,13 +215,10 @@
                         <button type="button" id="count_plus">+</button>
                     </div>
                 </div>
-
                 <br/>
-                <br/>
-
                 <div>
                     <span style="color: #616161; font-size: 15px;">상품 가격</span><br/>
-                    <span id="prod_price" style="font-size: 30px; padding-right: 5px;"><b>prod_price</b></span>
+                    <span id="prod_price" style="font-size: 30px; padding-right: 5px; font-weight: bold;"><b>prod_price</b></span>
                     <span>원</span>
                 </div>
             </div>
@@ -285,7 +287,6 @@
     </div>
 
     <%@ include file="includes/footer.jsp" %>
-
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>

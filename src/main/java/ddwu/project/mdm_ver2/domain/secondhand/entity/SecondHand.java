@@ -61,6 +61,9 @@ public class SecondHand {
     @Column(name = "sh_bid_cnt")
     private Long bidCnt;
 
+    @Column(name = "select_bid_id")
+    private Long selectBidId;
+
 //    @ElementCollection(fetch = FetchType.LAZY)
 //    private List<SecondHandBid> ShBidList;
 }

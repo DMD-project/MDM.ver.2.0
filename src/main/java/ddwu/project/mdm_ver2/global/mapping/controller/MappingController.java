@@ -112,11 +112,6 @@ public class MappingController {
         return "mypage";
     }
 
-    @GetMapping("/mypage/nickname/view")
-    public String updateNickname() {
-        return "mypage_nickname";
-    }
-
     @GetMapping("/mypage/review/view")
     public String getReviewByUser() {
         return "mypage_review";

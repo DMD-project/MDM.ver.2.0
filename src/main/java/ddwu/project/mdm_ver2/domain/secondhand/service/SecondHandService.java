@@ -289,6 +289,7 @@ public class SecondHandService {
                         secondHand.getPrice(),
                         secondHand.getImgUrl(),
                         secondHand.getContent(),
+                        secondHand.getState(),
                         secondHandBidService.getSecondHandBidList(principal, secondHandBidRepository.findAllBySecondHandId(shId)),
                         favState,
                         userState,

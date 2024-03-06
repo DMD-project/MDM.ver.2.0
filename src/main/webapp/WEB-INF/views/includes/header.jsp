@@ -120,7 +120,7 @@
     <nav class="navbar">
 
         <div class="navbar_logo">
-            <a href="/"><img src="images/m2dm.png" style="width: 200px; height: auto;"></a>
+            <a href="/"><img src="../../images/m2dm.png" style="width: 200px; height: auto;"></a>
         </div>
         <ul class="navbar_menu">
             <li><a href="#"><b>커뮤니티</b></a></li>

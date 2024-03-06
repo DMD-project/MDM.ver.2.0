@@ -67,6 +67,7 @@ public class SecondHandBidService {
                         .secondHand(secondHand)
                         .bidUserId(user.getId())
                         .price(request.getPrice())
+                        .bidState('n')
                         .build();
                 shBidRepository.saveAndFlush(secondHandBid);
 

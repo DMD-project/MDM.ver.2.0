@@ -120,9 +120,8 @@
     <nav class="navbar">
 
         <div class="navbar_logo">
-            <a href="/"><b>&nbsp;m2dm</b></a>
+            <a href="/"><img src="images/m2dm.png" style="width: 200px; height: auto;"></a>
         </div>
-
         <ul class="navbar_menu">
             <li><a href="#"><b>커뮤니티</b></a></li>
             <li><a href="/product/list/view"><b>쇼핑</b></a></li>

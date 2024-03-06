@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 
+import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseDto;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +38,7 @@ public interface GroupPurcahseApi {
             @ApiResponse(responseCode = "404", description = "공동구매 상품을 찾을 수 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    CustomResponse<GroupPurchase> getGroupPurchase(@PathVariable Long gpId);
+    CustomResponse<GroupPurchaseDto> getGroupPurchase(@PathVariable Long gpId);
 
     @Operation(summary = "공동구매 전체 개수 조회")
     @ApiResponses(value = {
@@ -62,5 +63,4 @@ public interface GroupPurcahseApi {
             @ApiResponse(responseCode = "200", description = "공동구매 검색 성공"),
             @ApiResponse(responseCode = "500", description = "서버 오류")})
     CustomResponse<List<GroupPurchase>> searchGroupPurchase(@Parameter(description = "상품이름 검색", required = true) @RequestParam(name = "keyword") String keyword);
-
 }

@@ -1,6 +1,5 @@
 package ddwu.project.mdm_ver2.domain.grouppurchase.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
 import jakarta.persistence.*;
@@ -9,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
@@ -35,7 +32,7 @@ public class GroupPurchase implements Serializable {
     private String content;
 
     @Column(name = "gp_state")
-    private GPStatus state; //진행 중, 마감 임박, 공구 성공
+    private GPStatus state;
 
     @Column(name = "gp_img_url")
     private String imgUrl;
@@ -58,5 +55,4 @@ public class GroupPurchase implements Serializable {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "cate_id", referencedColumnName = "cate_id")
     private Category category;
-
 }

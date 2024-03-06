@@ -1,5 +1,6 @@
 package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 
+import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseDto;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
@@ -32,7 +33,7 @@ public class GroupPurchaseController implements GroupPurcahseApi {
 
     // 특정 공동구매 상품 조회
     @GetMapping("/{gpId}")
-    public CustomResponse<GroupPurchase> getGroupPurchase (@PathVariable Long gpId){
+    public CustomResponse<GroupPurchaseDto> getGroupPurchase(@PathVariable Long gpId) {
         return groupPurchaseService.getGroupPurchase(gpId);
     }
 
@@ -44,14 +45,14 @@ public class GroupPurchaseController implements GroupPurcahseApi {
 
     // 공동구매 참여
     @PostMapping("/order/{gpId}/{purchasedQty}")
-    public CustomResponse<String> joinGroupPurchase (Principal principal,@PathVariable Long gpId,
-                                                     @PathVariable int purchasedQty){
+    public CustomResponse<String> joinGroupPurchase(Principal principal, @PathVariable Long gpId,
+                                                    @PathVariable int purchasedQty) {
         return groupPurchaseService.joinGroupPurchase(principal, gpId, purchasedQty);
     }
 
     //  공동구매 검색
     @GetMapping("/search/{keyword}")
-    public CustomResponse<List<GroupPurchase>> searchGroupPurchase (@RequestParam(name = "keyword") String keyword){
+    public CustomResponse<List<GroupPurchase>> searchGroupPurchase(@RequestParam(name = "keyword") String keyword) {
         return groupPurchaseService.searchGroupPurchase(keyword);
     }
 }

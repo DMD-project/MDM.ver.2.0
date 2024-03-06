@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.domain.grouppurchase.service;
 
 import ddwu.project.mdm_ver2.domain.category.entity.Category;
 import ddwu.project.mdm_ver2.domain.category.repository.CategoryRepository;
+import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseDto;
 import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseRequest;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GPStatus;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
@@ -33,7 +34,6 @@ public class GroupPurchaseService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
-
 
     // 공동구매상품 등록
     public CustomResponse<GroupPurchase> addGroupPurchase(GroupPurchaseRequest request) {
@@ -105,6 +105,7 @@ public class GroupPurchaseService {
         try {
             List<GroupPurchase> groupPurchaseList = groupPurchaseRepository.findAll();
 
+            updateGroupPurchaseStatus();
             return CustomResponse.onSuccess(groupPurchaseList);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -133,6 +134,8 @@ public class GroupPurchaseService {
                         break;
                 }
             }
+            updateGroupPurchaseStatus();
+
             return CustomResponse.onSuccess(sortList);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -157,36 +160,41 @@ public class GroupPurchaseService {
                 productList = groupPurchaseRepository.findAllByCategoryCateCode(cateCode);
                 break;
         }
+        updateGroupPurchaseStatus();
 
         return productList;
     }
 
 
     // 특정 공동구매 상품 조회
-    public CustomResponse<GroupPurchase> getGroupPurchase(Long gpId) {
+    public CustomResponse<GroupPurchaseDto> getGroupPurchase(Long gpId) {
         try {
             GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
                     .orElseThrow(() -> new NotFoundException("공동구매 상품을 찾을 수 없습니다."));
 
-            return CustomResponse.onSuccess(groupPurchase);
+            int participantCount = orderRepository.countByGroupPurchase_Id(gpId);
+            GroupPurchaseDto groupPurchaseDto = new GroupPurchaseDto(groupPurchase, participantCount);
+            updateGroupPurchaseStatus();
+
+            return CustomResponse.onSuccess(groupPurchaseDto);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-
-    // userEmail에 해당하는 주문 정보를 출력하는 메서드
     public CustomResponse<List<Order>> getGroupPurchasesByUser(Principal principal) {
         try {
             if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.UNAUTHORIZED.value(), "로그인이 필요합니다.");
             }
 
-            String userEmail = principal.getName(); // Get the email of the currently authenticated user
+            String userEmail = principal.getName();
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new ResourceNotFoundException("User", "email", userEmail));
 
-            List<Order> orders = orderRepository.findByEmailAndGroupPurchaseIsNotNull(userEmail); // Find orders associated with the user's email where groupPurchase is not null
+            List<Order> orders = orderRepository.findByEmailAndGroupPurchaseIsNotNull(userEmail);
+            updateGroupPurchaseStatus();
+
             return CustomResponse.onSuccess(orders);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -251,26 +259,37 @@ public class GroupPurchaseService {
             }
 
             List<GroupPurchase> searchResults = groupPurchaseRepository.findByNameContainingIgnoreCase(keyword);
+            updateGroupPurchaseStatus();
             return CustomResponse.onSuccess(searchResults);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
+    @Transactional
     public void updateGroupPurchaseStatus() {
         List<GroupPurchase> groupPurchases = groupPurchaseRepository.findAll();
+        LocalDate currentDate = LocalDate.now();
+
         for (GroupPurchase groupPurchase : groupPurchases) {
-            LocalDate currentDate = LocalDate.now();
             LocalDate endDate = groupPurchase.getEnd();
+            GPStatus status = groupPurchase.getState();
+
+            System.out.println("Group Purchase ID: " + groupPurchase.getId() + ", Current Status: " + status);
+
+            if (status == GPStatus.ACHIEVED || status == GPStatus.FAIL) {
+                continue;
+            }
 
             if (groupPurchase.getNowQty() >= groupPurchase.getGoalQty() && currentDate.isAfter(endDate)) {
-                groupPurchase.setState(GPStatus.ACHIEVED);
+                status = GPStatus.ACHIEVED;
+            } else if (groupPurchase.getNowQty() < groupPurchase.getGoalQty() && currentDate.isAfter(endDate)) {
+                status = GPStatus.FAIL;
             } else if (currentDate.isAfter(endDate.minusDays(3))) {
-                groupPurchase.setState(GPStatus.URGENT);
-            } else {
-                groupPurchase.setState(GPStatus.ONGOING);
+                status = GPStatus.URGENT;
             }
+            groupPurchase.setState(status);
         }
+        groupPurchaseRepository.saveAll(groupPurchases);
     }
-
 }

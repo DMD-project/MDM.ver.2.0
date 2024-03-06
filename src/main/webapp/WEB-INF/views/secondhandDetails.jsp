@@ -98,6 +98,18 @@
             border-bottom: 3px solid #FF7500;
         }
     </style>
+    <style>
+        .bid_box {
+            width:650px;
+            height: 80px;
+            padding: 10px 20px 20px 20px;
+            margin-bottom: 20px;
+
+            border: 1px solid #EE842A;
+            border-radius: 10px;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -112,6 +124,8 @@
         <div class="product_info">
 
             <h1><span id="sh_name">sh_name</span></h1>
+            <span id="sh_update_submit">수정하기</span>
+            <span id="sh_delete_submit">삭제하기</span>
             <br/>
             <br/>
             <br/>
@@ -134,8 +148,7 @@
 
         </div>
 
-        <div class="button_wrapper">
-            <button class="bid" id="bid_submit"><b>제안하기</b></button>
+        <div id="submit_btn" class="button_wrapper">
         </div>
 
     </div>
@@ -162,7 +175,13 @@
         let shId = splitUrl[splitUrl.length - 2];
 
         $.ajax ({
+            type: 'GET',
             url: '/secondhand/' + shId,
+            beforeSend: function(xhr) {
+                var token = getCookie("access_token");
+
+                xhr.setRequestHeader("Authorization", "Bearer " + token);
+            },
             success: function(data) {
                 console.log(data);
 
@@ -170,6 +189,8 @@
                 let name = data.content.name;
                 let price = data.content.price;
                 let content = data.content.content;
+                let state = data.content.state;
+                let userState = data.content.userState;
 
                 $("img").attr('src', imgUrl);
                 $("img").attr('alt', imgUrl);
@@ -177,18 +198,81 @@
                 $("#sh_price").html(price);
                 $("#sh_content").html(content);
 
+                let bid_btn = "<button class='bid' id='bid_submit'><b>제안하기</b></button>";
+                let soldout_btn = "<button class='bid'><b>판매완료</b></button>";
+
+                if(state == "n") {
+                    $("#submit_btn").html(bid_btn);
+                } else {
+                    $("#submit_btn").html(soldout_btn);
+                }
+
                 let bid_arr = data.content.secondHandBidList;
                 let bid_box = "";
+
                 $.each(bid_arr, function(idx, value) {
-                    bid_box += "" + value.bidId
-                                + "" + value.shId
-                                + "" + value.bidUserId
-                                + "" + value.price
-                                + "" + value.bidUserState;
+                    let str = "";
+                    if(value.bidUserState == 'y' && state == 'n') {
+                        str += "<div id='delete_bid_submit' style='float: right; margin-left: 10px; color: #FF7500;'><i class='fa-solid fa-xmark'></i></div>"
+                              + "<div id='update_bid_submit' style='float: right; font-size: 14px; color: #FF7500;'>수정</div>";
+                    }
+
+                    let btnStr = "";
+                    if(state == "n") {
+                        if(userState == "y") {
+                            btnStr += "<button id='select_bid_submit' data-price='" + value.price + "' data-state='" +value.bidState+ "' style='float: right; font-size: 14px; color: #FF7500;'>거래하기</button>";
+                        }
+                    }
+
+                    bid_box += "<div class='bid_box' id='select_id' data-bid='" + value.bidId +"'>"
+                                + str
+                                + "<div id='select_price'><b>" + value.price + "</b> 원 </div>"
+                                + btnStr
+                            + "</div>";
                 });
+
                 $("#bid_list").html(bid_box);
             }
         });
+    });
+
+    $(document).on('click', '#sh_delete_submit', function() {
+        let url = window.location.href;
+        let splitUrl = url.split("/");
+
+        let shId = splitUrl[splitUrl.length - 2];
+
+        alert(shId);
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/secondhand/delete/' + shId,
+            beforeSend: function(xhr) {
+                var token = getCookie("access_token");
+
+                if (!token) {
+                    alert("로그인이 필요합니다.");
+                }
+                xhr.setRequestHeader("Authorization", "Bearer " + token);
+            },
+            error: function(xhr, data) {
+                alert(data.message);
+                return;
+            },
+            success: function(data) {
+                if(data.statusCode != 200) {
+                    alert(data.message);
+                    return;
+                } else {
+                    alert("삭제가 완료되었습니다.");
+                    location.href="http://localhost:8080/secondhand/list/view";
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '#sh_update_submit', function() {
+
     });
 
     $(document).on('click', '#bid_submit', function() {
@@ -234,6 +318,78 @@
             }
         });
     });
+
+    $(document).on('click', '#select_bid_submit', function() {
+        let url = window.location.href;
+        let splitUrl = url.split("/");
+
+        let shId = splitUrl[splitUrl.length - 2];
+
+        let bidId = $(this).parent().data('bid');
+        let bidPrice = $(this).data('price');
+        let bidState = $(this).data('state');
+
+        $.ajax({
+            type: 'POST',
+            url: '/secondhand/update/' + shId + '/state/' + bidState + '/select/' + bidId,
+            beforeSend: function(xhr) {
+                var token = getCookie("access_token");
+
+                if (!token) {
+                    alert("로그인이 필요합니다.");
+                }
+                xhr.setRequestHeader("Authorization", "Bearer " + token);
+            },
+            error: function(xhr, data) {
+                alert(data.message);
+            },
+            success: function(data) {
+                if (data.statusCode != 200) {
+                    alert(data.message);
+                } else {
+                    alert(bidPrice + '원에 거래가 완료되었습니다.');
+                    location.href="http://localhost:8080/secondhand/" + shId + "/view";
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '#update_bid_submit', function() {
+        let bidId = $(this).parent().data('bid');
+    });
+
+    $(document).on('click', '#delete_bid_submit', function() {
+        let url = window.location.href;
+        let splitUrl = url.split("/");
+
+        let shId = splitUrl[splitUrl.length - 2];
+
+        let bidId = $(this).parent().data('bid');
+
+        $.ajax({
+            type:'DELETE',
+            url: '/shBid/' + shId + '/delete/' +bidId,
+            beforeSend: function(xhr) {
+                var token = getCookie("access_token");
+
+                if (!token) {
+                    alert("로그인이 필요합니다.");
+                    window.location.href='/login';
+                }
+
+                xhr.setRequestHeader("Authorization", "Bearer " + token);
+            },
+            error: function(xhr, data) {
+                alert(data.message);
+                return;
+            },
+            success: function(data) {
+                alert("요청 삭제가 완료되었습니다.");
+                location.href="http://localhost:8080/secondhand/" + shId + "/view";
+            }
+        });
+    });
+
 </script>
 
 <%@ include file="includes/footer.jsp" %>

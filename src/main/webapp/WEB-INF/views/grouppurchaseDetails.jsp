@@ -103,7 +103,7 @@
 <div class="sample">
 
     <div class="gp_img">
-        <img src="" alt="">
+        <img id="prod_img" src="" alt="">
     </div>
     <div class="gp_info_wrapper">
         <div class="gp_info">
@@ -148,7 +148,7 @@
             <br/>
             <div>
                 <span style="color: #616161; font-size: 15px;">상품 가격</span><br/>
-                <span id="gp_price" style="font-size: 30px;"><b>gp_price</b></span>
+                <span id="gp_price" style="font-size: 30px; font-weight: bold;"><b>gp_price</b></span>
                 <span style="padding-left: 5px;">원</span>
             </div>
         </div>
@@ -180,24 +180,25 @@
         $.ajax ({
             url: '/gp/' + gpId,
             success: function(data) {
+                console.log(data);
 
-                let gp_imgUrl = data.content.imgUrl;
-                let gp_name = data.content.name;
-                let gp_participants_qty = data.content.participantsQty;
-                let gp_goal_qty = data.content.goalQty;
-                let gp_now_qty = data.content.nowQty;
+                let gp_imgUrl = data.content.groupPurchase.imgUrl;
+                let gp_name = data.content.groupPurchase.name;
+                let gp_participants_qty = data.content.participantCount;
+                let gp_goal_qty = data.content.groupPurchase.goalQty;
+                let gp_now_qty = data.content.groupPurchase.nowQty;
 
-                $("img").attr('src', gp_imgUrl);
-                $("img").attr('alt', gp_imgUrl);
+                $("#prod_img").attr('src', gp_imgUrl);
+                $("#prod_img").attr('alt', gp_imgUrl);
                 $("#gp_name").html(gp_name);
                 $("#gp_participants").html(gp_participants_qty);
                 $("#goal_qty").html(gp_goal_qty);
                 $("#qty").html(gp_now_qty);
 
-                let gp_start = data.content.start;
-                let gp_end = data.content.end;
-                let gp_price = data.content.price;
-                let gp_content = data.content.content;
+                let gp_start = data.content.groupPurchase.start;
+                let gp_end = data.content.groupPurchase.end;
+                let gp_price = data.content.groupPurchase.price;
+                let gp_content = data.content.groupPurchase.content;
 
                 $("#start_date").html(gp_start);
                 $("#end_date").html(gp_end);

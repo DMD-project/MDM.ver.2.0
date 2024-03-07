@@ -118,7 +118,7 @@
 <div class="sample">
 
     <div class="sh_img">
-        <img src="" alt="">
+        <img id="prod_img" src="" alt="">
     </div>
     <div class="product_info_wrapper">
         <div class="product_info">
@@ -135,7 +135,7 @@
             <div>
                 <span style="color: #616161; font-size: 15px;">상품 가격</span><br/>
 
-                <span id="sh_price" style="font-size: 30px;"><b>sh_price</b></span>
+                <span id="sh_price" style="font-size: 30px; font-weight: bold;"><b>sh_price</b></span>
                 <span style="padding-left: 5px;">원</span>
             </div>
 
@@ -192,8 +192,8 @@
                 let state = data.content.state;
                 let userState = data.content.userState;
 
-                $("img").attr('src', imgUrl);
-                $("img").attr('alt', imgUrl);
+                $("#prod_img").attr('src', imgUrl);
+                $("#prod_img").attr('alt', imgUrl);
                 $("#sh_name").html(name);
                 $("#sh_price").html(price);
                 $("#sh_content").html(content);

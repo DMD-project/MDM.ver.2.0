@@ -196,7 +196,7 @@
 
     <div class="sample">
         <div class="product_img">
-            <img src="" alt="">
+            <img id="prod_img" src="" alt="">
         </div>
         <div class="product_info_wrapper">
             <div class="product_info">
@@ -445,8 +445,8 @@
                     let prod_price = data.content.price;
                     let prod_content = data.content.content;
 
-                    $("img").attr('src', prod_imgUrl);
-                    $("img").attr('alt', prod_imgUrl);
+                    $("#prod_img").attr('src', prod_imgUrl);
+                    $("#prod_img").attr('alt', prod_imgUrl);
                     $("#prod_name").html(prod_name);
                     $("#prod_price").html(prod_price);
                     $("#prod_content").html(prod_content);

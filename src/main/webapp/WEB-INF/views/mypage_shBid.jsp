@@ -255,7 +255,6 @@
                             + "<span id='delete_shBid' style='float: right; margin-left: 10px; background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 5px 7px; border-radius: 10px;'>삭제</span>"
                             + "<span id='update_shBid' style='float:right;'>희망가 수정</span>";
             }
-
             return status;
         }
 

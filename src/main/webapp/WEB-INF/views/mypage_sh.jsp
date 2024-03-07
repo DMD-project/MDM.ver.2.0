@@ -237,17 +237,19 @@
                                     + "<img src='" + value.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
                                     + "</a>"
                                     + "<div style='display: flex; flex-direction: column; width: 680px;'>"
-                                        + "<div id='" + value.id + "'>" + printState(value.state) + "</div>"
+                                        + "<div id='" + value.id + "' style='height: 27px'>" + printState(value.state) + "</div>"
                                         + "<a href='/secondhand/" + value.imgUrl + "/view'>"
                                         + "<div style='font-size: 20px; font-weight: bold;'>" + value.name + "</div>"
                                         + "</a>"
                                         + "<div id='sh_price' style='font-size: 22px; font-weight: bold; margin-top: 25px;'>" + value.price + "원</div>"
-                                        + "<div id='" + value.id + "'style='width: 50%; margin-top: 5px;'>"
-                                            + "<span id='show_shBid' style='color: #616161; font-size: 15px;'><i class='fa-solid fa-angle-down'></i>&nbsp;요청 내역</span>"
-                                            + "<span style='color: #FF7500; font-weight: bold;'>&nbsp;" + value.bidCnt + "</span>"
-                                            + "<div id='shBid_list' style='padding: 13px 10px;'></div>"
-                                        + "</div>"
-                                    + "</div>"
+                                        if (value.state == "n") {
+                                            sh_box += "<div id='" + value.id + "'style='width: 50%; margin-top: 5px;'>"
+                                                        + "<span id='show_shBid' style='color: #616161; font-size: 15px;'><i class='fa-solid fa-angle-down'></i>&nbsp;요청 내역</span>"
+                                                        + "<span style='color: #FF7500; font-weight: bold;'>&nbsp;" + value.bidCnt + "</span>"
+                                                        + "<div id='shBid_list' style='padding: 13px 10px;'></div>"
+                                                    + "</div>";
+                                        }
+                                sh_box += "</div>"
                                 + "</div>";
                     });
                     $("#list_wrapper").html(sh_box);
@@ -258,9 +260,9 @@
         function printState(state) {
             let status = "";
             if (state == 'y')
-                status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>거래완료</span>";
+                status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>판매완료</span>";
             else {
-                status += "<span style='background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>판매 중</span>"
+                status += "<span style='background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>판매 중</span>"
                             + "<span id='delete_sh'>삭제</span>"
                             + "<span id='update_sh'>수정</span>";
             }
@@ -284,7 +286,7 @@
                     let shBid_arr = data.content;
                     let shBid_list = "";
                     $.each(shBid_arr, function(idx, value) {
-                        shBid_list += "<div style='margin-bottom: 10px;'>"
+                        shBid_list += "<div id='" + value.bidId + "' data-shId='" + value.shId + "' data-price='" + value.price + "' data-status='" + value.bidStatus + "' style='margin-bottom: 10px;'>"
                                         + "<span>" + value.price + "원</span>"
                                         + "<span id='shBid_accept'>거래</span>"
                                     + "</div>"
@@ -295,8 +297,29 @@
         });
 
         $(document).on('click', '#shBid_accept', function() {
+            let shId = $(this).parent().data('shId');
+            let bidId = $(this).parent().attr('id');
+            let bidPrice = $(this).parent().data('price');
+            let bidState = $(this).parent().data('state');
 
+            $.ajax ({
+                type: 'POST',
+                url: '/secondhand/update/' + shId + '/state/' + bidState + '/select/' + bidId,
+                beforeSend: function(xhr) {
+                    var token = getCookie("access_token");
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                success: function(data) {
+                    if (data.statusCode != 200) {
+                        alert(data.message);
+                    } else {
+                        alert(bidPrice + '원에 거래가 완료되었습니다.');
+                        location.href="/secondhand/" + shId + "/view";
+                    }
+                }
+            })
         });
+
 
         $(document).on('click', '#hide_shBid', function() {
             let change = "<span id='show_shBid' style='color: #616161; font-size: 15px;'><i class='fa-solid fa-angle-down'></i>&nbsp;요청 내역</span>"

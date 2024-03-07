@@ -8,6 +8,10 @@
 
     <script src="https://kit.fontawesome.com/0dff8da39e.js" crossorigin="anonymous"></script>
     <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
         .link {
             cursor: pointer;
         }
@@ -67,6 +71,13 @@
             color: #333333;
             outline: none;
         }
+        .content_box {
+            display: flex;
+            float: left;
+            width: 80%;
+            padding: 30px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -77,7 +88,7 @@
 
         <div class="mypage_content_header">
             <div style="float: left; color: #FF7500; font-size: 20px;"><b>마이페이지</b></div>
-            <div style="float: right;"><span class="link">자주 묻는 질문</span></div>
+            <div style="float: right;"><span class="link" onclick="location.href='/mypage/faq/view'">자주 묻는 질문</span></div>
         </div>
 
         <div class="mypage_content_main">
@@ -109,8 +120,8 @@
             <ul>
                 <li style="font-size: 20px; color: #333333;"><b>나의 쇼핑 활동</b></li>
                 <li><span class="link">관심 상품</span></li>
-                <li><span class="link" onclick="location.href='/mypage/view'" style="color: #FF7500;">구매 내역</span></li>
-                <li><span class="link" onclick="location.href='/mypage/gp/view'">공동구매 참여 내역</span></li>
+                <li><span class="link" onclick="location.href='/mypage/view'">구매 내역</span></li>
+                <li><span class="link" onclick="location.href='/mypage/gp/view'" style="color: #FF7500;">공동구매 참여 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/sh/view'">중고거래 판매 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/shBid/view'">중고거래 요청 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/review/view'">내가 작성한 후기</span></li>
@@ -118,7 +129,7 @@
         </nav>
 
         <div class="under_content_main" style="width: 100%; padding-top: 45px; padding-left: 30px;">
-            <span style="padding: 10px; font-size: 25px; font-weight: bold; color: #FF7500;">구매 내역</span>
+            <span style="padding: 10px; font-size: 25px; font-weight: bold; color: #FF7500;">공동구매 참여 내역</span>
             <div id="list_wrapper">
 
 
@@ -143,7 +154,7 @@
 
         $(document).ready(function() {
             printUserInfo();
-            printMyOrder();
+            printMyGP();
         });
 
         function printUserInfo() {
@@ -171,17 +182,58 @@
             });
         }
 
-        function printMyOrder() {
+        function printMyGP() {
             $.ajax ({
-                url: '/mypage/order',
+                url: '/mypage/gp',
                 beforeSend: function(xhr) {
                     var token = getCookie("access_token");
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 success: function(data) {
                     console.log(data);
+
+                    let order_arr = data.content;
+                    let order_box = "";
+                    $.each(order_arr, function(idx, value) {
+                    order_box += "<div class='content_box'>"
+                                    + "<a href='/gp/" + value.groupPurchase.id + "/view'>"
+                                    + "<img src='" + value.groupPurchase.imgUrl + "' style='width: 115px; height: 135px; margin-right: 30px;'>"
+                                    + "</a>"
+                                    + "<div style='display: flex; flex-direction: column; width: 680px;'>"
+                                        + "<div>" + printStatus(value.state) + "</div>"
+                                        + "<a href='/gp/" + value.groupPurchase.id + "/view'>"
+                                        + "<div style='font-size: 20px; font-weight: bold; margin-top: 10px;'>" + value.groupPurchase.name + "</div>"
+                                        + "</a>"
+                                        + "<div style='font-size: 14px; color: #B0B0B0; margin-top: 3px;'>"
+                                            + "<span>" + value.groupPurchase.start + "</span>"
+                                            + "<span>~</span>"
+                                            + "<span>" + value.groupPurchase.end + "</span>"
+                                        + "</div>"
+                                        + "<div style='font-size: 15px; margin-top: 20px;'>" + value.qty + "개</div>"
+                                        + "<div style='font-size: 20px;'>" + value.price + "원</div>"
+                                    + "</div>"
+                                + "</div>";
+                    });
+                    $("#list_wrapper").html(order_box);
                 }
             });
+        }
+
+        function printStatus(state) {
+            let status = "";
+            if (state == "ONGOING")
+                status += "<span style='background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>진행 중</span>";
+            else if (state == "URENT")
+                status += "<span style='background-color: #FF6666; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>마감 임박</span>";
+            else if (state == "ACHIEVED") {
+                status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>실패</span>";
+                            +"<span style='background-color: #FF7500; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-left: 5px; border-radius: 7px;'>성공</span>";
+            } else {
+                status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>마감</span>"
+                            + "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-left: 5px; border-radius: 7px;'>실패</span>";
+            }
+
+            return status;
         }
 
         $(document).on('click', '#update_user_info', function() {
@@ -247,7 +299,7 @@
 
         $(document).on('click', '#cancel', function() {
             printUserInfo();
-            printMyOrder()
+            printMyGP();
         });
 
     </script>

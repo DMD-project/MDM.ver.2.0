@@ -8,6 +8,10 @@
 
     <script src="https://kit.fontawesome.com/0dff8da39e.js" crossorigin="anonymous"></script>
     <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
         .link {
             cursor: pointer;
         }
@@ -24,7 +28,6 @@
         .mypage_content_main {
             margin-top: 70px;
         }
-
         .under_content {
             display : flex;
             justify-content: center;
@@ -67,6 +70,44 @@
             color: #333333;
             outline: none;
         }
+        .content_box {
+            display: flex;
+            float: left;
+            width: 80%;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        #update_shBid, #update_shBid_submit {
+            background-color: #FF7500;
+            color: #FFFFFF;
+            float: right;
+            font-size: 14px;
+            padding: 5px 7px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #delete_shBid {
+            background-color: #616161;
+            color: #FFFFFF;
+            float: right;
+            font-size: 14px;
+            padding: 5px 7px;
+            margin-left: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #new_shBid {
+            width: 200px;
+            height: 31px;
+            font-size: 22px;
+            border: 1px solid #616161;
+            border-radius: 5px;
+            padding: 0 10px;
+        }
+        #new_shBid::placeholder {
+            color: #C2C2C2;
+            text-align: right;
+        }
     </style>
 </head>
 <body>
@@ -77,7 +118,7 @@
 
         <div class="mypage_content_header">
             <div style="float: left; color: #FF7500; font-size: 20px;"><b>마이페이지</b></div>
-            <div style="float: right;"><span class="link">자주 묻는 질문</span></div>
+            <div style="float: right;"><span class="link" onclick="location.href='/mypage/faq/view'">자주 묻는 질문</span></div>
         </div>
 
         <div class="mypage_content_main">
@@ -109,16 +150,16 @@
             <ul>
                 <li style="font-size: 20px; color: #333333;"><b>나의 쇼핑 활동</b></li>
                 <li><span class="link">관심 상품</span></li>
-                <li><span class="link" onclick="location.href='/mypage/view'" style="color: #FF7500;">구매 내역</span></li>
+                <li><span class="link" onclick="location.href='/mypage/view'">구매 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/gp/view'">공동구매 참여 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/sh/view'">중고거래 판매 내역</span></li>
-                <li><span class="link" onclick="location.href='/mypage/shBid/view'">중고거래 요청 내역</span></li>
+                <li><span class="link" onclick="location.href='/mypage/shBid/view'" style="color: #FF7500;">중고거래 요청 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/review/view'">내가 작성한 후기</span></li>
             </ul>
         </nav>
 
         <div class="under_content_main" style="width: 100%; padding-top: 45px; padding-left: 30px;">
-            <span style="padding: 10px; font-size: 25px; font-weight: bold; color: #FF7500;">구매 내역</span>
+            <span style="padding: 10px; font-size: 25px; font-weight: bold; color: #FF7500;">중고거래 요청 내역</span>
             <div id="list_wrapper">
 
 
@@ -143,7 +184,7 @@
 
         $(document).ready(function() {
             printUserInfo();
-            printMyOrder();
+            printMyShBid();
         });
 
         function printUserInfo() {
@@ -171,18 +212,108 @@
             });
         }
 
-        function printMyOrder() {
+        function printMyShBid() {
             $.ajax ({
-                url: '/mypage/order',
+                url: '/mypage/shBid',
                 beforeSend: function(xhr) {
                     var token = getCookie("access_token");
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 success: function(data) {
-                    console.log(data);
+                    let shBid_arr = data.content;
+                    let shBid_box = "";
+                    $.each(shBid_arr, function(idx, value) {
+                        shBid_box += "<div class='content_box'>"
+                                        + "<a href='/secondhand/" + value.secondHand.id + "/view'>"
+                                        + "<img src='" + value.secondHand.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
+                                        + "</a>"
+                                        + "<div style='display:flex; flex-direction: column; width: 680px;'>"
+                                            + "<div id='" + value.secondHand.id + "' class='" + value.id + "'>" + printState(value.bidState, value.id, value.secondHand.selectBidId) + "</div>"
+                                            + "<a href='/secondhand/" + value.secondHand.id + "/view'>"
+                                            + "<div style='font-size: 20px; font-weight: bold'>" + value.secondHand.name + "</div>"
+                                            + "</a>"
+                                            + "<div style='margin-top: 3px'>" + value.secondHand.price + "원</div>"
+                                            + "<div id='shBid_label' style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>구매 희망가</div>"
+                                            + "<div id='shBid_price' style='font-size: 25px; font-weight: bold;'>" + value.price + "원</div>"
+                                        + "</div>"
+                                    + "</div>";
+                    });
+                    $("#list_wrapper").html(shBid_box);
                 }
             });
         }
+
+        function printState(state, bidId, selectBidId) {
+            let status = "";
+            if (state == 'y' && (bidId == selectBidId))
+                status += "<span style='display: inline-block; margin-bottom: 4px; background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>희망가 채택</span>";
+            else if (state == 'y' && (bidId != selectBidId)) {
+                status += "<span style='display: inline-block; margin-bottom: 4px; background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>판매 완료</span>";
+            }
+            else {
+                status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>대기 중</span>"
+                            + "<span id='delete_shBid' style='float: right; margin-left: 10px; background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 5px 7px; border-radius: 10px;'>삭제</span>"
+                            + "<span id='update_shBid' style='float:right;'>희망가 수정</span>";
+            }
+
+            return status;
+        }
+
+        $(document).on('click', '#update_shBid', function() {
+            let input_box = "<input type='text' id='new_shBid' placeholder='희망가 입력'>"
+            $(this).parent().siblings('div#shBid_price').after(input_box);
+            $(this).parent().siblings('div#shBid_price').remove();
+
+            let btn = "";
+            btn += "<span id='update_shBid_submit'>등록</span>"
+                    + "<span id='cancel' style='float: right;color: #FF7500; font-size: 14px; padding: 5px 0px; margin-right: 10px;'>취소</span>";
+
+            $(this).after(btn);
+            $(this).prev().remove();
+            $(this).remove();
+        });
+
+        $(document).on('click', '#update_shBid_submit', function() {
+            let shId = $(this).parent().attr('id');
+            let shBidId = $(this).parent().attr('class');
+            let new_shBid = $('#new_shBid').val();
+
+            $.ajax ({
+                type: 'POST',
+                url: '/shBid/' + shId + '/update/' + shBidId,
+                beforeSend: function(xhr) {
+                    var token = getCookie("access_token");
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                data: JSON.stringify (
+                    {
+                        "shId" : shId,
+                        "price" : new_shBid
+                    }
+                ),
+                contentType: 'application/json; charset=utf-8',
+                success: function(data) {
+                    printMyShBid();
+                }
+            })
+        });
+
+        $(document).on('click', '#delete_shBid', function() {
+            let shId = $(this).parent().attr('id');
+            let shBidId = $(this).parent().attr('class');
+
+            $.ajax ({
+                type: 'DELETE',
+                url: '/shBid/' + shId + '/delete/' + shBidId,
+                beforeSend: function(xhr) {
+                    var token = getCookie("access_token");
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                success: function(data) {
+                    printMyShBid();
+                }
+            })
+        });
 
         $(document).on('click', '#update_user_info', function() {
             let new_content = "";
@@ -247,7 +378,7 @@
 
         $(document).on('click', '#cancel', function() {
             printUserInfo();
-            printMyOrder()
+            printMyShBid();
         });
 
     </script>

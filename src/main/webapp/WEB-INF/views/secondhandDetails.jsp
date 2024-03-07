@@ -13,20 +13,27 @@
         }
         input {
             background-color: #FFFFFF;
-
             width: 300px;
-
             color: #000000;
-            font-size: 20px;
+
             border: 1px solid #C2C2C2;
             border-radius: 10px;
-
             margin-top: 5px;
             padding: 10px;
         }
         input::placeholder {
             color: #C2C2C2;
             text-align: right;
+        }
+         {
+            background-color: #FFFFFF;
+            width: 300px;
+            color: #000000;
+            font-size: 20px;
+            border: 1px solid #C2C2C2;
+            border-radius: 10px;
+            margin-top: 5px;
+            padding: 10px;
         }
 
         .sample {
@@ -50,23 +57,19 @@
         }
         .product_info {
           background-color: white;
-
-          width: 400px;
+          width: 360px;
           height: 330px;
-
-          padding: 35px 0 40px 50px;
+          padding: 35px 40px 40px 50px;
           margin: auto;
         }
         .button_wrapper {
           width: 450px;
-
           display : flex;
           justify-content: center;
-
           margin-top: 30px;
         }
 
-        .bid {
+        .bid_btn {
               background-color: #FF7500;
               color: white;
               font-size: 20px;
@@ -108,7 +111,54 @@
             border: 1px solid #EE842A;
             border-radius: 10px;
         }
-
+        #update_sh, #update_sh_submit {
+            background-color: #FF7500;
+            color: #FFFFFF;
+            float: right;
+            font-size: 14px;
+            padding: 5px 7px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #delete_sh {
+            background-color: #616161;
+            color: #FFFFFF;
+            float: right;
+            font-size: 14px;
+            padding: 5px 7px;
+            margin-left: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #bid_accept, #update_bid, #update_bid_submit {
+            float: right;
+            background-color: #FFEDDE;
+            color: #FF7500;
+            font-size: 14px;
+            padding: 2px 5px;
+            border: 1px solid #FF7500;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        #delete_bid {
+            float: right;
+            background-color: #C2C2C2;
+            color: #616161;
+            font-size: 14px;
+            padding: 2px 5px;
+            margin-left: 7px;
+            border: 1px solid #616161;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        #new_bid {
+            background-color: #FFFFFF;
+            width: 50%;
+            color: #000000;
+            border: 1px solid #C2C2C2;
+            border-radius: 5px;
+            padding: 5px;
+        }
     </style>
 </head>
 <body>
@@ -122,27 +172,24 @@
     </div>
     <div class="product_info_wrapper">
         <div class="product_info">
+            <div id="status_bar" style="margin-bottom: 10px;"></div>
+            <span id="sh_name" style="font-size: 30px; font-weight: bold;">sh_name</span>
 
-            <h1><span id="sh_name">sh_name</span></h1>
-            <span id="sh_update_submit">수정하기</span>
-            <span id="sh_delete_submit">삭제하기</span>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-
-            <div>
+            <div style="margin-top:20px;">
                 <span style="color: #616161; font-size: 15px;">상품 가격</span><br/>
-
                 <span id="sh_price" style="font-size: 30px; font-weight: bold;"><b>sh_price</b></span>
                 <span style="padding-left: 5px;">원</span>
             </div>
+            <div style='overflow: scroll; width: 85%; margin-top: 5px; height: 120px;'>
+                <span style='color: #616161; font-size: 15px;'>요청 내역</span>
+                <span id="bid_count" style='color: #FF7500; font-weight: bold;'>0</span>
+                    <div id='shBid_list' style='padding: 13px 10px;'>
 
-            <div style="margin-top: 30px;">
+                    </div>
+            </div>
+            <div class="sh_bid" style="margin-top: 5px; display: block;">
                 <span style="color: #616161; font-size: 15px;">구매 희망가</span><br/>
-
-                <input type="text" id="bid_price" placeholder="희망가 입력">
+                <input type="text" id="bid_price" placeholder="희망가 입력" style="font-size: 20px;">
                 <span style="padding-left: 5px;">원</span>
             </div>
 
@@ -162,13 +209,13 @@
     <span id="sh_content"></span>
 </div>
 
-<div>
-    <span id="bid_list"></span>
-</div>
-
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
+        printSecondhandDetails();
+    });
+
+    function printSecondhandDetails() {
         let url = window.location.href;
         let splitUrl = url.split("/");
 
@@ -179,7 +226,6 @@
             url: '/secondhand/' + shId,
             beforeSend: function(xhr) {
                 var token = getCookie("access_token");
-
                 xhr.setRequestHeader("Authorization", "Bearer " + token);
             },
             success: function(data) {
@@ -189,70 +235,76 @@
                 let name = data.content.name;
                 let price = data.content.price;
                 let content = data.content.content;
-                let state = data.content.state;
-                let userState = data.content.userState;
+                let bid_count = data.content.secondHandBidList.length;
 
                 $("#prod_img").attr('src', imgUrl);
                 $("#prod_img").attr('alt', imgUrl);
                 $("#sh_name").html(name);
                 $("#sh_price").html(price);
                 $("#sh_content").html(content);
+                $("#bid_count").html(bid_count);
 
-                let bid_btn = "<button class='bid' id='bid_submit'><b>제안하기</b></button>";
-                let soldout_btn = "<button class='bid'><b>판매완료</b></button>";
+                let isWriter = data.content.userState;
+                let soldout = data.content.state;
 
-                if(state == "n") {
-                    $("#submit_btn").html(bid_btn);
-                } else {
+                let bid_btn = "<button class='bid_btn' id='bid_submit'><b>제안하기</b></button>";
+                let soldout_btn = "<button class='bid_btn'><b>판매 완료</b></button>";
+                let seller_btn = "<button class='bid_btn'><b></b></button>"
+
+                let status = "";
+                if (soldout == 'y') {
+                    status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>판매 완료</span>";
                     $("#submit_btn").html(soldout_btn);
+                    $(".bid_btn").css("background-color", "#868686");
+                    $(".bid_btn").attr("disabled", true);
+                    $(".product_info").css('height', '330px');
+                } else if (soldout == 'n' && isWriter == 'y') {
+                    status += "<span style='background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>판매 중</span>"
+                            + "<span id='delete_sh'>삭제</span>"
+                            + "<span id='update_sh'>수정</span>";
+                    $(".product_info").css('height', '425px');
+                    $(".sh_bid").css("display", "none");
+                } else if (soldout == 'n' && isWriter == 'n') {
+                    status += "<span style='background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>판매 중</span>"
+                    $("#submit_btn").html(bid_btn);
+                    $(".product_info").css('height', '330px');
                 }
+                $("#status_bar").html(status);
 
                 let bid_arr = data.content.secondHandBidList;
                 let bid_box = "";
-
                 $.each(bid_arr, function(idx, value) {
-                    let str = "";
-                    if(value.bidUserState == 'y' && state == 'n') {
-                        str += "<div id='delete_bid_submit' style='float: right; margin-left: 10px; color: #FF7500;'><i class='fa-solid fa-xmark'></i></div>"
-                              + "<div id='update_bid_submit' style='float: right; font-size: 14px; color: #FF7500;'>수정</div>";
-                    }
-
-                    let btnStr = "";
-                    if(state == "n") {
-                        if(userState == "y") {
-                            btnStr += "<button id='select_bid_submit' data-price='" + value.price + "' data-state='" +value.bidState+ "' style='float: right; font-size: 14px; color: #FF7500;'>거래하기</button>";
-                        }
-                    }
-
-                    bid_box += "<div class='bid_box' id='select_id' data-bid='" + value.bidId +"'>"
-                                + str
-                                + "<div id='select_price'><b>" + value.price + "</b> 원 </div>"
-                                + btnStr
-                            + "</div>";
+                    let isBidUser = value.bidUserState;
+                    bid_box += "<div id='" + value.bidId + "' data-price='" + value.price + "' data-state='" + value.bidState + "' style='margin-bottom: 10px;'>"
+                                + "<span id='bid_price'>" + value.price + "원</span>";
+                            if (soldout == 'n') {
+                                if (isWriter == 'y') {
+                                    bid_box += "<span id='bid_accept'>거래</span>";
+                                } else if (isBidUser == 'y') {
+                                    bid_box += "<span id='delete_bid'>삭제</span>"
+                                                +"<span id='update_bid'>수정</span>";
+                                }
+                            }
+                    bid_box += "</div>";
                 });
-
-                $("#bid_list").html(bid_box);
+                $("#shBid_list").html(bid_box);
             }
         });
+    }
+
+    $(document).on('click', '#cancel', function() {
+        location.reload();
     });
 
-    $(document).on('click', '#sh_delete_submit', function() {
+    $(document).on('click', '#delete_sh', function() {
         let url = window.location.href;
         let splitUrl = url.split("/");
-
         let shId = splitUrl[splitUrl.length - 2];
-
-        alert(shId);
-
         $.ajax({
             type: 'DELETE',
             url: '/secondhand/delete/' + shId,
             beforeSend: function(xhr) {
                 var token = getCookie("access_token");
-
-                if (!token) {
-                    alert("로그인이 필요합니다.");
-                }
                 xhr.setRequestHeader("Authorization", "Bearer " + token);
             },
             error: function(xhr, data) {
@@ -265,14 +317,73 @@
                     return;
                 } else {
                     alert("삭제가 완료되었습니다.");
-                    location.href="http://localhost:8080/secondhand/list/view";
+                    location.href="/secondhand/list/view";
                 }
             }
         });
     });
 
-    $(document).on('click', '#sh_update_submit', function() {
+    $(document).on('click', '#update_sh', function() {
+            let update_sh_box = "";
+            update_sh_box += "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>카테고리</div>"
+                                + "<select id='new_cateCode' style='width: 120px; padding: 5px 20px 5px 5px; border: 1px solid #B0B0B0;'>"
+                                    + "<option value='null' selected>카테고리 선택</option>"
+                                    + "<option value='FUR'>가구</option>"
+                                    + "<option value='FAB'>패브릭</option>"
+                                    + "<option value='AD'>가전/디지털</option>"
+                                    + "<option value='STO'>수납/정리</option>"
+                                    + "<option value='DEC'>소품</option>"
+                                    + "<option value='LIT'>조명</option>"
+                                    + "<option value='PLA'>식물</option>"
+                                + "</select>"
+                                + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>상품명</div>"
+                                + "<input type='text' id='new_sh_name' style='font-size: 15px;'>"
+                                + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>거래 가격</div>"
+                                + "<input type='text' id='new_sh_price' style='font-size: 15px;'>"
+                                + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>상세 정보</div>"
+                                + "<textarea id='new_sh_content' style='width: 80%; height: 145px; border: 1px solid #B0B0B0; border-radius: 5px; padding: 15px; margin-top: 5px;'></textarea>"
 
+            $(this).parent().nextAll().hide();
+            $(this).parent().after(update_sh_box);
+
+            let status_bar = "";
+            status_bar += "<span id='update_sh_submit'>등록</span>"
+                    + "<span id='cancel' style='float: right;color: #FF7500; font-size: 14px; padding: 5px 0px; margin-right: 10px;'>취소</span>";
+
+            $(this).after(status_bar);
+            $(this).prev().hide();
+            $(this).hide();
+    });
+
+    $(document).on('click', '#update_sh_submit', function() {
+            let url = window.location.href;
+            let splitUrl = url.split("/");
+            let shId = splitUrl[splitUrl.length - 2];
+            let new_cateCode = $("#new_cateCode option:selected").val();
+            let new_sh_name = $("#new_sh_name").val();
+            let new_sh_price = $("#new_sh_price").val();
+            let new_sh_content = $("#new_sh_content").val();
+
+            $.ajax ({
+                type: 'PUT',
+                url: '/secondhand/update/' + shId,
+                beforeSend: function(xhr) {
+                    var token = getCookie("access_token");
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                data: JSON.stringify (
+                    {
+                        "cateCode" : new_cateCode,
+                        "name" : new_sh_name,
+                        "price" : new_sh_price,
+                        "content" : new_sh_content,
+                    }
+                ),
+                contentType: 'application/json; charset=utf-8',
+                success: function(data) {
+                    location.reload();
+                }
+            })
     });
 
     $(document).on('click', '#bid_submit', function() {
@@ -280,12 +391,10 @@
         let splitUrl = url.split("/");
 
         let shId = splitUrl[splitUrl.length - 2];
-
         let bid_price = $("#bid_price").val();
 
-        if(bid_price.length == 0) {
+        if(bid_price.length == 0)
             alert("구매 희망가를 입력해 주세요.");
-        }
 
         $.ajax({
             type: 'POST',
@@ -319,17 +428,58 @@
         });
     });
 
-    $(document).on('click', '#select_bid_submit', function() {
+    $(document).on('click', '#update_bid', function() {
+        let input_box = "<input type='text' id='new_bid' placeholder='희망가 입력'>"
+        $(this).parent().children("#bid_price").before(input_box);
+        $(this).parent().children("#bid_price").remove();
+
+        let btn = "";
+        btn += "<span id='update_bid_submit' style='margin-top: 5px;'>등록</span>"
+                + "<span id='cancel' style='float: right;color: #FF7500; font-size: 14px; padding: 5px 0px; margin-right: 10px; margin-top: 5px;'>취소</span>";
+
+        $(this).after(btn);
+        $(this).prev().remove();
+        $(this).remove();
+    });
+
+    $(document).on('click', '#update_bid_submit', function() {
         let url = window.location.href;
         let splitUrl = url.split("/");
 
         let shId = splitUrl[splitUrl.length - 2];
+        let shBidId = $(this).parent().attr('id');
+        let new_bid = $('#new_bid').val();
 
-        let bidId = $(this).parent().data('bid');
-        let bidPrice = $(this).data('price');
-        let bidState = $(this).data('state');
+        $.ajax ({
+            type: 'POST',
+            url: '/shBid/' + shId + '/update/' + shBidId,
+            beforeSend: function(xhr) {
+                var token = getCookie("access_token");
+                xhr.setRequestHeader("Authorization", "Bearer " + token);
+            },
+            data: JSON.stringify (
+                {
+                    "shId" : shId,
+                    "price" : new_bid
+                }
+            ),
+            contentType: 'application/json; charset=utf-8',
+            success: function(data) {
+                location.reload();
+            }
+        })
+    });
 
-        $.ajax({
+    $(document).on('click', '#bid_accept', function() {
+        let url = window.location.href;
+        let splitUrl = url.split("/");
+
+        let shId = splitUrl[splitUrl.length - 2];
+        let bidId = $(this).parent().attr('id');
+        let bidPrice = $(this).parent().data('price');
+        let bidState = $(this).parent().data('state');
+
+        $.ajax ({
             type: 'POST',
             url: '/secondhand/update/' + shId + '/state/' + bidState + '/select/' + bidId,
             beforeSend: function(xhr) {
@@ -348,23 +498,18 @@
                     alert(data.message);
                 } else {
                     alert(bidPrice + '원에 거래가 완료되었습니다.');
-                    location.href="http://localhost:8080/secondhand/" + shId + "/view";
+                    location.href="/secondhand/" + shId + "/view";
                 }
             }
         });
     });
 
-    $(document).on('click', '#update_bid_submit', function() {
-        let bidId = $(this).parent().data('bid');
-    });
-
-    $(document).on('click', '#delete_bid_submit', function() {
+    $(document).on('click', '#delete_bid', function() {
         let url = window.location.href;
         let splitUrl = url.split("/");
 
         let shId = splitUrl[splitUrl.length - 2];
-
-        let bidId = $(this).parent().data('bid');
+        let bidId = $(this).parent().attr('id');
 
         $.ajax({
             type:'DELETE',
@@ -376,7 +521,6 @@
                     alert("로그인이 필요합니다.");
                     window.location.href='/login';
                 }
-
                 xhr.setRequestHeader("Authorization", "Bearer " + token);
             },
             error: function(xhr, data) {

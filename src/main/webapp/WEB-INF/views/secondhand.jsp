@@ -11,84 +11,64 @@
         body {
             background-color: #F9F1E7;
         }
-    </style>
-
-    <style>
         .category_bar {
             background-color: #F9F1E7;
             text-align: center;
-
             height: 250px;
-
             padding: 10px 50px 10px 50px;
         }
         #category_btn {
-                    background-color: white;
-
-                    width: 90px;
-                    height: 90px;
-
-                    border: none;
-                    border-radius: 50%;
-                    margin: 20px;
+            background-color: white;
+            width: 90px;
+            height: 90px;
+            border: none;
+            border-radius: 50%;
+            margin: 20px;
         }
         .category_bar img {
             width: 50px;
             height: 50px;
         }
-
         .search_bar input {
             width: 50%;
             height: 40px;
-
             border: none;
             border-radius: 25px;
-
             padding-left: 15px;
             margin-top: 10px;
             margin-bottom: 10px;
         }
-
         .content_wrapper {
             background-color: #FFFFFF;
-
             padding-top: 30px;
             padding-left: 150px;
             padding-right: 150px;
         }
-
         #addSecondhand {
             background-color: #FF7500;
             color: white;
             font-size: 13px;
             text-align: center;
-
             width: 80px;
             height: 25px;
-
             border: none;
             border-radius: 10px;
         }
-
         .top_wrapper {
             padding: 0 80px 50px 80px;
         }
         #secondhand_list ul {
             list-style: none;
             width: 1032px;
-
             display: flex;
             flex-flow: wrap;
-
             margin: auto;
             padding: 0;
         }
         #secondhand_list li {
             list-style: none;
             text-align: right;
-
             width: 214px;
-
             padding: 20px;
             margin: 1px;
         }
@@ -112,30 +92,58 @@
             <input type="text" id="keyword" placeholder="검색어를 입력하세요." />
         </div>
 
-        <button id="category_btn" value="">
-            <img src="../../images/category_btn_01.png"><br/>전체
-        </button>
-        <button id="category_btn" value="FUR">
-            <img src="../../images/category_btn_02.png"><br/>가구
-        </button>
-        <button id="category_btn" value="FAB">
-            <img src="../../images/category_btn_03.png"><br/>패브릭
-        </button>
-        <button id="category_btn" value="AD">
-            <img src="../../images/category_btn_04.png"><br/>가전/디지털
-        </button>
-        <button id="category_btn" value="STO">
-            <img src="../../images/category_btn_05.png"><br/>수납/정리
-        </button>
-        <button id="category_btn" value="DEC">
-            <img src="../../images/category_btn_06.png"><br/>소품
-        </button>
-        <button id="category_btn" value="LIT">
-            <img src="../../images/category_btn_07.png"><br/>조명
-        </button>
-        <button id="category_btn" value="PLA">
-            <img src="../../images/category_btn_08.png"><br/>식물
-        </button>
+        <table style="text-align: center; font-size: 14px; margin: auto;">
+            <tr>
+                <td>
+                    <button id="category_btn" value="">
+                        <img src="../../images/category_btn_01.png">
+                    </button>
+                    <br/>전체
+                </td>
+                <td>
+                    <button id="category_btn" value="FUR">
+                        <img src="../../images/category_btn_02.png">
+                    </button>
+                    <br/>가구
+                </td>
+                <td>
+                    <button id="category_btn" value="FAB">
+                        <img src="../../images/category_btn_03.png">
+                    </button>
+                    <br/>패브릭
+                </td>
+                <td>
+                    <button id="category_btn" value="AD">
+                        <img src="../../images/category_btn_04.png">
+                    </button>
+                    <br/>가전/디지털
+                </td>
+                <td>
+                    <button id="category_btn" value="STO">
+                        <img src="../../images/category_btn_05.png">
+                    </button>
+                    <br/>수납/정리
+                </td>
+                <td>
+                    <button id="category_btn" value="DEC">
+                        <img src="../../images/category_btn_06.png">
+                    </button>
+                    <br/>소품
+                </td>
+                <td>
+                    <button id="category_btn" value="LIT">
+                        <img src="../../images/category_btn_07.png">
+                    </button>
+                    <br/>조명
+                </td>
+                <td>
+                    <button id="category_btn" value="PLA">
+                        <img src="../../images/category_btn_08.png">
+                    </button>
+                    <br/>식물
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div class="content_wrapper">
@@ -246,9 +254,6 @@
                                             + "<span><b>" + data.content[i].price + "원</b></span>"
                                             + "</a>"
                                             + "</li>";
-
-                        let secondhand_state = data.content[i].state;
-
                         if(i % 4 == 3) {
                             secondhand_info += "</ul>";
                             secondhand_info += "<br/><ul>";

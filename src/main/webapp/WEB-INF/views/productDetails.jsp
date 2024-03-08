@@ -188,6 +188,16 @@
         #delete_review {
             cursor: pointer;
         }
+        #update_review_submit {
+            float: right;
+            background-color: #FFEDDE;
+            color: #FF7500;
+            font-size: 14px;
+            padding: 2px 5px;
+            border: 1px solid #FF7500;
+            border-radius: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -278,8 +288,6 @@
                 </div>
 
                 <div id="review_list">
-
-
 
                 </div>
             </div>
@@ -491,9 +499,14 @@
                                     + "<span class='star' data-value='5'>⭐</span>"
                                 + "</div>"
                                 + "<textarea id='update_review_content' style='width: 100%; height: 60px; margin: 10px 0 5px 0;'></textarea>"
-                                + "<div id='update_review_submit' style='float: right; font-size: 14px; margin-right: 5px; color: #FF7500;'>등록</div>";
+                                + "<span id='update_review_submit'>등록</span>"
+                                + "<span id='cancel' style='float: right;color: #FF7500; font-size: 14px; padding: 5px 0px; margin-right: 10px;'>취소</span>";
 
             $(this).parent().html(update_review_box);
+        });
+
+        $(document).on('click', '#cancel', function() {
+            location.reload();
         });
 
         $(document).on('click', '#update_review_submit', function() {

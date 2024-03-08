@@ -14,7 +14,7 @@
         .category_bar {
             background-color: #F9F1E7;
             text-align: center;
-            height: 250px;
+            height: 280px;
             padding: 10px 50px 10px 50px;
         }
         #category_btn {

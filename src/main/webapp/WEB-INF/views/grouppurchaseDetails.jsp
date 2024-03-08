@@ -12,39 +12,33 @@
 
     <style>
         body {
-          background-color: #F9F1E7;
+            background-color: #F9F1E7;
         }
         .sample {
-          display : flex;
-          justify-content: center;
-
-          margin-top: 30px;
-          margin-bottom: 50px;
+            display : flex;
+            justify-content: center;
+            margin-top: 30px;
+            margin-bottom: 50px;
         }
         .gp_img {
-          background-color: white;
-
-          width: 500px;
-          height: 500px;
-
-          border: none;
+            background-color: white;
+            width: 500px;
+            height: 500px;
+            border: none;
         }
 
         .gp_info_wrapper {
             padding: 0 30px;
         }
         .gp_info {
-          background-color: white;
-
-          width: 400px;
-          height: 330px;
-
-          padding: 35px 0 40px 50px;
-          margin: auto;
+            background-color: white;
+            width: 400px;
+            height: 330px;
+            padding: 40px 0 35px 50px;
+            margin: auto;
         }
         .limit_info_wrapper {
             display : flex;
-
             margin-bottom:20px;
         }
         .limit_info_date {
@@ -56,43 +50,51 @@
             margin-left: 25px;
         }
         .button_wrapper {
-          width: 450px;
-
-          display : flex;
-          justify-content: center;
-
-          margin-top: 30px;
+            width: 450px;
+            display : flex;
+            justify-content: center;
+            margin-top: 30px;
         }
         .submit {
               background-color: #FF7500;
               color: white;
               font-size: 20px;
               text-align: center;
-
               width: 450px;
               height: 60px;
-
               border: none;
               border-radius: 10px;
          }
-
         .info_nav_bar {
              background-color: #F5F5F5;
-
              height: 60px;
              line-height: 60px;
-
              padding-left: 150px;
         }
         .info_nav_bar div {
             width: 150px;
-
             text-align: center;
             float: left;
         }
         .info_nav_bar_border {
             color: #FF7500;
             border-bottom: 3px solid #FF7500;
+        }
+        .count_wrapper {
+            margin-top: 10px;
+        }
+        .count_wrapper button {
+            background-color: #FF7500;
+            color: #FFFFFF;
+            width: 25px;
+            height: 25px;
+            border: none;
+        }
+        .count_wrapper input {
+            width: 25px;
+            font-size: 15px;
+            text-align: center;
+            border: none;
         }
     </style>
 </head>
@@ -107,14 +109,14 @@
     </div>
     <div class="gp_info_wrapper">
         <div class="gp_info">
+            <div id="status_bar" style="margin-bottom: 10px;"></div>
+            <span id="gp_name" style="font-size: 30px; font-weight: bold">gp_name</span>
 
-            <h1><span id="gp_name">gp_name</span></h1>
-
-            <div class="limit_info_wrapper">
+            <div class="limit_info_wrapper" style="margin: 20px 0;">
                 <div class="limit_info_date">
                     <span>남은 기간</span>
                     <br/>
-                    <span style="font-size: 35px;">N</span>
+                    <span id="gp_DDay" style="font-size: 35px;">N</span>
                     <span style="font-size: 13px;">일</span>
                 </div>
                 <div class="limit_info_count">
@@ -126,13 +128,10 @@
             </div>
 
             <div>
-                <span style="color: #616161; font-size: 15px;">목표 수량</span>
-                <span id="goal_qty" style="padding-left: 5px;">goal_qty</span>
-                <span>개</span>
-            </div>
-            <div>
-                <span style="color: #616161; font-size: 15px;">현재 수량</span>
-                <span id="qty" style="padding-left: 5px;">qty</span>
+                <span style="color: #616161; font-size: 15px;">현재수량/목표 수량</span>
+                <span id="qty" style="padding-left: 5px;">goal_qty</span>
+                <span>개 /</span>
+                <span id="goal_qty" style="padding-left: 5px;">qty</span>
                 <span>개</span>
             </div>
             <div>
@@ -143,7 +142,11 @@
             </div>
             <div>
                 <span style="color: #616161; font-size: 15px;">주문수량</span>
-                <input id="purchasedQty" type="number" min="1" max="10" step="1" value="1" style="margin: 10px;">
+                <div class="count_wrapper">
+                    <button type="button" id="count_minus">-</button>
+                    <input type="text" id="count_value" value="1">
+                    <button type="button" id="count_plus">+</button>
+                </div>
             </div>
             <br/>
             <div>
@@ -171,12 +174,16 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 <script>
 
+    let maxQty = 0;
     $(document).ready(function() {
+        printGPDetails();
+    });
+
+    function printGPDetails() {
         let url = window.location.href;
         let splitUrl = url.split("/");
 
         let gpId = splitUrl[splitUrl.length - 2];
-
         $.ajax ({
             url: '/gp/' + gpId,
             success: function(data) {
@@ -187,6 +194,8 @@
                 let gp_participants_qty = data.content.participantCount;
                 let gp_goal_qty = data.content.groupPurchase.goalQty;
                 let gp_now_qty = data.content.groupPurchase.nowQty;
+
+                maxQty = data.content.groupPurchase.maxQty;
 
                 $("#prod_img").attr('src', gp_imgUrl);
                 $("#prod_img").attr('alt', gp_imgUrl);
@@ -204,18 +213,67 @@
                 $("#end_date").html(gp_end);
                 $("#gp_price").html(gp_price);
                 $("#gp_content").html(gp_content);
+
+                let end_date = new Date(gp_end);
+                let today = new Date();
+                let diff = today - end_date;
+                let result = -(Math.ceil(diff / (1000 * 60 * 60 * 24)) - 1);
+
+                if (result <= 0)
+                    result = 0;
+
+                $("#gp_DDay").html(result);
+
+                let status = "";
+                let state = data.content.groupPurchase.state;
+                if (state == "ONGOING")
+                    status += "<span style='background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>진행 중</span>";
+                else if (state == "URGENT")
+                    status += "<span style='background-color: #FF6666; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>마감 임박</span>";
+                else if (state == "ACHIEVED") {
+                    status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>실패</span>";
+                            + "<span style='background-color: #FF7500; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-left: 5px; border-radius: 7px;'>성공</span>";
+                    $(".submit").css("background-color", "#868686");
+                    $(".submit").attr("disabled", true);
+                    $(".submit").text("마감");
+                } else {
+                    status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>마감</span>"
+                            + "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-left: 5px; border-radius: 7px;'>실패</span>";
+                    $(".submit").css("background-color", "#868686");
+                    $(".submit").attr("disabled", true);
+                    $(".submit").text("마감");
+                }
+                $("#status_bar").html(status);
             }
-        });
+        })
+    }
+
+    $(document).on('click', '#count_minus', function() {
+        let count_value = $('#count_value').val();
+        if (count_value == 1)
+            alert('최소 수량 입니다.');
+        else
+            count_value--;
+
+        $("#count_value").attr('value', count_value);
+    });
+
+    $(document).on('click', '#count_plus', function() {
+        let count_value = $('#count_value').val();
+        count_value++;
+
+        if (maxQty < count_value)
+            alert('1인당 최대 구매 갯수는 ' + maxQty + '개 입니다.');
+        else
+            $("#count_value").attr('value', count_value);
     });
 
     $(document).on('click', '#gp_join', function() {
-
         let url = window.location.href;
         let splitUrl = url.split("/");
 
         let gpId = splitUrl[splitUrl.length - 2];
-        let purchasedQty = $('#purchasedQty').val();
-
+        let purchasedQty = $('#count_value').val();
         $.ajax ({
             type: 'POST',
             url: '/gp/order/' + gpId + "/" + purchasedQty,
@@ -243,11 +301,11 @@
                     if(confirm("참여가 완료되었습니다.\n마이페이지에서 확인하기") == true) {
                         location.href="http://localhost:8080/mypage/gp/view";
                     } else {
-                        console.log("취소되었습니다");
+                        location.reload();
                     }
                 }
             }
-        });
+        })
     });
 
 </script>

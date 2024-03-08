@@ -77,6 +77,9 @@ public class MappingController {
         return "productDetails";
     }
 
+    @GetMapping("/order/view")
+    public String getOrderDetail() { return "order";}
+
     @GetMapping("/cart/view")
     public String getCart() {
         return "cart";

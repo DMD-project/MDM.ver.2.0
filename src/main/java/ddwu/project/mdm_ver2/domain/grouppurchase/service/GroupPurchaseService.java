@@ -80,6 +80,7 @@ public class GroupPurchaseService {
             groupPurchase.setCategory(category);
 
             GroupPurchase updatedGroupPurchase = groupPurchaseRepository.save(groupPurchase);
+            updateGroupPurchaseStatus();
             return CustomResponse.onSuccess(updatedGroupPurchase);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -287,6 +288,8 @@ public class GroupPurchaseService {
                 status = GPStatus.FAIL;
             } else if (currentDate.isAfter(endDate.minusDays(3))) {
                 status = GPStatus.URGENT;
+            } else {
+                status = GPStatus.ONGOING;
             }
             groupPurchase.setState(status);
         }

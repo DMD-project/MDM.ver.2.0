@@ -141,7 +141,6 @@
             <div class="order_payment">
                 <span style="font-size: 17px; color: #616161;"><b>결제 수단</b></span>
                 <hr style="border: 1px solid #FFAB64;">
-
             </div>
 
         </div>
@@ -174,9 +173,40 @@
 
     <%@ include file="includes/footer.jsp" %>
 
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
+        $(document).ready(function() {
+            printProductInfo();
+        });
 
+        $(document).on('click', '#zipcode', function() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    var addr = '';
 
+                    if (data.userSelectedType === 'R') {
+                        addr = data.roadAddress;
+                    } else {
+       핑                 addr = data.jibunAddress;
+                    }
+
+                    $('#order_address_zipcode').val(data.zonecode);
+                    $('#order_address_address_01').val(addr);
+                    $('#order_address_zipcode').attr('readonly', true);
+                    $('#order_address_address_01').attr('readonly', true);
+                    $('#order_address_address_02').focus();
+                }
+            }).open();
+        });
+
+        function printProductInfo() {
+            let urlParams = new URL(location.href).searchParams;
+            let prodId = urlParams.get('prodId');
+            let count = urlParams.get('count');
+
+            console.log(prodId);
+            console.log(count);
+        }
     </script>
 
 </body>

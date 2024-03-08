@@ -346,6 +346,16 @@
             });
         });
 
+        $(document).on('click', '#order', function() {
+            let url = window.location.href;
+            let splitUrl = url.split("/");
+
+            let prodId = splitUrl[splitUrl.length - 2];
+            let count = $('#count_value').val();
+
+            location.href='/order/view?prodId=' + prodId + '&count=' + count;
+        });
+
         let star = 0;
         $(document).on('click', '.ratingStar span', function() {
             $(this).parent().children('span').removeClass('on');

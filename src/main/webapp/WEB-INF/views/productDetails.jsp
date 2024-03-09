@@ -347,13 +347,19 @@
         });
 
         $(document).on('click', '#order', function() {
-            let url = window.location.href;
-            let splitUrl = url.split("/");
+            var token = getCookie("access_token");
+            if (!token) {
+                alert('로그인이 필요합니다.');
+                location.href = "/login";
+            } else {
+                let url = window.location.href;
+                let splitUrl = url.split("/");
 
-            let prodId = splitUrl[splitUrl.length - 2];
-            let count = $('#count_value').val();
+                let prodId = splitUrl[splitUrl.length - 2];
+                let count = $('#count_value').val();
 
-            location.href='/order/view?prodId=' + prodId + '&count=' + count;
+                location.href='/order/view?from=product&prodId=' + prodId + '&count=' + count;
+            }
         });
 
         let star = 0;

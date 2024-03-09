@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -18,65 +18,39 @@
         .navbar {
             width: 100%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background-color: var(--background-color);
+            justify-content: space-between;
         }
         .navbar_logo {
             display: flex;
             font-size: 35px;
-
             padding-left: 15px;
             padding-right: 30px;
         }
         .navbar_logo a:link {
             text-decoration: none;
         }
-        .navbar_logo a:link {
+        .navbar_logo a:link, .navbar_logo a:visited {
             color: black;
-       }
-       .navbar_logo a:visited {
-            color: black;
-       }
-
+        }
         .navbar_menu {
-          list-style: none;
-          display: flex;
-          margin: 0;
-          padding-left: 0;
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding-left: 0;
         }
         .navbar_menu li {
-          padding: 0px 20px;
+            padding: 0px 20px;
         }
-
        .navbar_menu a {
             text-decoration: none;
        }
-       .navbar_menu a:link {
-            color: black;
-       }
-       .navbar_menu a:visited {
+       .navbar_menu a:link, .navbar_menu a:visited {
             color: black;
        }
        .navbar_menu a:hover {
             color: #FF7500;
        }
-
-        .navbar_search {
-            list-style: none;
-
-            padding-left: 100px;
-        }
-        .navbar_search input {
-            width: 300px;
-            height: 30px;
-
-            border: none;
-            border-radius: 15px;
-
-            padding-left: 15px;
-        }
-
         .navbar_icons {
           list-style: none;
           display: flex;
@@ -84,28 +58,22 @@
           padding-left: 400px;
         }
         .navbar_icons i {
-            padding: 0px 7px;
+            padding: 0px 8px;
+            font-size: 18px;
         }
         .navbar_icons a:link, a:visited {
             color: black;
         }
-
         .navbar_login {
-            list-style: none;
-            display: flex;
+            padding-right: 60px;
         }
-        .navbar_login li {
-            padding-right: 50px;
-        }
-        .navbar_login button {
+        #login_btn button {
             background-color: #FF7500;
             color: white;
             font-size: 15px;
             text-align: center;
-
             width: 80px;
             height: 30px;
-
             border: none;
             border-radius: 10px;
         }
@@ -118,7 +86,6 @@
 
 <div class="header">
     <nav class="navbar">
-
         <div class="navbar_logo">
             <a href="/"><img src="../../images/m2dm.png" style="width: 200px; height: auto;"></a>
         </div>
@@ -128,21 +95,15 @@
             <li><a href="/gp/list/view"><b>공동구매</b></a></li>
             <li><a href="/secondhand/list/view"><b>중고거래</b></a></li>
         </ul>
-
         <ul class="navbar_icons">
             <a href="#"><i class="fa-solid fa-heart"></i></a>
-            <a href="/cart/view"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="/cart/view"><span>3</span><i class="fa-solid fa-cart-shopping"></i></a>
             <a href="/mypage/view"><i class="fa-solid fa-user"></i></a>
-
         </ul>
-
         <ul class="navbar_login">
-            <li>
-                <span id="login_btn">
-
-                    <button onclick='logout()'>로그아웃</button>
-                </span>
-            </li>
+            <div id="login_btn">
+                <button onclick='logout()'>로그아웃</button>
+            </div>
         </ul>
     </nav>
 </div>
@@ -188,7 +149,7 @@
 
         var token = getCookie("access_token");
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/kakao/logout", true);
+        xhr.open("POST", "/kakao/logout", true);
         xhr.setRequestHeader("Authorization", "Bearer " + token);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {

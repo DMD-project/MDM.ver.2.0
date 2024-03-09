@@ -413,10 +413,17 @@
                             "content" : content
                         }
                     ),
-                    success: function(result) {
-                        $(".ratingStar").children().removeClass('on');
-                        $('#textarea').val('');
-                        printProductDetails();
+                    success: function(data) {
+                        if(data.statusCode != 200) {
+                            alert(data.message);
+                            return;
+                        } else {
+                            $(".ratingStar").children().removeClass('on');
+                            $('#textarea').val('');
+                            printProductDetails();
+                            alert('리뷰가 등록되었습니다.');
+                        }
+
                     }
                 });
             }
@@ -558,10 +565,15 @@
                         }
                     ),
                     success: function(data) {
-                        if (data.statusCode == 405)
-                            alert('해당 리뷰를 수정할 수 없는 사용자입니다.');
-                        else
+                        if(data.statusCode != 200) {
+                            if (data.statusCode == 405)
+                                alert('해당 리뷰를 수정할 수 없는 사용자입니다.');
+                            else
+                                alert(data.message);
+                        } else {
+                            alert('수정되었습니다.');
                             printProductDetails();
+                        }
                     }
                 });
             }
@@ -587,10 +599,15 @@
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 success: function(data) {
-                    if (data.statusCode == 405)
-                        alert('해당 리뷰를 삭제할 수 없는 사용자입니다.');
-                    else
+                    if(data.statusCode != 200) {
+                        if (data.statusCode == 405)
+                            alert('해당 리뷰를 삭제할 수 없는 사용자입니다.');
+                        else
+                            alert(data.message);
+                    } else {
+                        alert('삭제되었습니다.');
                         printProductDetails();
+                    }
                 }
             })
         });

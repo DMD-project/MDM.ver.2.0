@@ -1,5 +1,8 @@
 package ddwu.project.mdm_ver2.domain.review.service;
 
+import ddwu.project.mdm_ver2.domain.cartItem.entity.Items;
+import ddwu.project.mdm_ver2.domain.order.entity.Order;
+import ddwu.project.mdm_ver2.domain.order.service.OrderService;
 import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import ddwu.project.mdm_ver2.domain.product.repository.ProductRepository;
 import ddwu.project.mdm_ver2.domain.review.dto.ReviewRequest;
@@ -24,6 +27,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final OrderService orderService;
 
     /* 리뷰 정렬 */
     public CustomResponse<List<Review>> sortReview(Long prodId, String sort) {
@@ -60,22 +64,38 @@ public class ReviewService {
             Product product = productRepository.findById(prodId)
                     .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
 
-            Review review = Review.builder()
-                    .user(user)
-                    .product(product)
-                    .star(request.getStar())
-                    .date(request.getDate())
-                    .content(request.getContent())
-                    .build();
+            boolean reviewState = false;
 
-            reviewRepository.saveAndFlush(review);
+            List<Order> orderList = orderService.getOrderByUser(userEmail).getContent();
+            for(Order order: orderList) {
+                List<Items> items = order.getCartItems();
+                for(Items item: items) {
+                    Long orderProdId = item.getId();
+                    if(orderProdId.equals(prodId)) {
+                        reviewState = true;
+                    }
+                }
+            }
 
-            product.setReviewCnt(reviewRepository.countByProductId(prodId));
-            product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
-            productRepository.saveAndFlush(product);
+            if(reviewState) {
+                Review review = Review.builder()
+                        .user(user)
+                        .product(product)
+                        .star(request.getStar())
+                        .date(request.getDate())
+                        .content(request.getContent())
+                        .build();
 
-            return CustomResponse.onSuccess(review);
+                reviewRepository.saveAndFlush(review);
 
+                product.setReviewCnt(reviewRepository.countByProductId(prodId));
+                product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
+                productRepository.saveAndFlush(product);
+
+                return CustomResponse.onSuccess(review);
+            } else {
+                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 구매한 사용자만 작성이 가능합니다.");
+            }
         } catch(Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }

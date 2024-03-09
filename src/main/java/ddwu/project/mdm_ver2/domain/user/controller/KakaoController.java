@@ -58,7 +58,7 @@ public class KakaoController implements UserApi {
         return userService.reissue(request);
     }
 
-    @GetMapping("/kakao/logout")
+    @PostMapping("/kakao/logout")
     public CustomResponse<Void> logout(HttpServletRequest request) {
         return userService.logout(request);
     }

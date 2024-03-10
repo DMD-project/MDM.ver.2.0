@@ -35,9 +35,16 @@ public class OrderController implements OrderApi{
         return orderService.getOrderDetail(orderId);
     }
 
-    // 장바구니 항목 구매 추가
+    // 장바구니 상품 구매 추가
     @PostMapping("/cart/add")
     public CustomResponse<Void> purchaseItemsFromCart(Principal principal, @RequestBody List<Long> itemIds) {
         return orderService.purchaseItemsFromCart(principal.getName(), itemIds);
+    }
+
+    // 일반상품 바로 구매
+    @PostMapping("/proudct/{proudctId}/{purchasedQty}")
+    public CustomResponse<Void> purchaseItems(Principal principal, @PathVariable Long proudctId,
+                                                    @PathVariable int purchasedQty) {
+        return orderService.purchaseItems(principal.getName(), proudctId, purchasedQty);
     }
 }

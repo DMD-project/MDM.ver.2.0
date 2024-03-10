@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.domain.order.entity;
 
 import ddwu.project.mdm_ver2.domain.cartItem.entity.Items;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
+import ddwu.project.mdm_ver2.domain.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "orders")
-public class Order { //일반상품(장바구니) 결제, 공동구매 결제
+public class Order { //일반상품 즉시 주문, 일반상품(장바구니) 주문, 공동구매 참여
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,12 +49,16 @@ public class Order { //일반상품(장바구니) 결제, 공동구매 결제
     @Column(name = "order_qty")
     private Integer qty; // 주문 수량
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Items> cartItems = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "prod_id")
+    private Product product;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gp_id")
-    private GroupPurchase groupPurchase; // 공동구매
+    private GroupPurchase groupPurchase;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Items> cartItems = new ArrayList<>();
 
     public List<Items> getCartItems() {
         return cartItems;

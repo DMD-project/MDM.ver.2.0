@@ -8,9 +8,12 @@ import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseReposi
 import ddwu.project.mdm_ver2.domain.order.dto.OrderDto;
 import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.order.repository.OrderRepository;
+import ddwu.project.mdm_ver2.domain.product.entity.Product;
+import ddwu.project.mdm_ver2.domain.product.repository.ProductRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -25,7 +28,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ItemsRepository itemsRepository;
     private final GroupPurchaseRepository groupPurchaseRepository;
-
+    private final ProductRepository productRepository;
 
     public CustomResponse<Void> updateOrder(long orderId, OrderDto updatedOrder) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
@@ -40,7 +43,7 @@ public class OrderService {
             Order savedOrder = orderRepository.save(existingOrder);
             return CustomResponse.onSuccess("주문이 수정되었습니다.");
         } else {
-            return CustomResponse.onFailure(404, "주문을 찾을 수 없습니다.");
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "주문을 찾을 수 없습니다.");
         }
     }
 
@@ -63,7 +66,7 @@ public class OrderService {
     public CustomResponse<Order> getOrderDetail(long orderId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         return optionalOrder.map(order -> CustomResponse.onSuccess(order))
-                .orElseGet(() -> CustomResponse.onFailure(404, "주문을 찾을 수 없습니다."));
+                .orElseGet(() -> CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "주문을 찾을 수 없습니다."));
     }
 
     public CustomResponse<List<Order>> getOrderByUser(String email) {
@@ -71,7 +74,7 @@ public class OrderService {
         if (!orders.isEmpty()) {
             return CustomResponse.onSuccess(orders);
         } else {
-            return CustomResponse.onFailure(404, "주문을 찾을 수 없습니다.");
+            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "주문을 찾을 수 없습니다.");
         }
     }
 
@@ -101,5 +104,24 @@ public class OrderService {
         Order savedOrder = orderRepository.save(order);
 
         return CustomResponse.onSuccess("장바구니 상품 주문이 승인되었습니다.");
+    }
+
+    public CustomResponse<Void> purchaseItems(String userEmail, Long productId, int purchasedQty) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
+
+
+        boolean alreadyJoined = orderRepository.existsByEmailAndProduct(userEmail, product);
+        if (alreadyJoined) {
+            return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "이미 해당 공동구매에 참여하였습니다.");
+        }
+        Order order = new Order();
+        order.setEmail(userEmail);
+        order.setProduct(product);
+        order.setPrice(product.getPrice() * purchasedQty);
+        order.setQty(purchasedQty);
+
+        orderRepository.save(order);
+
+        return CustomResponse.onSuccess("일반 상품 주문이 승인되었습니다.");
     }
 }

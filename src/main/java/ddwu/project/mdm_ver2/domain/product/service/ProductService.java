@@ -34,7 +34,7 @@ public class ProductService {
 
     //  일반상품 등록
     @Transactional
-    public CustomResponse<Product> addProduct(ProductRequest request) {
+    public CustomResponse<Void> addProduct(ProductRequest request) {
         try {
             Category category = categoryRepository.findByCateCode(request.getCategory());
 
@@ -53,7 +53,7 @@ public class ProductService {
 
             Product addProduct = productRepository.save(product);
 
-            return CustomResponse.onSuccess(addProduct);
+            return CustomResponse.onSuccess("상품이 등록되었습니다");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -61,7 +61,7 @@ public class ProductService {
 
     // 일반상품 수정
     @Transactional
-    public CustomResponse<Product> updateProduct(Long prodId, ProductRequest updatedProduct) {
+    public CustomResponse<Void> updateProduct(Long prodId, ProductRequest updatedProduct) {
         try {
             Product product = productRepository.findById(prodId)
                     .orElseThrow(() -> new ResourceNotFoundException("Product", "prodId", prodId));
@@ -77,7 +77,7 @@ public class ProductService {
 
                 Product updateProduct = productRepository.save(product);
 
-                return CustomResponse.onSuccess(updateProduct);
+                return CustomResponse.onSuccess("일반 상품이 수정되었습니다");
             }
             return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "상품을 찾을 수 없습니다.");
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public class ProductService {
                     .orElseThrow(() -> new ResourceNotFoundException("Product", "prodId", prodId));
 
             productRepository.delete(product);
-            return CustomResponse.onSuccess(null);
+            return CustomResponse.onSuccess("일반 상품이 삭제되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }

@@ -29,7 +29,7 @@ public class CartItemController implements CartItemApi {
     // 장바구니품목 추가
     @Transactional
     @PostMapping("add/{prodId}/{count}")
-    public CustomResponse<Items> addItemToCart(Principal principal, @PathVariable("prodId") long prodId, @PathVariable("count") int count) {
+    public CustomResponse<Void> addItemToCart(Principal principal, @PathVariable("prodId") long prodId, @PathVariable("count") int count) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
         Product product = productRepository.findById(prodId).orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
 
@@ -39,7 +39,7 @@ public class CartItemController implements CartItemApi {
     // 장바구니품목 증가(1개씩)
     @Transactional
     @PutMapping("/increase/{itemsId}")
-    public CustomResponse<Items> increaseItem(@PathVariable("itemsId") long itemsId) {
+    public CustomResponse<Void> increaseItem(@PathVariable("itemsId") long itemsId) {
         Items cartItem = cartItemRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("장바구니 품목을 찾을 수 없습니다."));
         return cartItemService.increaseItem(cartItem);
@@ -48,7 +48,7 @@ public class CartItemController implements CartItemApi {
     // 장바구니품목 감소(1개씩)
     @Transactional
     @PutMapping("/decrease/{itemsId}")
-    public CustomResponse<Items> decreaseItem(@PathVariable("itemsId") long itemsId) {
+    public CustomResponse<Void> decreaseItem(@PathVariable("itemsId") long itemsId) {
         Items cartItem = cartItemRepository.findById(itemsId)
                 .orElseThrow(() -> new NotFoundException("장바구니 품목을 찾을 수 없습니다."));
         return cartItemService.decreaseItem(cartItem);
@@ -60,5 +60,4 @@ public class CartItemController implements CartItemApi {
     public CustomResponse<Void> deleteCartItems(@RequestParam(name = "itemsId[]") List<Long> itemsId) {
         return cartItemService.deleteCartItems(itemsId);
     }
-
 }

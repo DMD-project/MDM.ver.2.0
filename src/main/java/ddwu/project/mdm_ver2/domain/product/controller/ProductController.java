@@ -48,5 +48,4 @@ public class ProductController implements ProductApi { //상품은 관리자만 
     public CustomResponse<List<Product>> searchProduct(@RequestParam(name = "keyword") String keyword) {
         return productService.searchProduct(keyword);
     }
-
 }

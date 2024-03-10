@@ -16,14 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface ProductAdminApi {
     @Operation(summary = "일반상품 등록", description = "상품을 등록합니다.")
     @ApiResponse(responseCode = "200", description = "성공적으로 상품을 추가했습니다.", content = @Content(schema = @Schema(implementation = CustomResponse.class)))
-    CustomResponse<Product> addProduct(@RequestBody ProductRequest request);
+    CustomResponse<Void> addProduct(@RequestBody ProductRequest request);
 
     @Operation(summary = "일반상품 수정", description = "상품을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "성공적으로 상품을 수정했습니다.", content = @Content(schema = @Schema(implementation = CustomResponse.class)))
-    CustomResponse<Product> updateProduct(@RequestBody ProductRequest request, @Parameter(description = "일반상품 ID") @PathVariable("prodId") Long prodId);
+    CustomResponse<Void> updateProduct(@RequestBody ProductRequest request, @Parameter(description = "일반상품 ID") @PathVariable("prodId") Long prodId);
 
     @Operation(summary = "일반상품 삭제", description = "상품을 삭제합니다.")
     @ApiResponse(responseCode = "200", description = "성공적으로 상품을 삭제했습니다.", content = @Content(schema = @Schema(implementation = CustomResponse.class)))
     CustomResponse<Void> deleteBag(@Parameter(description = "일반상품 ID") @PathVariable("prodId") Long prodId);
-
 }

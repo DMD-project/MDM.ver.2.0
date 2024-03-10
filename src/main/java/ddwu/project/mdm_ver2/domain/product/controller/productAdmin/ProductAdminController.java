@@ -16,13 +16,13 @@ public class ProductAdminController implements ProductAdminApi {
 
     //상품 추가
     @PostMapping("/add")
-    public CustomResponse<Product> addProduct(@RequestBody ProductRequest request) {
+    public CustomResponse<Void> addProduct(@RequestBody ProductRequest request) {
         return productService.addProduct(request);
     }
 
     //상품 수정
     @PutMapping("update/{prodId}")
-    public CustomResponse<Product> updateProduct(@RequestBody ProductRequest request, @PathVariable("prodId") Long prodId) {
+    public CustomResponse<Void> updateProduct(@RequestBody ProductRequest request, @PathVariable("prodId") Long prodId) {
         return productService.updateProduct(prodId, request);
     }
 
@@ -31,5 +31,4 @@ public class ProductAdminController implements ProductAdminApi {
     public CustomResponse<Void> deleteBag(@PathVariable("prodId") Long prodId) {
         return productService.deleteProduct(prodId);
     }
-
 }

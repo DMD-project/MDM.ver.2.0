@@ -27,5 +27,4 @@ public class Category {
         this.cateCode = cateCode;
         this.name = name;
     }
-
 }

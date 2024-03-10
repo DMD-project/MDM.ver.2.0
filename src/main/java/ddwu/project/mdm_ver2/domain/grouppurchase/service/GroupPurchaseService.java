@@ -36,7 +36,7 @@ public class GroupPurchaseService {
     private final OrderRepository orderRepository;
 
     // 공동구매상품 등록
-    public CustomResponse<GroupPurchase> addGroupPurchase(GroupPurchaseRequest request) {
+    public CustomResponse<Void> addGroupPurchase(GroupPurchaseRequest request) {
         try {
             GroupPurchase groupPurchase = new GroupPurchase();
             groupPurchase.setName(request.getName());
@@ -54,15 +54,15 @@ public class GroupPurchaseService {
             groupPurchase.setCategory(category);
 
             GroupPurchase savedGroupPurchase = groupPurchaseRepository.save(groupPurchase);
-            return CustomResponse.onSuccess(savedGroupPurchase);
+            return CustomResponse.onSuccess("공동구매 상품이 등록되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
     // 공동구매상품 수정
-    public CustomResponse<GroupPurchase> updateGroupPurchase(Long gpId,
-                                                             GroupPurchaseRequest request) {
+    public CustomResponse<Void> updateGroupPurchase(Long gpId,
+                                                    GroupPurchaseRequest request) {
         try {
             GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
                     .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
@@ -81,21 +81,21 @@ public class GroupPurchaseService {
 
             GroupPurchase updatedGroupPurchase = groupPurchaseRepository.save(groupPurchase);
             updateGroupPurchaseStatus();
-            return CustomResponse.onSuccess(updatedGroupPurchase);
+            return CustomResponse.onSuccess("공동구매 상품이 수정되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
     // 공동구매상품 삭제
-    public CustomResponse<String> deleteGroupPurchase(Long gpId) {
+    public CustomResponse<Void> deleteGroupPurchase(Long gpId) {
         try {
             GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
                     .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
 
             groupPurchaseRepository.delete(groupPurchase);
 
-            return CustomResponse.onSuccess("공동구매상품이 삭제되었습니다.");
+            return CustomResponse.onSuccess("공동구매 상품이 삭제되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }

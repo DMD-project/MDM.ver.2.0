@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
@@ -22,7 +21,7 @@ public interface OrderApi {
             @ApiResponse(responseCode = "200", description = "주문 정보 수정 성공"),
             @ApiResponse(responseCode = "400", description = "해당 주문이 존재하지 않음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")})
-    CustomResponse<Order> updateOrder(@Parameter(description = "주문 ID") @PathVariable("orderId") long orderId,
+    CustomResponse<Void> updateOrder(@Parameter(description = "주문 ID") @PathVariable("orderId") long orderId,
                                       @Parameter(description = "수정된 주문 정보") @RequestBody OrderDto updatedOrder);
 
     @Operation(summary = "주문 취소")
@@ -43,7 +42,7 @@ public interface OrderApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "장바구니 항목 구매 추가 성공"),
             @ApiResponse(responseCode = "500", description = "서버 오류")})
-    CustomResponse<Order> purchaseItemsFromCart(@Parameter(description = "현재 사용자 정보") Principal principal,
+    CustomResponse<Void> purchaseItemsFromCart(@Parameter(description = "현재 사용자 정보") Principal principal,
                                                 @Parameter(description = "상품 ID 목록") @RequestBody List<Long> itemIds);
 
 //    @Operation(summary = "공동구매 항목 추가")

@@ -19,7 +19,7 @@ public class CartService {
     public CustomResponse<Cart> getCartByUser(String userEmail) {
         Cart cart = cartRepository.findByUserEmail(userEmail);
         if (cart == null) {
-            return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "사용자 이메일 " + userEmail + "에 대한 장바구니를 찾을 수 없습니다.");
+            return CustomResponse.onSuccess("장바구니에 상품이 없습니다. 첫 상품을 추가해보세요.", null);
         }
         return CustomResponse.onSuccess(cart);
     }
@@ -34,5 +34,4 @@ public class CartService {
         cartRepository.delete(cart);
         return CustomResponse.onSuccess(null);
     }
-
 }

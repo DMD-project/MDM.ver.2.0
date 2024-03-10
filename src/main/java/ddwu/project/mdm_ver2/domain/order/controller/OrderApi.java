@@ -22,7 +22,7 @@ public interface OrderApi {
             @ApiResponse(responseCode = "400", description = "해당 주문이 존재하지 않음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")})
     CustomResponse<Void> updateOrder(@Parameter(description = "주문 ID") @PathVariable("orderId") long orderId,
-                                      @Parameter(description = "수정된 주문 정보") @RequestBody OrderDto updatedOrder);
+                                     @Parameter(description = "수정된 주문 정보") @RequestBody OrderDto updatedOrder);
 
     @Operation(summary = "주문 취소")
     @ApiResponses(value = {
@@ -38,17 +38,18 @@ public interface OrderApi {
             @ApiResponse(responseCode = "500", description = "서버 오류")})
     CustomResponse<Order> getOrderDetail(@Parameter(description = "주문 ID") @PathVariable("orderId") long orderId);
 
-    @Operation(summary = "장바구니 항목 구매 추가")
+    @Operation(summary = "장바구니 상품 구매")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "장바구니 항목 구매 추가 성공"),
             @ApiResponse(responseCode = "500", description = "서버 오류")})
     CustomResponse<Void> purchaseItemsFromCart(@Parameter(description = "현재 사용자 정보") Principal principal,
-                                                @Parameter(description = "상품 ID 목록") @RequestBody List<Long> itemIds);
+                                               @Parameter(description = "상품 ID 목록") @RequestBody List<Long> itemIds);
 
-//    @Operation(summary = "공동구매 항목 추가")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "공동구매 항목 추가 성공"),
-//            @ApiResponse(responseCode = "500", description = "서버 오류")})
-//    CustomResponse<Order> addGroupPurchaseToOrder(@Parameter(description = "현재 사용자 정보") Principal principal,
-//                                                  @Parameter(description = "공동구매 참여자 ID") @RequestParam("gpParticipantId") Long gpParticipantId);
+    @Operation(summary = "일반상품 바로 구매")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "일반상품 바로 구매 성공"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")})
+    CustomResponse<Void> purchaseItems(@Parameter(description = "현재 사용자 정보") Principal principal,
+                                       @Parameter(description = "상품 ID") @PathVariable Long productId,
+                                       @Parameter(description = "구매 수량") @PathVariable int purchasedQty);
 }

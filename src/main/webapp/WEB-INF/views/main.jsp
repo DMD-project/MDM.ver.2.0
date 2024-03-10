@@ -55,13 +55,13 @@
 
     <div class="slick">
         <div class="photo_banner">
-            <img src="" alt="배너_이미지_01"/>
+            <img src="../../images/banner/banner1.png" alt="배너_이미지_01"/>
         </div>
         <div class="photo_banner">
-            <img src="" alt="배너_이미지_02"/>
+            <img src="../../images/banner/banner2.png" alt="배너_이미지_02"/>
         </div>
         <div class="photo_banner">
-            <img src="" alt="배너_이미지_03"/>
+            <img src="../../images/banner/banner3.png" alt="배너_이미지_03"/>
         </div>
     </div>
 

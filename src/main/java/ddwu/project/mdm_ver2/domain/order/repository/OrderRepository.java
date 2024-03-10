@@ -9,9 +9,12 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByEmail(String email);
-    List<Order> findByEmailAndGroupPurchaseIsNotNull(String email);
-    boolean existsByEmailAndGroupPurchase(String email, GroupPurchase groupPurchase);
-    int countByGroupPurchase_Id(Long gpId);
 
+    List<Order> findByEmail(String email);
+
+    List<Order> findByEmailAndGroupPurchaseIsNotNull(String email);
+
+    boolean existsByEmailAndGroupPurchase(String email, GroupPurchase groupPurchase);
+
+    int countByGroupPurchase_Id(Long gpId);
 }

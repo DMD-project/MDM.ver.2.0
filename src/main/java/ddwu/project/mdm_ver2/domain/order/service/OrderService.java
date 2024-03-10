@@ -27,7 +27,7 @@ public class OrderService {
     private final GroupPurchaseRepository groupPurchaseRepository;
 
 
-    public CustomResponse<Order> updateOrder(long orderId, OrderDto updatedOrder) {
+    public CustomResponse<Void> updateOrder(long orderId, OrderDto updatedOrder) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isPresent()) {
             Order existingOrder = optionalOrder.get();
@@ -38,7 +38,7 @@ public class OrderService {
             existingOrder.setDetailAddr(updatedOrder.getDetailAddr());
 
             Order savedOrder = orderRepository.save(existingOrder);
-            return CustomResponse.onSuccess(savedOrder);
+            return CustomResponse.onSuccess("주문이 수정되었습니다.");
         } else {
             return CustomResponse.onFailure(404, "주문을 찾을 수 없습니다.");
         }
@@ -57,7 +57,7 @@ public class OrderService {
 
         orderRepository.deleteById(orderId);
 
-        return CustomResponse.onSuccess(null);
+        return CustomResponse.onSuccess("주문이 취소되었습니다.");
     }
 
     public CustomResponse<Order> getOrderDetail(long orderId) {
@@ -75,7 +75,7 @@ public class OrderService {
         }
     }
 
-    public CustomResponse<Order> purchaseItemsFromCart(String userEmail, List<Long> itemIds) {
+    public CustomResponse<Void> purchaseItemsFromCart(String userEmail, List<Long> itemIds) {
         Order order = new Order();
         int totalPrice = 0;
         int totalQty = 0;
@@ -100,6 +100,6 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        return CustomResponse.onSuccess(savedOrder);
+        return CustomResponse.onSuccess("장바구니 상품 주문이 승인되었습니다.");
     }
 }

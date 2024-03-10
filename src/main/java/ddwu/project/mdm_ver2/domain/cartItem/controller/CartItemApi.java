@@ -1,6 +1,5 @@
 package ddwu.project.mdm_ver2.domain.cartItem.controller;
 
-import ddwu.project.mdm_ver2.domain.cartItem.entity.Items;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,17 +16,17 @@ public interface CartItemApi {
 
     @Operation(summary = "장바구니 품목 추가")
     @ApiResponse(responseCode = "200", description = "장바구니 품목 추가 성공")
-    CustomResponse<Items> addItemToCart(Principal principal,
-                                        @PathVariable("prodId") long prodId,
-                                        @PathVariable("count") int count);
+    CustomResponse<Void> addItemToCart(Principal principal,
+                                       @PathVariable("prodId") long prodId,
+                                       @PathVariable("count") int count);
 
     @Operation(summary = "장바구니 품목 증가(1개씩)")
     @ApiResponse(responseCode = "200", description = "장바구니 품목 증가 성공")
-    CustomResponse<Items> increaseItem(@PathVariable("itemsId") long itemsId);
+    CustomResponse<Void> increaseItem(@PathVariable("itemsId") long itemsId);
 
     @Operation(summary = "장바구니 품목 감소(1개씩)")
     @ApiResponse(responseCode = "200", description = "장바구니 품목 감소 성공")
-    CustomResponse<Items> decreaseItem(@PathVariable("itemsId") long itemsId);
+    CustomResponse<Void> decreaseItem(@PathVariable("itemsId") long itemsId);
 
     @Operation(summary = "장바구니 선택한 품목들 삭제")
     @ApiResponses(value = {
@@ -35,5 +34,4 @@ public interface CartItemApi {
             @ApiResponse(responseCode = "404", description = "장바구니 품목을 찾을 수 없음")
     })
     CustomResponse<Void> deleteCartItems(@RequestParam(name = "itemsId") List<Long> itemsId);
-
 }

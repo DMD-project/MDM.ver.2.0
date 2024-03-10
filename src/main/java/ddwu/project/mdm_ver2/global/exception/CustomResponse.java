@@ -29,8 +29,8 @@ public class CustomResponse<T> {
         return new CustomResponse<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), content);
     }
 
-    public static <T> CustomResponse<T> onSuccess(String message, T content) {
-        return new CustomResponse<>(HttpStatus.OK.value(), message, content);
+    public static <T> CustomResponse<T> onSuccess(String message) {
+        return new CustomResponse<>(HttpStatus.OK.value(), message, null);
     }
 
     // 실패한 경우 응답 생성

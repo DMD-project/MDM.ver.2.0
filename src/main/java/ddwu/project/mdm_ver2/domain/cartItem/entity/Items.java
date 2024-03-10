@@ -50,7 +50,6 @@ public class Items {
     @JsonIgnore
     private Order order;
 
-
     public Items(int count, int price, Cart cart, Product product) {
         this.count = count;
         this.price = price;
@@ -73,5 +72,4 @@ public class Items {
     public void subPrice(int price) {
         this.price -= price;
     }
-
 }

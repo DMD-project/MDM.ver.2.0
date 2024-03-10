@@ -22,7 +22,7 @@ public class CartItemService {
 
     // 장바구니품목 추가
     @Transactional
-    public CustomResponse<Items> addItemToCart(User user, Product product, int count) {
+    public CustomResponse<Void> addItemToCart(User user, Product product, int count) {
         try {
             Cart cart = cartRepository.findByUserId(user.getId());
 
@@ -46,7 +46,7 @@ public class CartItemService {
             cart.setCount(cart.getCount() + count);
             cart.setPrice(cart.getPrice() + (count * price));
 
-            return CustomResponse.onSuccess(cartItem);
+            return CustomResponse.onSuccess("상품이 장바구니에 추가되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -54,7 +54,7 @@ public class CartItemService {
 
     // 장바구니품목 증가(1개씩)
     @Transactional
-    public CustomResponse<Items> increaseItem(Items cartItem) {
+    public CustomResponse<Void> increaseItem(Items cartItem) {
         try {
             int price = cartItem.getProduct().getPrice();
             Cart cart = cartItem.getCart();
@@ -66,7 +66,7 @@ public class CartItemService {
 
             Items updatedCartItem = cartItemRepository.save(cartItem);
 
-            return CustomResponse.onSuccess(updatedCartItem);
+            return CustomResponse.onSuccess("장바구니 상품 수량이 증가되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -74,7 +74,7 @@ public class CartItemService {
 
     // 장바구니품목 감소(1개씩)
     @Transactional
-    public CustomResponse<Items> decreaseItem(Items cartItem) {
+    public CustomResponse<Void> decreaseItem(Items cartItem) {
         try {
             int price = cartItem.getProduct().getPrice();
             Cart cart = cartItem.getCart();
@@ -87,7 +87,7 @@ public class CartItemService {
 
             Items updatedCartItem = cartItemRepository.save(cartItem);
 
-            return CustomResponse.onSuccess(updatedCartItem);
+            return CustomResponse.onSuccess("장바구니 상품 수량이 감소되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -113,7 +113,7 @@ public class CartItemService {
 
                 cartItemRepository.delete(cartItem);
             }
-            return CustomResponse.onSuccess(null);
+            return CustomResponse.onSuccess("장바구니 상품이 성공적으로 삭제되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }

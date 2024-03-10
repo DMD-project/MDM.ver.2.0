@@ -1,4 +1,5 @@
 package ddwu.project.mdm_ver2.domain.product.entity;
+
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

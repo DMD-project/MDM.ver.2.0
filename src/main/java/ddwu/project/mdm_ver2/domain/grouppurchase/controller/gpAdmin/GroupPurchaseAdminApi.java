@@ -1,7 +1,6 @@
 package ddwu.project.mdm_ver2.domain.grouppurchase.controller.gpAdmin;
 
 import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseRequest;
-import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,21 +15,20 @@ public interface GroupPurchaseAdminApi {
 
     @Operation(summary = "공동구매 등록")
     @ApiResponse(responseCode = "200", description = "공동구매 등록 성공")
-    CustomResponse<GroupPurchase> addGroupPurchase(@RequestBody GroupPurchaseRequest request);
+    CustomResponse<Void> addGroupPurchase(@RequestBody GroupPurchaseRequest request);
 
     @Operation(summary = "공동구매 수정")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "공동구매 수정 성공"),
             @ApiResponse(responseCode = "404", description = "공동구매를 찾을 수 없음")
     })
-    CustomResponse<GroupPurchase> updateGroupPurchase(@Parameter(description = "공동구매 ID") @PathVariable Long gpId,
-                                                      @RequestBody GroupPurchaseRequest request);
+    CustomResponse<Void> updateGroupPurchase(@Parameter(description = "공동구매 ID") @PathVariable Long gpId,
+                                             @RequestBody GroupPurchaseRequest request);
 
     @Operation(summary = "공동구매 삭제")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "공동구매 삭제 성공"),
             @ApiResponse(responseCode = "404", description = "공동구매를 찾을 수 없음")
     })
-    CustomResponse<String> deleteGroupPurchase(@Parameter(description = "공동구매 ID") @PathVariable Long gpId);
-
+    CustomResponse<Void> deleteGroupPurchase(@Parameter(description = "공동구매 ID") @PathVariable Long gpId);
 }

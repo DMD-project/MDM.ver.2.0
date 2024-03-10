@@ -19,7 +19,7 @@ public class OrderController implements OrderApi{
 
     // 주문 정보 수정
     @PutMapping("/update/{orderId}")
-    public CustomResponse<Order> updateOrder(@PathVariable("orderId") long orderId, @RequestBody OrderDto updatedOrder) {
+    public CustomResponse<Void> updateOrder(@PathVariable("orderId") long orderId, @RequestBody OrderDto updatedOrder) {
         return orderService.updateOrder(orderId, updatedOrder);
     }
 
@@ -37,7 +37,7 @@ public class OrderController implements OrderApi{
 
     // 장바구니 항목 구매 추가
     @PostMapping("/cart/add")
-    public CustomResponse<Order> purchaseItemsFromCart(Principal principal, @RequestBody List<Long> itemIds) {
+    public CustomResponse<Void> purchaseItemsFromCart(Principal principal, @RequestBody List<Long> itemIds) {
         return orderService.purchaseItemsFromCart(principal.getName(), itemIds);
     }
 }

@@ -26,5 +26,4 @@ public class CartController implements CartApi {
     public CustomResponse<Void> clearCart(Principal principal) {
         return cartService.clearCart(principal.getName());
     }
-
 }

@@ -97,7 +97,7 @@
         </ul>
         <ul class="navbar_icons">
             <a href="#"><i class="fa-solid fa-heart"></i></a>
-            <a href="/cart/view"><span>3</span><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="/cart/view"><i class="fa-solid fa-cart-shopping"></i></a>
             <a href="/mypage/view"><i class="fa-solid fa-user"></i></a>
         </ul>
         <ul class="navbar_login">

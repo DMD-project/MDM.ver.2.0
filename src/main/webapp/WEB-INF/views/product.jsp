@@ -158,7 +158,11 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function() {
-            printProduct();
+            let urlParams = new URL(location.href).searchParams;
+            let cateCode = urlParams.get('cateCode');
+            let sortBy = $("#sortSelect option:selected").val();
+
+            printProduct(sortBy, cateCode);
 
             $("#keyword").keydown(function(e) {
                 if (e.keyCode == 13) {

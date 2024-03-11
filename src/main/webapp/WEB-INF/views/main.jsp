@@ -136,5 +136,13 @@
 
     <%@ include file="includes/footer.jsp" %>
 
+    <script>
+
+        $(document).on('click', '#category_btn', function() {
+            cateCode = $(this).val();
+            location.href = "/product/list/view?cateCode=" + cateCode;
+        });
+    </script>
+
 </body>
 </html>

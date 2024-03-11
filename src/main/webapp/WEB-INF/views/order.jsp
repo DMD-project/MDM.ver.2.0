@@ -21,25 +21,27 @@
         }
         .content_left span {
             color: #868686;
-            display:inline-block;
+            display: inline-block;
             width: 80px;
             padding-left: 5px;
         }
-        .order_address, .order_product, .order_payment {
-            margin-top: 50px;
+        .order_user_info, .order_address, .order_product, .order_payment {
+            margin-bottom: 40px;
         }
         .order_user_phone, .order_user_email,
         .order_address_phone, .order_address_address {
             margin-top: 7px;
         }
+        .order_address_address input:read-only {
+            background-color: #EEEEEE;
+            color: #C2C2C2;
+        }
         .content_right {
             margin-left: 50px;
-
             display: inline;
         }
         input, textarea, select {
             border: 1px solid #C2C2C2;
-
             height: 40px;
             padding-left: 10px;
             margin-top: 7px;
@@ -47,19 +49,15 @@
         #zipcode {
             background-color: #FFFFFF;
             color: #FFAB64;
-
             font-size: 15px;
             width: 80px;
             height: 35px;
-
             border: 1px solid #FFAB64;
             border-radius: 7px;
             margin-left: 10px;
         }
-
         .price_info {
             background-color: #FFFFFF;
-
             width: 360px;
             height: 170px;
             padding: 30px 40px 30px 40px;
@@ -72,13 +70,18 @@
             color: white;
             font-size: 20px;
             text-align: center;
-
             width: 440px;
             height: 60px;
-
             border: none;
             border-radius: 10px;
         }
+        .order_item {
+            background-color: #FFFFFF;
+            display: flex;
+            padding: 25px 30px;
+            margin-top: 20px;
+        }
+
     </style>
 </head>
 <body>
@@ -104,10 +107,6 @@
                         <option>010</option>
                     </select>
                     <input id="order_user_phone_02" type="text" style="width: 195px;">
-                </div>
-                <div class="order_user_email">
-                    <span>이메일</span>
-                    <input id="order_user_email" type="text" style="width: 300px;">
                 </div>
             </div>
             <div class="order_address">
@@ -137,6 +136,9 @@
             <div class="order_product">
                 <span style="font-size: 17px; color: #616161;"><b>주문 상품</b></span>
                 <hr style="border: 1px solid #FFAB64;">
+                <div id="order_item_wrapper">
+
+                </div>
             </div>
             <div class="order_payment">
                 <span style="font-size: 17px; color: #616161;"><b>결제 수단</b></span>
@@ -150,18 +152,18 @@
                 <span style="font-size: 20px;"><b>결제 금액</b></span>
                 <div class="product_price" style="padding-top: 15px; padding-bottom: 10px;">
                     <div style="float: left;">총 상품 금액</div>
-                    <div style="float: right;"><span style="padding-right: 5px;">product_price</span>원</div>
+                    <div style="float: right;"><span id="product_price" style="padding-right: 5px;">product_price</span>원</div>
                 </div>
                 <br/>
                 <div class="shipping_fee" style="padding-bottom: 10px;">
                     <div style="float: left;">배송비</div>
-                    <div style="float: right;"><span style="padding-right: 5px;">shipping_fee</span>원</div>
+                    <div style="float: right;"><span id="shipping_fee" style="padding-right: 5px;">shipping_fee</span>원</div>
                 </div>
                 <br/>
 
                 <div class="total_price" style="padding-top: 50px;">
                     <div style="float: left; font-size: 18px;"><b>최종 결제 금액</b></div>
-                    <div style="float: right;"><span style="font-size: 25px; padding-right: 5px;"><b>total_price</b></span>원</div>
+                    <div style="float: right;"><span id="total_price" style="font-size: 25px; font-weight: bold; padding-right: 5px;">total_price</span>원</div>
                 </div>
             </div>
 
@@ -179,6 +181,50 @@
             printProductInfo();
         });
 
+        $(document).on('click', '#submit', function() {
+            let urlParams = new URL(location.href).searchParams;
+            let from = urlParams.get('from');
+
+            let user_name = $('#order_user_name').val();
+            let user_phone = $('#order_user_phone_01 option:selected').val() + $('#order_user_phone_02').val();
+
+            let order_name = $('#order_address_name').val();
+            let order_phone = $('#order_address_phone_01 option:selected').val() + $('#order_address_phone_02').val();
+            let zipcode = $('#order_address_zipcode').val();
+            let addr_01 = $('#order_address_address_01').val();
+            let addr_02 = $('#order_address_address_02').val();
+
+            if (user_name == "" || user_phone == "010")
+                alert('주문자 정보를 입력해 주세요.');
+            else if (order_name == "" || order_phone == "010" || zipcode == "" || addr_01 == "" || addr_02 == "")
+                alert('배송지 정보를 입력해 주세요');
+
+            if (from == "product") {
+                let productId = urlParams.get('prodId');
+                let purchasedQty = urlParams.get('count');
+
+                $.ajax ({
+                    type: 'POST',
+                    url: '/order/product/' + productId + '/' + purchasedQty,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        if (!token) {
+                            alert("로그인이 필요합니다.");
+                            location.href="http://localhost:8080/login";
+                        }
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    success: function(data) {
+                        console.log(data);
+                    }
+                })
+
+            } else if (from == "cart") {
+
+
+            }
+        });
+
         $(document).on('click', '#zipcode', function() {
             new daum.Postcode({
                 oncomplete: function(data) {
@@ -187,7 +233,7 @@
                     if (data.userSelectedType === 'R') {
                         addr = data.roadAddress;
                     } else {
-       핑                 addr = data.jibunAddress;
+                        addr = data.jibunAddress;
                     }
 
                     $('#order_address_zipcode').val(data.zonecode);
@@ -201,12 +247,88 @@
 
         function printProductInfo() {
             let urlParams = new URL(location.href).searchParams;
-            let prodId = urlParams.get('prodId');
-            let count = urlParams.get('count');
+            let from = urlParams.get('from');
 
-            console.log(prodId);
-            console.log(count);
+            if (from == "product") {
+                let prodId = urlParams.get('prodId');
+                let count = urlParams.get('count');
+
+                $.ajax ({
+                    url: '/product/' + prodId,
+                    success: function(data) {
+                        let product_price = data.content.price * count;
+                        let shipping_fee = 3000;
+
+                        let item_box = "";
+                        item_box += "<div class='order_item'>"
+                                        + "<img src='" + data.content.imgUrl + "' style='width: 90px; height: 100px; margin-right: 30px;'>"
+                                        + "<div>"
+                                            + "<div style='font-size: 20px; font-weight: bold; margin-top: 5px;'>" + data.content.name + "</div>"
+                                            + "<div style='margin-top: 20px;'>" + count + "개</div>"
+                                            + "<div style='font-size: 25px; font-weight: bold;'>" + product_price + "원</div>"
+                                        + "</div>"
+                                    + "</div>";
+                        $("#order_item_wrapper").html(item_box);
+
+                        if (50000 <= product_price)
+                            shipping_fee = 0;
+
+                        let total_price = product_price + shipping_fee;
+
+                        $("#product_price").html(product_price);
+                        $("#shipping_fee").html(shipping_fee);
+                        $("#total_price").html(total_price);
+                    }
+                })
+            } else if (from == "cart") {
+                let param_list = urlParams.get('item_list');
+                let item_list = param_list.split(",");
+
+                $.ajax ({
+                    url: '/cart',
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        if (!token) {
+                            alert("로그인이 필요합니다.");
+                            location.href="http://localhost:8080/login";
+                        }
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    success: function(data) {
+                        let cart_item = data.content.cartItems;
+                        let order_item = cart_item.filter(x1 => item_list.some(x2 => x1.id == x2));
+
+                        let product_price = 0;
+                        let shipping_fee = 3000;
+
+                        let item_box = "";
+                        $.each(order_item, function(idx, value) {
+                            product_price += value.price;
+
+                            item_box += "<div class='order_item'>"
+                                            + "<img src='" + value.product.imgUrl + "' style='width: 90px; height: 100px; margin-right: 30px;'>"
+                                            + "<div>"
+                                                + "<div style='font-size: 20px; font-weight: bold; margin-top: 5px;'>" + value.product.name + "</div>"
+                                                + "<div style='margin-top: 20px;'>" + value.count + "개</div>"
+                                                + "<div style='font-size: 25px; font-weight: bold;'>" + value.price + "원</div>"
+                                            + "</div>"
+                                        + "</div>";
+                        });
+                        $("#order_item_wrapper").html(item_box);
+
+                        if (50000 <= product_price)
+                            shipping_fee = 0;
+
+                        let total_price = product_price + shipping_fee;
+
+                        $("#product_price").html(product_price);
+                        $("#shipping_fee").html(shipping_fee);
+                        $("#total_price").html(total_price);
+                    }
+                })
+            }
         }
+
     </script>
 
 </body>

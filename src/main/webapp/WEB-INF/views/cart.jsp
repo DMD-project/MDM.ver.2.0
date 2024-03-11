@@ -43,7 +43,7 @@
         .button_wrapper {
             margin-top: 30px;
         }
-        .submit {
+        #submit {
             background-color: #FF7500;
             color: white;
             font-size: 20px;
@@ -122,12 +122,12 @@
 
                 <div class="total_price">
                     <div style="float: left; font-size: 18px;"><b>결제 금액</b></div>
-                    <div style="float: right;"><span id="total_price" style="font-size: 25px; padding-right: 5px;"><b>total_price</b></span>원</div>
+                    <div style="float: right;"><span id="total_price" style="font-size: 25px; font-weight: bold; padding-right: 5px;">total_price</span>원</div>
                 </div>
             </div>
 
             <div class="button_wrapper">
-                <button class="submit"><b>주문하기</b></button>
+                <button id="submit"><b>주문하기</b></button>
             </div>
         </div>
     </div>
@@ -151,7 +151,6 @@
 
         function printCartItems() {
             $.ajax ({
-                type: 'GET',
                 url: '/cart',
                 beforeSend: function(xhr) {
                     var token = getCookie("access_token");
@@ -170,6 +169,8 @@
                     }
                 },
                 success: function(data) {
+                    console.log(data);
+
                     let product_total = data.content.price;
                     let product_qty = data.content.count;
                     let shipping_fee = 3000;
@@ -209,6 +210,22 @@
                 }
             });
         }
+
+        $(document).on('click', '#submit', function() {
+            let item_list = [];
+            $(".cartItem_wrapper").each(function(idx, element) {
+                if ($(element).find('input').is(':checked')) {
+                    item_id = $(element).find('.cartItem_checkbox').val();
+                    item_list.push(item_id);
+                }
+            });
+
+            if (item_list.length == 0)
+                alert('구매할 상품을 선택해 주세요.');
+            else
+                location.href = "/order/view?from=cart&item_list=" + item_list;
+
+        });
 
         $(document).on('click', '.check_all', function() {
             if ($('.check_all').is(':checked'))

@@ -166,14 +166,14 @@
             height: 40px;
             display: inline-block;
             overflow: hidden;
-            background: url(../../images/star.png) no-repeat;
+            background: url(../../images/review/star.png) no-repeat;
         }
         .review_avg_star_background {
             width: 181px;
             height: 40px;
             display: inline-block;
             overflow: hidden;
-            background: url(../../images/star-background.png) no-repeat;
+            background: url(../../images/review/star-background.png) no-repeat;
         }
         .review_star {
             color: transparent;
@@ -206,7 +206,7 @@
 
     <div class="sample">
         <div class="product_img">
-            <img id="prod_img" src="" alt="">
+            <img id="prod_img" src="" alt="" style="width: 500px; height: 500px;">
         </div>
         <div class="product_info_wrapper">
             <div class="product_info">

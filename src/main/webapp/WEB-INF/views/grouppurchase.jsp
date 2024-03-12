@@ -97,49 +97,49 @@
             <tr>
                 <td>
                     <button id="category_btn" value="">
-                        <img src="../../images/category_btn_01.png">
+                        <img src="../../images/category/category_btn_01.png">
                     </button>
                     <br/>전체
                 </td>
                 <td>
                     <button id="category_btn" value="FUR">
-                        <img src="../../images/category_btn_02.png">
+                        <img src="../../images/category/category_btn_02.png">
                     </button>
                     <br/>가구
                 </td>
                 <td>
                     <button id="category_btn" value="FAB">
-                        <img src="../../images/category_btn_03.png">
+                        <img src="../../images/category/category_btn_03.png">
                     </button>
                     <br/>패브릭
                 </td>
                 <td>
                     <button id="category_btn" value="AD">
-                        <img src="../../images/category_btn_04.png">
+                        <img src="../../images/category/category_btn_04.png">
                     </button>
                     <br/>가전/디지털
                 </td>
                 <td>
                     <button id="category_btn" value="STO">
-                        <img src="../../images/category_btn_05.png">
+                        <img src="../../images/category/category_btn_05.png">
                     </button>
                     <br/>수납/정리
                 </td>
                 <td>
                     <button id="category_btn" value="DEC">
-                        <img src="../../images/category_btn_06.png">
+                        <img src="../../images/category/category_btn_06.png">
                     </button>
                     <br/>소품
                 </td>
                 <td>
                     <button id="category_btn" value="LIT">
-                        <img src="../../images/category_btn_07.png">
+                        <img src="../../images/category/category_btn_07.png">
                     </button>
                     <br/>조명
                 </td>
                 <td>
                     <button id="category_btn" value="PLA">
-                        <img src="../../images/category_btn_08.png">
+                        <img src="../../images/category/category_btn_08.png">
                     </button>
                     <br/>식물
                 </td>

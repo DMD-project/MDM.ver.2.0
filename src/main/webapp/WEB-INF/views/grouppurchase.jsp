@@ -238,13 +238,14 @@
                     "cateCode" : cateCode
                 },
                 success: function(data) {
+                    console.log(data);
                     $("#count").html(data.content.length);
 
                     let grouppurchase_info = "";
-
                     grouppurchase_info += "<ul>";
                     for(let i = 0; i < data.content.length; i++) {
                         grouppurchase_info += "<li>"
+                                            + "<div style='text-align: left;'>" + printStatus(data.content[i].state) + "</div>"
                                             + "<a href='/gp/" + data.content[i].id + "/view'>" + "<p>"
                                             + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
                                             + "<span>" + data.content[i].name + "</span>" + "<br/>"
@@ -261,6 +262,23 @@
                     $("#gp_list").html(grouppurchase_info);
                 }
             });
+        }
+
+        function printStatus(state) {
+                let status = "";
+                if (state == "ONGOING")
+                    status += "<span style='background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>진행 중</span>";
+                else if (state == "URGENT")
+                    status += "<span style='background-color: #FF6666; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>마감 임박</span>";
+                else if (state == "ACHIEVED") {
+                    status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>마감</span>"
+                            + "<span style='background-color: #FF7500; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-left: 5px; border-radius: 7px;'>성공</span>";
+                } else {
+                    status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>마감</span>"
+                            + "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-left: 5px; border-radius: 7px;'>실패</span>";
+                }
+
+                return status;
         }
 
     </script>

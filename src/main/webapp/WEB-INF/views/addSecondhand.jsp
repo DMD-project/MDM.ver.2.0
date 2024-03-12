@@ -113,26 +113,23 @@
 
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
         <script>
-            let category;
-            $("#categorySelect").change(function () {
-                category = $("option:selected").val();
-            });
 
             $(document).on('click', '#sh_submit', function() {
+                let category = $("option:selected").val();
                 let name = $("#name_value").val();
                 let price = $("#price_value").val();
                 let detail = $("#detail_value").val();
 
-                if(category.length == 0) {
+                if (category == "") {
                     alert("카테고리를 선택해 주세요.");
                 }
-                if(name.length == 0) {
+                else if (name.length == 0) {
                     alert("등록할 상품명을 입력해 주세요.");
                 }
-                if(price.length == 0) {
+                else if (price.length == 0 || price == "") {
                     alert("희망 거래 가격을 입력해 주세요.");
                 }
-                if(detail.length == 0) {
+                else if(detail.length == 0) {
                     alert("상품 정보를 적어주세요.");
                 } else {
                     $.ajax({
@@ -167,7 +164,7 @@
                                 location.href="http://localhost:8080/secondhand/" + data.content.id + "/view";
                             }
                         }
-                    });
+                    })
                 }
             });
 

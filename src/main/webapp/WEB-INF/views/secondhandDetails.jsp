@@ -15,7 +15,6 @@
             background-color: #FFFFFF;
             width: 300px;
             color: #000000;
-
             border: 1px solid #C2C2C2;
             border-radius: 10px;
             margin-top: 5px;
@@ -25,74 +24,56 @@
             color: #C2C2C2;
             text-align: right;
         }
-         {
-            background-color: #FFFFFF;
-            width: 300px;
-            color: #000000;
-            font-size: 20px;
-            border: 1px solid #C2C2C2;
-            border-radius: 10px;
-            margin-top: 5px;
-            padding: 10px;
+        input:read-only {
+            background-color: #EEEEEE;
+            color: #C2C2C2;
         }
-
         .sample {
           display : flex;
           justify-content: center;
-
           margin-top: 30px;
           margin-bottom: 50px;
         }
         .sh_img {
           background-color: white;
-
           width: 500px;
           height: 500px;
-
           border: none;
         }
-
         .product_info_wrapper {
             padding: 0 30px;
         }
         .product_info {
-          background-color: white;
-          width: 360px;
-          height: 330px;
-          padding: 35px 40px 40px 50px;
-          margin: auto;
+            background-color: white;
+            width: 360px;
+            height: 330px;
+            padding: 35px 40px 40px 50px;
+            margin: auto;
         }
         .button_wrapper {
-          width: 450px;
-          display : flex;
-          justify-content: center;
-          margin-top: 30px;
+            width: 450px;
+            display : flex;
+            justify-content: center;
+            margin-top: 30px;
         }
-
         .bid_btn {
               background-color: #FF7500;
               color: white;
               font-size: 20px;
               text-align: center;
-
               width: 450px;
               height: 60px;
-
               border: none;
               border-radius: 10px;
-         }
-
+        }
         .info_nav_bar {
              background-color: #F5F5F5;
-
              height: 60px;
              line-height: 60px;
-
              padding-left: 150px;
         }
         .info_nav_bar div {
             width: 150px;
-
             text-align: center;
             float: left;
         }
@@ -100,14 +81,11 @@
             color: #FF7500;
             border-bottom: 3px solid #FF7500;
         }
-    </style>
-    <style>
         .bid_box {
             width:650px;
             height: 80px;
             padding: 10px 20px 20px 20px;
             margin-bottom: 20px;
-
             border: 1px solid #EE842A;
             border-radius: 10px;
         }
@@ -159,6 +137,7 @@
             border-radius: 5px;
             padding: 5px;
         }
+
     </style>
 </head>
 <body>
@@ -195,8 +174,7 @@
 
             </div>
 
-            <div id="submit_btn" class="button_wrapper">
-            </div>
+            <div id="submit_btn" class="button_wrapper"></div>
 
         </div>
     </div>
@@ -258,6 +236,8 @@
                         $(".bid_btn").css("background-color", "#868686");
                         $(".bid_btn").attr("disabled", true);
                         $(".product_info").css('height', '330px');
+                        $("#bid_price").attr("placeholder", '판매 완료');
+                        $("#bid_price").attr("readonly", true);
                     } else if (soldout == 'n' && isWriter == 'y') {
                         status += "<span style='background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>판매 중</span>"
                                 + "<span id='delete_sh'>삭제</span>"
@@ -320,50 +300,59 @@
                         location.href="/secondhand/list/view";
                     }
                 }
-            });
+            })
         });
 
         $(document).on('click', '#update_sh', function() {
-                let update_sh_box = "";
-                update_sh_box += "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>카테고리</div>"
-                                    + "<select id='new_cateCode' style='width: 120px; padding: 5px 20px 5px 5px; border: 1px solid #B0B0B0;'>"
-                                        + "<option value='null' selected>카테고리 선택</option>"
-                                        + "<option value='FUR'>가구</option>"
-                                        + "<option value='FAB'>패브릭</option>"
-                                        + "<option value='AD'>가전/디지털</option>"
-                                        + "<option value='STO'>수납/정리</option>"
-                                        + "<option value='DEC'>소품</option>"
-                                        + "<option value='LIT'>조명</option>"
-                                        + "<option value='PLA'>식물</option>"
-                                    + "</select>"
-                                    + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>상품명</div>"
-                                    + "<input type='text' id='new_sh_name' style='font-size: 15px;'>"
-                                    + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>거래 가격</div>"
-                                    + "<input type='text' id='new_sh_price' style='font-size: 15px;'>"
-                                    + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>상세 정보</div>"
-                                    + "<textarea id='new_sh_content' style='width: 80%; height: 145px; border: 1px solid #B0B0B0; border-radius: 5px; padding: 15px; margin-top: 5px;'></textarea>"
+            let update_sh_box = "";
+            update_sh_box += "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>카테고리</div>"
+                                + "<select id='new_cateCode' style='width: 120px; padding: 5px 20px 5px 5px; border: 1px solid #B0B0B0;'>"
+                                    + "<option value='null' selected>카테고리 선택</option>"
+                                    + "<option value='FUR'>가구</option>"
+                                    + "<option value='FAB'>패브릭</option>"
+                                    + "<option value='AD'>가전/디지털</option>"
+                                    + "<option value='STO'>수납/정리</option>"
+                                    + "<option value='DEC'>소품</option>"
+                                    + "<option value='LIT'>조명</option>"
+                                    + "<option value='PLA'>식물</option>"
+                                + "</select>"
+                                + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>상품명</div>"
+                                + "<input type='text' id='new_sh_name' style='font-size: 15px;'>"
+                                + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>거래 가격</div>"
+                                + "<input type='text' id='new_sh_price' style='font-size: 15px;'>"
+                                + "<div style='color: #B0B0B0; font-size: 13px; margin-top: 10px;'>상세 정보</div>"
+                                + "<textarea id='new_sh_content' style='width: 80%; height: 145px; border: 1px solid #B0B0B0; border-radius: 5px; padding: 15px; margin-top: 5px;'></textarea>"
 
-                $(this).parent().nextAll().hide();
-                $(this).parent().after(update_sh_box);
+            $(this).parent().nextAll().hide();
+            $(this).parent().after(update_sh_box);
 
-                let status_bar = "";
-                status_bar += "<span id='update_sh_submit'>등록</span>"
+            let status_bar = "";
+            status_bar += "<span id='update_sh_submit'>등록</span>"
                         + "<span id='cancel' style='float: right;color: #FF7500; font-size: 14px; padding: 5px 0px; margin-right: 10px;'>취소</span>";
 
-                $(this).after(status_bar);
-                $(this).prev().hide();
-                $(this).hide();
+            $(this).after(status_bar);
+            $(this).prev().hide();
+            $(this).hide();
         });
 
         $(document).on('click', '#update_sh_submit', function() {
-                let url = window.location.href;
-                let splitUrl = url.split("/");
-                let shId = splitUrl[splitUrl.length - 2];
-                let new_cateCode = $("#new_cateCode option:selected").val();
-                let new_sh_name = $("#new_sh_name").val();
-                let new_sh_price = $("#new_sh_price").val();
-                let new_sh_content = $("#new_sh_content").val();
+            let url = window.location.href;
+            let splitUrl = url.split("/");
+            let shId = splitUrl[splitUrl.length - 2];
+            let new_cateCode = $("#new_cateCode option:selected").val();
+            let new_sh_name = $("#new_sh_name").val();
+            let new_sh_price = $("#new_sh_price").val();
+            let new_sh_content = $("#new_sh_content").val();
 
+            if (new_cateCode == "")
+                alert('카테고리를 선택해 주세요.');
+            else if (new_sh_name.length == 0)
+                 alert('등록할 상품명을 입력해 주세요.');
+            else if (new_sh_price.length == 0 || new_sh_price == "")
+                alert('희망 거래 가격을 입력해 주세요.');
+            else if (new_sh_content.length == 0)
+                alert("상품 정보를 적어주세요.");
+            else {
                 $.ajax ({
                     type: 'PUT',
                     url: '/secondhand/update/' + shId,
@@ -384,6 +373,7 @@
                         location.reload();
                     }
                 })
+            }
         });
 
         $(document).on('click', '#bid_submit', function() {
@@ -393,39 +383,40 @@
             let shId = splitUrl[splitUrl.length - 2];
             let bid_price = $("#bid_price").val();
 
-            if(bid_price.length == 0)
+            if(bid_price.length == 0 || bid_price == "0")
                 alert("구매 희망가를 입력해 주세요.");
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/shBid/' + shId + '/add',
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        console.log("Token:", token);
 
-            $.ajax({
-                type: 'POST',
-                url: '/shBid/' + shId + '/add',
-                beforeSend: function(xhr) {
-                    var token = getCookie("access_token");
-                    console.log("Token:", token);
-
-                    if(!token) {
-                        alert("로그인이 필요합니다.");
-                        window.location.href='/login';
+                        if(!token) {
+                            alert("로그인이 필요합니다.");
+                            window.location.href='/login';
+                        }
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    contentType : 'application/json',
+                    data : JSON.stringify (
+                        {
+                            "shId" : shId,
+                            "price" : bid_price
+                        }
+                    ),
+                    success: function(data) {
+                        if(data.statusCode != 200) {
+                            alert(data.message);
+                            return;
+                        } else {
+                            alert("구매 희망가가 등록되었습니다.");
+                            location.href="http://localhost:8080/secondhand/" + data.content.secondHand.id + "/view";
+                        }
                     }
-                    xhr.setRequestHeader("Authorization", "Bearer " + token);
-                },
-                contentType : 'application/json',
-                data : JSON.stringify (
-                    {
-                        "shId" : shId,
-                        "price" : bid_price
-                    }
-                ),
-                success: function(data) {
-                    if(data.statusCode != 200) {
-                        alert(data.message);
-                        return;
-                    } else {
-                        alert("구매 희망가가 등록되었습니다.");
-                        location.href="http://localhost:8080/secondhand/" + data.content.secondHand.id + "/view";
-                    }
-                }
-            });
+                })
+            }
         });
 
         $(document).on('click', '#update_bid', function() {
@@ -450,24 +441,28 @@
             let shBidId = $(this).parent().attr('id');
             let new_bid = $('#new_bid').val();
 
-            $.ajax ({
-                type: 'POST',
-                url: '/shBid/' + shId + '/update/' + shBidId,
-                beforeSend: function(xhr) {
-                    var token = getCookie("access_token");
-                    xhr.setRequestHeader("Authorization", "Bearer " + token);
-                },
-                data: JSON.stringify (
-                    {
-                        "shId" : shId,
-                        "price" : new_bid
+            if (new_bid.length == 0 || new_bid == "")
+                alert("구매 희망가를 입력해 주세요.");
+            else {
+                $.ajax ({
+                    type: 'POST',
+                    url: '/shBid/' + shId + '/update/' + shBidId,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    data: JSON.stringify (
+                        {
+                            "shId" : shId,
+                            "price" : new_bid
+                        }
+                    ),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(data) {
+                        location.reload();
                     }
-                ),
-                contentType: 'application/json; charset=utf-8',
-                success: function(data) {
-                    location.reload();
-                }
-            })
+                })
+            }
         });
 
         $(document).on('click', '#bid_accept', function() {

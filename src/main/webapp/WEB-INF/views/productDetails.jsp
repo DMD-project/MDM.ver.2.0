@@ -235,7 +235,7 @@
 
             <div class="button_wrapper">
                 <button id="add_cart"><b>장바구니</b></button>
-                <button id="order"><b>결제하기</b></button>
+                <button id="order"><b>바로 구매</b></button>
             </div>
         </div>
     </div>

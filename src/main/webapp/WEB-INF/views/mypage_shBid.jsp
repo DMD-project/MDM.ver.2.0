@@ -277,24 +277,28 @@
             let shBidId = $(this).parent().attr('class');
             let new_shBid = $('#new_shBid').val();
 
-            $.ajax ({
-                type: 'POST',
-                url: '/shBid/' + shId + '/update/' + shBidId,
-                beforeSend: function(xhr) {
-                    var token = getCookie("access_token");
-                    xhr.setRequestHeader("Authorization", "Bearer " + token);
-                },
-                data: JSON.stringify (
-                    {
-                        "shId" : shId,
-                        "price" : new_shBid
+            if (new_shBid.length == 0 || new_shBid == "0")
+                alert('구매 희망가를 입력해 주세요.');
+            else {
+                $.ajax ({
+                    type: 'POST',
+                    url: '/shBid/' + shId + '/update/' + shBidId,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    data: JSON.stringify (
+                        {
+                            "shId" : shId,
+                            "price" : new_shBid
+                        }
+                    ),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(data) {
+                        printMyShBid();
                     }
-                ),
-                contentType: 'application/json; charset=utf-8',
-                success: function(data) {
-                    printMyShBid();
-                }
-            })
+                })
+            }
         });
 
         $(document).on('click', '#delete_shBid', function() {

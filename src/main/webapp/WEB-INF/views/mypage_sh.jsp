@@ -227,8 +227,6 @@
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 success: function(data) {
-                    console.log(data);
-
                     let sh_arr = data.content;
                     let sh_box = "";
                     $.each(sh_arr, function(idx, value) {
@@ -367,26 +365,36 @@
             let new_sh_price = $("#new_sh_price").val();
             let new_sh_content = $("#new_sh_content").val();
 
-            $.ajax ({
-                type: 'PUT',
-                url: '/secondhand/update/' + shId,
-                beforeSend: function(xhr) {
-                    var token = getCookie("access_token");
-                    xhr.setRequestHeader("Authorization", "Bearer " + token);
-                },
-                data: JSON.stringify (
-                    {
-                        "cateCode" : new_cateCode,
-                        "name" : new_sh_name,
-                        "price" : new_sh_price,
-                        "content" : new_sh_content,
+            if (new_cateCode == "")
+                alert('카테고리를 선택해 주세요.');
+            else if (new_sh_name.length == 0)
+                alert("등록할 상품명을 입력해 주세요.");
+            else if (new_sh_price.length == 0 || new_sh_price == "0")
+                alert("희망 거래 가격을 입력해 주세요.");
+            else if (new_sh_content.length == 0)
+                alert("상품 정보를 적어주세요.");
+            else {
+                $.ajax ({
+                    type: 'PUT',
+                    url: '/secondhand/update/' + shId,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    data: JSON.stringify (
+                        {
+                            "cateCode" : new_cateCode,
+                            "name" : new_sh_name,
+                            "price" : new_sh_price,
+                            "content" : new_sh_content,
+                        }
+                    ),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(data) {
+                        printMySecondhand();
                     }
-                ),
-                contentType: 'application/json; charset=utf-8',
-                success: function(data) {
-                    printMySecondhand();
-                }
-            })
+                })
+            }
         });
 
         $(document).on('click', '#delete_sh', function() {

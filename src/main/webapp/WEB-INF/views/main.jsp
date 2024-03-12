@@ -16,35 +16,56 @@
             height: 400px;
         }
         .slick-arrow {
-                    position: absolute;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    z-index: 5
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
         }
         .slick-prev {    left: 0;}
         .slick-next {    right: 0;}
-    </style>
-
-    <style>
         .category_bar {
             background-color: #F9F1E7;
             text-align: center;
-
             padding: 10px 50px 10px 50px;
         }
         .category_bar button {
-                    background-color: white;
-
-                    width: 90px;
-                    height: 90px;
-
-                    border: none;
-                    border-radius: 50%;
-                    margin: 20px;
+            background-color: #FFFFFF;
+            width: 90px;
+            height: 90px;
+            border: none;
+            border-radius: 50%;
+            margin: 20px;
         }
         .category_bar img {
             width: 50px;
             height: 50px;
+        }
+        .content_wrapper {
+            background-color: #FFFFFF;
+            padding: 30px 150px 50px 150px;
+            margin-top: 20px;
+        }
+        .top_wrapper {
+            padding: 0 50px;
+        }
+        #product_list ul {
+            list-style: none;
+            width: 1032px;
+            display: flex;
+            flex-flow: wrap;
+            margin: auto;
+            padding: 0;
+        }
+        #product_list li {
+            list-style: none;
+            text-align: right;
+            width: 214px;
+            padding: 20px;
+            margin: 1px;
+        }
+        a:link, a:visited {
+            text-decoration: none;
+            color: black;
         }
     </style>
 
@@ -74,7 +95,6 @@
             autoplaySpeed: 2000,
         });
     </script>
-
 
     <div class="category_bar">
         <table style="text-align: center; font-size: 14px; margin: auto;">
@@ -131,17 +151,60 @@
         </table>
     </div>
 
-    <div class="shop_banner"></div>
-    <div></div>
+    <div class="content_wrapper">
+        <div class="top_wrapper">
+            <span style="color: #616161; font-weight: bold;">상품 둘러보기</span>
+            <a href="/product/list/view"><span style="float: right; color: #FF7500; font-weight: bold;">더보기</span></a>
+        </div>
+
+        <div id="product_list">
+
+        </div>
+    </div>
 
     <%@ include file="includes/footer.jsp" %>
 
     <script>
+        $(document).ready(function() {
+            printProduct();
+        });
 
         $(document).on('click', '#category_btn', function() {
             cateCode = $(this).val();
             location.href = "/product/list/view?cateCode=" + cateCode;
         });
+
+        function printProduct(sortBy, cateCode) {
+            $.ajax ({
+                url: '/product/sort/category',
+                data: {
+                    "sortBy" : sortBy,
+                    "cateCode" : cateCode
+                },
+                success: function(data) {
+                    let product_info = "";
+
+                    product_info += "<ul>";
+                    for (let i = 0; i < 8; i++) {
+
+                        product_info += "<li>"
+                                        + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
+                                        + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
+                                        + "<span>" + data.content[i].name + "</span>" + "<br/>"
+                                        + "<span><b>" + data.content[i].price + "원</b></span>"
+                                        + "</a>"
+                                        + "</li>";
+
+                        if (i % 4 == 3) {
+                            product_info += "</ul>";
+                            product_info += "<br/><ul>";
+                        }
+                    }
+                    $("#product_list").empty();
+                    $("#product_list").html(product_info);
+                }
+            });
+        }
     </script>
 
 </body>

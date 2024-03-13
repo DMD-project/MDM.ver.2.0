@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @JsonPropertyOrder({"statusCode", "message", "content"})
 public class CustomResponse<T> {
+
     @JsonProperty("statusCode")
     @NonNull
     private final int statusCode;
@@ -24,7 +25,7 @@ public class CustomResponse<T> {
     @JsonProperty("content")
     private T content;
 
-    // 성공한 경우 응답 생성
+    /* 성공한 경우 응답 생성 */
     public static <T> CustomResponse<T> onSuccess(T content) {
         return new CustomResponse<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), content);
     }
@@ -33,7 +34,7 @@ public class CustomResponse<T> {
         return new CustomResponse<>(HttpStatus.OK.value(), message, null);
     }
 
-    // 실패한 경우 응답 생성
+    /* 실패한 경우 응답 생성 */
     public static <T> CustomResponse<T> onFailure(int statusCode, String message) {
         return new CustomResponse<>(statusCode, message, null);
     }
@@ -42,9 +43,8 @@ public class CustomResponse<T> {
         return new CustomResponse<>(statusCode, message, content);
     }
 
-    // Json serialize
+    /* Json serialize */
     public String toJsonString() throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(this);
     }
-
 }

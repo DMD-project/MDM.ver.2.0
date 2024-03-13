@@ -26,7 +26,6 @@ public class AuthenticationConfig {
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .formLogin(formLogin -> formLogin.disable());
-//                .apply(new MyCustomDsl());
         httpSecurity
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(
@@ -90,24 +89,10 @@ public class AuthenticationConfig {
                         .permitAll());
         httpSecurity
                 .sessionManagement((sessionManagement) ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));// jwt 사용하는 경우 사용
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity
                 .addFilterBefore(new JwtFilter(jwtProvider, redisUtil), UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
     }
-/*
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*"); // 허용할 URL
-        config.addAllowedHeader("*"); // 허용할 Header
-        config.addAllowedMethod("*"); // 허용할 Http Method
-        config.setExposedHeaders(Arrays.asList("Authorization", "Authorization-refresh"));
-        source.registerCorsConfiguration("/**", config); // 모든 Url에 대해 설정한 CorsConfiguration 등록
-        return new CorsFilter(source);
-    }
- */
 }

@@ -8,9 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/* Authentication을 담고 있는 UserDetails 인터페이스 상속
-   SecurityContextHolder에 담을 Authentication 객체를 만들 때 사용 */
-
 @ToString
 @Builder
 @AllArgsConstructor
@@ -20,7 +17,6 @@ public class CustomUserDetails implements UserDetails {
     private String email;
     private Role role;
 
-    /* 해당 user 권한 목록 */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> grantedAuthority = new ArrayList<>();
@@ -33,13 +29,11 @@ public class CustomUserDetails implements UserDetails {
         return grantedAuthority;
     }
 
-    /* 비밀번호 */
     @Override
     public String getPassword() {
         return null;
     }
 
-    /* pk 값 */
     @Override
     public String getUsername() {
         return email;

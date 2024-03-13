@@ -239,7 +239,8 @@
                         xhr.setRequestHeader("Authorization", "Bearer " + token);
                     },
                     success: function(data) {
-                        printUserInfo();
+                        alert('닉네임을 수정하였습니다.');
+                        location.href="http://localhost:8080/mypage/view";
                     }
                 });
             }

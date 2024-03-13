@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "orders")
-public class Order { //일반상품 즉시 주문, 일반상품(장바구니) 주문, 공동구매 참여
+public class Order { /* 일반상품 즉시 주문, 일반상품 (장바구니) 주문, 공동구매 참여 */
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,28 +26,28 @@ public class Order { //일반상품 즉시 주문, 일반상품(장바구니) �
     private long id;
 
     @Column(name = "order_name")
-    private String name; // 이름
+    private String name;
 
     @Column(name = "order_contact")
-    private String contact; // 전화번호
+    private String contact;
 
     @Column(name = "order_email")
-    private String email;   // 이메일
+    private String email;
 
     @Column(name = "order_zipcode")
     private String zipcode;
 
     @Column(name = "order_street_addr")
-    private String streetAddr;  //배송지
+    private String streetAddr;
 
     @Column(name = "order_detail_addr")
     private String detailAddr;
 
     @Column(name = "order_price")
-    private Integer price; // 주문 총 가격
+    private Integer price;
 
     @Column(name = "order_qty")
-    private Integer qty; // 주문 수량
+    private Integer qty;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "prod_id")

@@ -23,9 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .email(user.getEmail())
                     .role(user.getRole())
                     .build();
-
         }
-
         return null;
     }
 }

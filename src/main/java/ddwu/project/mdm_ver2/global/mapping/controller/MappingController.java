@@ -22,10 +22,6 @@ import java.util.HashMap;
 public class MappingController {
 
     private final UserService userService;
-    private final ProductService productService;
-    private final CartService cartService;
-    private final GroupPurchaseService groupPurchaseService;
-    private final SecondHandService secondHandService;
 
     @GetMapping("/")
     public String main() {

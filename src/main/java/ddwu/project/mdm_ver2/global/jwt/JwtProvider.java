@@ -22,7 +22,6 @@ import static org.springframework.security.core.authority.AuthorityUtils.createA
 @Slf4j
 @Component
 @RequiredArgsConstructor
-//@Service
 public class JwtProvider {
 
     @Value("${jwt.secretKey}")
@@ -31,10 +30,9 @@ public class JwtProvider {
     private final CustomUserDetailsService userDetailsService;
     private final RedisUtil redisUtil;
 
-    private static final Long accessTokenValidTime = Duration.ofMinutes(30).toMillis(); // 만료시간 30분
-    private static final Long refreshTokenValidTime = Duration.ofDays(14).toMillis(); // 만료시간 2주
+    private static final Long accessTokenValidTime = Duration.ofMinutes(30).toMillis();
+    private static final Long refreshTokenValidTime = Duration.ofDays(14).toMillis();
 
-    /* access, refresh token 생성 */
     public String createAccessToken(Long userId, String kakaoAccessToken) {
         return createToken(userId, kakaoAccessToken, "access", accessTokenValidTime);
     }
@@ -61,7 +59,6 @@ public class JwtProvider {
                 .compact();
     }
 
-    /* token 유효, 만료 확인 */
     public boolean isValidate(String token) {
 
         try {
@@ -81,40 +78,12 @@ public class JwtProvider {
         return false;
     }
 
-    public boolean isRefreshToken(String token) {
-        Header header = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getHeader();
-
-        if(header.get("type").toString().equals("refresh")) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isAccessToken(String token) {
-        Header header = Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getHeader();
-
-        if(header.get("type").toString().equals("access")) {
-            return true;
-        }
-        return false;
-    }
-
-    /* Jwt Token에 담긴 유저 정보 DB에 검색,
-    해당 유저의 권한 처리를 위해 Context에 담는 Authentication 객체를 반환 */
     public Authentication getAuthentication(String token){
         log.info("getUserId: {}", getUserId(token));
         CustomUserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(this.getUserId(token)));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-
-    /* token에서 회원 정보 추출 */
     public Long getUserId(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)
@@ -131,16 +100,6 @@ public class JwtProvider {
                 .get("kakaoAccessToken", String.class);
     }
 
-    private String getRole(String accessToken) {
-        return (String) Jwts.parser()
-                .setSigningKey(SECRET_KEY)
-                .parseClaimsJws(accessToken)
-                .getBody()
-                .get("role", String.class);
-
-    }
-
-    /* 남은 유효 시간 확인 */
     public Long getAccessTokenValidTime(String accessToken) {
         Date expiration = Jwts.parser()
                 .setSigningKey(SECRET_KEY)

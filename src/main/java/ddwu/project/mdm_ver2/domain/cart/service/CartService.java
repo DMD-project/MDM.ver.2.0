@@ -14,7 +14,6 @@ public class CartService {
 
     private final CartRepository cartRepository;
 
-    // 사용자 장바구니 조회
     @Transactional
     public CustomResponse<Cart> getCartByUser(String userEmail) {
         Cart cart = cartRepository.findByUserEmail(userEmail);
@@ -24,7 +23,6 @@ public class CartService {
         return CustomResponse.onSuccess(cart);
     }
 
-    //장바구니 전체 비우기
     @Transactional
     public CustomResponse<Void> clearCart(String userEmail) {
         Cart cart = cartRepository.findByUserEmail(userEmail);

@@ -17,10 +17,10 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class CartItemService {
+
     private final ItemsRepository cartItemRepository;
     private final CartRepository cartRepository;
 
-    // 장바구니품목 추가
     @Transactional
     public CustomResponse<Void> addItemToCart(User user, Product product, int count) {
         try {
@@ -28,7 +28,6 @@ public class CartItemService {
 
             int price = product.getPrice();
 
-            // 장바구니가 존재하지 않는다면
             if (cart == null) {
                 cart = Cart.createCart(user);
                 cartRepository.save(cart);
@@ -52,7 +51,6 @@ public class CartItemService {
         }
     }
 
-    // 장바구니품목 증가(1개씩)
     @Transactional
     public CustomResponse<Void> increaseItem(Items cartItem) {
         try {
@@ -72,7 +70,6 @@ public class CartItemService {
         }
     }
 
-    // 장바구니품목 감소(1개씩)
     @Transactional
     public CustomResponse<Void> decreaseItem(Items cartItem) {
         try {
@@ -93,7 +90,6 @@ public class CartItemService {
         }
     }
 
-    // 장바구니 품목 삭제
     @Transactional
     public CustomResponse<Void> deleteCartItems(List<Long> itemsIds) {
         try {
@@ -101,7 +97,7 @@ public class CartItemService {
                 Items cartItem = cartItemRepository.findById(itemsId).orElse(null);
 
                 if (cartItem == null) {
-                    return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), itemsId + " 장바구니품목을 찾을 수 없습니다." );
+                    return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), itemsId + " 장바구니 품목을 찾을 수 없습니다." );
                 }
 
                 Cart cart = cartItem.getCart();
@@ -118,5 +114,4 @@ public class CartItemService {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
-
 }

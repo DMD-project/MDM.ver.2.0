@@ -37,8 +37,9 @@ public class GroupPurchase implements Serializable {
     @Column(name = "gp_img_url")
     private String imgUrl;
 
+    /* 최대 구매 가능 수량 */
     @Column(name = "gp_max_qty")
-    private int maxQty; //최대 구매 가능 수량
+    private int maxQty;
 
     @Column(name = "gp_now_qty")
     private int nowQty;

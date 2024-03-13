@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressRequest {
-
     private String streetAddr;
     private String detailAddr;
     private String zipcode;

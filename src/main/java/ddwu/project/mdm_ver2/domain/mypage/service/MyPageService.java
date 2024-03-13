@@ -19,7 +19,6 @@ public class MyPageService {
         try {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-
             return CustomResponse.onSuccess(user);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -36,7 +35,6 @@ public class MyPageService {
         try {
             user.setNickname(nickname);
             User updateUser = userRepository.saveAndFlush(user);
-
             return CustomResponse.onSuccess(updateUser);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());

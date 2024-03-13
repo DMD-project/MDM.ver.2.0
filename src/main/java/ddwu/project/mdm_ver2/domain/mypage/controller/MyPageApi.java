@@ -75,5 +75,4 @@ public interface MyPageApi {
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     CustomResponse<List<Order>> getOrderByUser(@Parameter(description = "현재 사용자 정보") Principal principal);
-
 }

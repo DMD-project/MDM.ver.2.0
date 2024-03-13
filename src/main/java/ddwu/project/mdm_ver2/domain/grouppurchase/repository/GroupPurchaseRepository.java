@@ -9,11 +9,11 @@ import java.util.List;
 @Repository
 public interface GroupPurchaseRepository extends JpaRepository<GroupPurchase, Long> {
 
-    List<GroupPurchase> findAllByOrderByPriceAsc(); // 낮은 가격순
+    List<GroupPurchase> findAllByOrderByPriceAsc();
 
-    List<GroupPurchase> findAllByOrderByPriceDesc(); // 높은 가격순
+    List<GroupPurchase> findAllByOrderByPriceDesc();
 
-    List<GroupPurchase> findAllByOrderByIdDesc();   //  최신순
+    List<GroupPurchase> findAllByOrderByIdDesc();
 
     List<GroupPurchase> findAllByCategoryCateCodeOrderByPriceAsc(String cateCode);
 

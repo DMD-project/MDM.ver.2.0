@@ -54,11 +54,10 @@ public class FavoriteService {
     }
 
     public Favorite setProdFavoriteState(String userEmail, Long prodId, Character favState) {
-        if(favState.equals('y')) { // 클릭 시 'n' -> 찜 해제(db 삭제)
+        if(favState.equals('y')) {
             deleteFavorite(userEmail, FavoriteType.GENERAL.toString(), prodId);
-
             return null;
-        } else { // 클릭 시 'y' -> 찜 등록(db 추가)
+        } else {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
@@ -70,11 +69,10 @@ public class FavoriteService {
     }
 
     public Favorite setSHFavoriteState(String userEmail, Long shId, Character favState) {
-        if(favState.equals('y')) { // 클릭 시 'n' -> 찜 해제(db 삭제)
+        if(favState.equals('y')) {
             deleteFavorite(userEmail, FavoriteType.SH.toString(), shId);
-
             return null;
-        } else { // 클릭 시 'y' -> 찜 등록(db 추가)
+        } else {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
@@ -86,10 +84,10 @@ public class FavoriteService {
     }
 
     public Favorite setGPFavoriteState(String userEmail, Long gpId, Character favState) {
-        if(favState.equals('y')) { // 클릭 시 'n' -> 찜 해제(db 삭제)
+        if(favState.equals('y')) {
             deleteFavorite(userEmail, FavoriteType.GP.toString(), gpId);
             return null;
-        } else { // 클릭 시 'y' -> 찜 등록(db 추가)
+        } else {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
@@ -99,10 +97,6 @@ public class FavoriteService {
             return new Favorite(user, FavoriteType.GP, groupPurchase, 'y');
         }
     }
-
-//    public boolean getFavoriteState(User user, Product product) {
-//        return favoriteRepository.existsByUserAndProduct(user, product);
-//    }
 
     public Favorite addFavorite(Favorite favorite) {
         return favoriteRepository.saveAndFlush(favorite);
@@ -116,13 +110,12 @@ public class FavoriteService {
             case "SH":
                 favoriteRepository.deleteByUserEmailAndSecondHandId(userEmail, typeId);
                 break;
-//            case "GP":
-//                favoriteRepository.deleteByUserEmailAndGroupPurchaseId(userEmail, typeId);
-//                break;
+            case "GP":
+                favoriteRepository.deleteByUserEmailAndGroupPurchaseId(userEmail, typeId);
+                break;
         }
     }
 
-    /* 특정 사용자 찜 가져오기 */
     public CustomResponse<List<Favorite>> getUserFavoriteList(String userEmail) {
         try{
             List<Favorite> userFavoriteList = favoriteRepository.findAllByUserEmail(userEmail);

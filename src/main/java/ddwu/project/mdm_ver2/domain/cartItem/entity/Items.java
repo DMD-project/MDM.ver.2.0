@@ -30,11 +30,13 @@ public class Items {
     @Column(name = "items_id")
     private long id;
 
+    /* 상품 개수 */
     @Column(name = "items_count")
-    private int count; // 상품 개수
+    private int count;
 
+    /* 상품 금액 */
     @Column(name = "items_price")
-    private int price; //상품금액
+    private int price;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "cart_id")

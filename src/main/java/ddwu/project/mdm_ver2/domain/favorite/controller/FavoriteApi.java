@@ -20,7 +20,7 @@ public interface FavoriteApi {
             @ApiResponse(responseCode = "500", description = "찜 상태를 변경할 수 없음")
     })
     public CustomResponse<Favorite> changeFavoriteState(@Parameter(description = "현재 사용자 객체") Principal principal,
-                                                        @Parameter(description = "일반 상품/중고 거래/공동 구매 구분") @PathVariable(value="favType", required=true) String favType,
-                                                        @Parameter(description = "일반 상품/중고 거래/공동 구매 아이디") @PathVariable(value="typeId", required=true) long typeId,
-                                                        @Parameter(description = "현재 찜 상태") @PathVariable(value="favState", required = true) Character favState);
+                                                        @Parameter(description = "일반 상품/중고 거래/공동 구매 구분") @PathVariable(value = "favType", required = true) String favType,
+                                                        @Parameter(description = "일반 상품/중고 거래/공동 구매 아이디") @PathVariable(value = "typeId", required = true) long typeId,
+                                                        @Parameter(description = "현재 찜 상태") @PathVariable(value = "favState", required = true) Character favState);
 }

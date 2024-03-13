@@ -16,8 +16,6 @@ import java.security.Principal;
 public class FavoriteController implements FavoriteApi{
 
     private FavoriteService favoriteService;
-    private UserService userService;
-    private ProductRepository productRepository;
 
     @PostMapping("/favState/{favState}")
     public CustomResponse<Favorite> changeFavoriteState(Principal principal,
@@ -25,7 +23,5 @@ public class FavoriteController implements FavoriteApi{
                                                         @PathVariable(value="typeId", required=true) long typeId,
                                                         @PathVariable(value="favState", required = true) Character favState) {
         return favoriteService.setFavoriteState(principal.getName(), favType, typeId, favState);
-//        return favoriteService.setFavoriteState(userEmail, favType, typeId, favState);
     }
-
 }

@@ -22,11 +22,13 @@ public class Cart {
     @Column(name = "cart_id")
     private long id;
 
+    /* 전체 상품 개수 */
     @Column(name = "cart_count")
-    private int count; // 전체 상품개수
+    private int count;
 
+    /* 전체 상품 금액 */
     @Column(name = "cart_price")
-    private int price; //전체 상품금액
+    private int price;
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})

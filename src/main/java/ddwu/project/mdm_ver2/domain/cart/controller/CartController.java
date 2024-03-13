@@ -15,13 +15,13 @@ public class CartController implements CartApi {
 
     private final CartService cartService;
 
-    // 사용자 장바구니 조회
+    /* 사용자 장바구니 조회 */
     @GetMapping
     public CustomResponse<Cart> getCartByUser(Principal principal) {
         return cartService.getCartByUser(principal.getName());
     }
 
-    // 장바구니 비우기
+    /* 장바구니 비우기 */
     @DeleteMapping("/delete")
     public CustomResponse<Void> clearCart(Principal principal) {
         return cartService.clearCart(principal.getName());

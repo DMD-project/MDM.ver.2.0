@@ -13,20 +13,19 @@ public class GroupPurchaseAdminContorller implements GroupPurchaseAdminApi {
 
     private final GroupPurchaseService groupPurchaseService;
 
-    // 공동구매 등록
+    /* 공동구매 등록 */
     @PostMapping("/add")
     public CustomResponse<Void> addGroupPurchase(@RequestBody GroupPurchaseRequest request) {
         return groupPurchaseService.addGroupPurchase(request);
     }
 
-    // 공동구매 수정
+    /* 공동구매 수정 */
     @PutMapping("/update/{gpId}")
-    public CustomResponse<Void> updateGroupPurchase(@PathVariable Long gpId,
-                                                    @RequestBody GroupPurchaseRequest request) {
+    public CustomResponse<Void> updateGroupPurchase(@PathVariable Long gpId, @RequestBody GroupPurchaseRequest request) {
         return groupPurchaseService.updateGroupPurchase(gpId, request);
     }
 
-    // 공동구매 삭제
+    /* 공동구매 삭제 */
     @DeleteMapping("/delete/{gpId}")
     public CustomResponse<Void> deleteGroupPurchase(@PathVariable Long gpId) {
         return groupPurchaseService.deleteGroupPurchase(gpId);

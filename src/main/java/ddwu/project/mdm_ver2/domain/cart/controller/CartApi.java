@@ -23,5 +23,4 @@ public interface CartApi {
             @ApiResponse(responseCode = "404", description = "장바구니가 비어있거나 사용자를 찾을 수 없음")
     })
     public CustomResponse<Void> clearCart(@Parameter(description = "현재 사용자의 Principal 객체") Principal principal);
-
 }

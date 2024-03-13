@@ -39,7 +39,6 @@ public class MyPageController implements MyPageApi {
     private final SecondHandBidService shBidService;
     private final OrderService orderService;
 
-
     @GetMapping
     public CustomResponse<User> getUser(Principal principal) {
         return myPageService.getUser(principal.getName());

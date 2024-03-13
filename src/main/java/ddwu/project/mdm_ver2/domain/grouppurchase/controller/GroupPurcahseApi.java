@@ -62,5 +62,5 @@ public interface GroupPurcahseApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "공동구매 검색 성공"),
             @ApiResponse(responseCode = "500", description = "서버 오류")})
-    CustomResponse<List<GroupPurchase>> searchGroupPurchase(@Parameter(description = "상품이름 검색", required = true) @RequestParam(name = "keyword") String keyword);
+    CustomResponse<List<GroupPurchase>> searchGroupPurchase(@Parameter(description = "상품 이름 검색", required = true) @RequestParam(name = "keyword") String keyword);
 }

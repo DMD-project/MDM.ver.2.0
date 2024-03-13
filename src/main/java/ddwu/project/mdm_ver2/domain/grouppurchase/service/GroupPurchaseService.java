@@ -35,7 +35,6 @@ public class GroupPurchaseService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
 
-    // 공동구매상품 등록
     public CustomResponse<Void> addGroupPurchase(GroupPurchaseRequest request) {
         try {
             GroupPurchase groupPurchase = new GroupPurchase();
@@ -60,9 +59,7 @@ public class GroupPurchaseService {
         }
     }
 
-    // 공동구매상품 수정
-    public CustomResponse<Void> updateGroupPurchase(Long gpId,
-                                                    GroupPurchaseRequest request) {
+    public CustomResponse<Void> updateGroupPurchase(Long gpId, GroupPurchaseRequest request) {
         try {
             GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
                     .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
@@ -81,31 +78,28 @@ public class GroupPurchaseService {
 
             GroupPurchase updatedGroupPurchase = groupPurchaseRepository.save(groupPurchase);
             updateGroupPurchaseStatus();
+
             return CustomResponse.onSuccess("공동구매 상품이 수정되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-    // 공동구매상품 삭제
     public CustomResponse<Void> deleteGroupPurchase(Long gpId) {
         try {
             GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
                     .orElseThrow(() -> new ResourceNotFoundException("GroupPurchase", "gpId", gpId));
 
             groupPurchaseRepository.delete(groupPurchase);
-
             return CustomResponse.onSuccess("공동구매 상품이 삭제되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-    // 공동구매 목록 조회
     public CustomResponse<List<GroupPurchase>> findAllGroupPurchases() {
         try {
             List<GroupPurchase> groupPurchaseList = groupPurchaseRepository.findAll();
-
             updateGroupPurchaseStatus();
             return CustomResponse.onSuccess(groupPurchaseList);
         } catch (Exception e) {
@@ -113,7 +107,6 @@ public class GroupPurchaseService {
         }
     }
 
-    // 공동구매 정렬
     public CustomResponse<List<GroupPurchase>> sortGroupPurchase(String sort, String cateCode) {
         try {
             List<GroupPurchase> sortList;
@@ -136,14 +129,12 @@ public class GroupPurchaseService {
                 }
             }
             updateGroupPurchaseStatus();
-
             return CustomResponse.onSuccess(sortList);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-    // 카테고리 분류 후 공동구매 정렬
     public List<GroupPurchase> sortGroupPurchasesByCategory(String sort, String cateCode) {
         List<GroupPurchase> productList;
 
@@ -162,12 +153,9 @@ public class GroupPurchaseService {
                 break;
         }
         updateGroupPurchaseStatus();
-
         return productList;
     }
 
-
-    // 특정 공동구매 상품 조회
     public CustomResponse<GroupPurchaseDto> getGroupPurchase(Long gpId) {
         try {
             GroupPurchase groupPurchase = groupPurchaseRepository.findById(gpId)
@@ -175,8 +163,8 @@ public class GroupPurchaseService {
 
             int participantCount = orderRepository.countByGroupPurchase_Id(gpId);
             GroupPurchaseDto groupPurchaseDto = new GroupPurchaseDto(groupPurchase, participantCount);
-            updateGroupPurchaseStatus();
 
+            updateGroupPurchaseStatus();
             return CustomResponse.onSuccess(groupPurchaseDto);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
@@ -202,12 +190,10 @@ public class GroupPurchaseService {
         }
     }
 
-    // 공동구매 전체 개수 조회
     public CustomResponse<Long> countAllGroupPurchases() {
         return CustomResponse.onSuccess(groupPurchaseRepository.count());
     }
 
-    // 공동구매 참여하기 - 주문
     public CustomResponse<String> joinGroupPurchase(Principal principal, Long gpId, int purchasedQty) {
         try {
             if (principal == null) {
@@ -242,7 +228,6 @@ public class GroupPurchaseService {
                     groupPurchaseRepository.save(groupPurchase);
 
                     return CustomResponse.onSuccess("공동구매 참여가 완료되었습니다.");
-
                 } else {
                     return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "공동구매에 참여 가능한 기간이 아닙니다.");
                 }
@@ -252,7 +237,6 @@ public class GroupPurchaseService {
         }
     }
 
-    //  공동구매 검색
     public CustomResponse<List<GroupPurchase>> searchGroupPurchase(String keyword) {
         try {
             if (StringUtils.isBlank(keyword)) {

@@ -12,22 +12,21 @@ import java.util.List;
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
-    boolean existsByUserEmailAndProductId(String userEmail, Long prodId); // get favState (exist->fav O)
+    boolean existsByUserEmailAndProductId(String userEmail, Long prodId);
 
     boolean existsByUserEmailAndSecondHandId(String userEmail, Long shId);
-//    boolean existsByUserEmailAndGroupPurchaseId(String userEmail, Long gpId);
 
     @Transactional
-    Favorite saveAndFlush(Favorite favInfo); // 찜등록
+    Favorite saveAndFlush(Favorite favInfo);
 
     @Transactional
-    void deleteByUserEmailAndProductId(String userEmail, Long prodId); // 찜해제
+    void deleteByUserEmailAndProductId(String userEmail, Long prodId);
 
     @Transactional
     void deleteByUserEmailAndSecondHandId(String userEmail, Long shId);
 
-//    @Transactional
-//    void deleteByUserEmailAndGroupPurchaseId(String userEmail, Long gpId);
+    @Transactional
+    void deleteByUserEmailAndGroupPurchaseId(String userEmail, Long gpId);
 
     List<Favorite> findAllByUserEmail(String userEmail);
 }

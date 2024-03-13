@@ -26,28 +26,21 @@ public class ReviewController implements ReviewApi{
 
     /* 리뷰 등록 */
     @PostMapping("/add")
-    public CustomResponse<Review> addReview(Principal principal,
-                                            @PathVariable("prodId") Long prodId,
-                                            @RequestBody ReviewRequest request) {
+    public CustomResponse<Review> addReview(Principal principal, @PathVariable("prodId") Long prodId, @RequestBody ReviewRequest request) {
         return reviewService.addReview(principal.getName(), prodId, request);
-//        return reviewService.addReview(userEmail, prodId, request);
     }
 
     /* 리뷰 수정 */
     @PostMapping("/update/{reviewId}")
-    public CustomResponse<Review> updateReview(Principal principal,
-                                               @PathVariable("prodId") Long prodId,
+    public CustomResponse<Review> updateReview(Principal principal, @PathVariable("prodId") Long prodId,
                                                @PathVariable("reviewId") Long reviewId,
                                                @RequestBody ReviewRequest request) {
         return reviewService.updateReview(principal, prodId, reviewId, request);
-//        return reviewService.updateReview(userEmail, prodId, reviewId, request);
     }
 
     /* 리뷰 삭제 */
     @DeleteMapping("/delete/{reviewId}")
-    public CustomResponse<Void> deleteReview(Principal principal,
-                                             @PathVariable("prodId") Long prodId,
-                                             @PathVariable("reviewId") Long reviewId) {
+    public CustomResponse<Void> deleteReview(Principal principal, @PathVariable("prodId") Long prodId, @PathVariable("reviewId") Long reviewId) {
         return reviewService.deleteReview(principal, prodId, reviewId);
     }
 }

@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SecondHandResponse {
-
     private Long shId;
     private Long userId; /* 중고거래 요청자 (가격 제안) */
     private String name;
@@ -24,6 +23,6 @@ public class SecondHandResponse {
     private Character state;
     private List<SecondHandBidResponse> secondHandBidList;
     private Character favState;
-    private Character userState; /* 로그인 X, 작성자와 현재 사용자 다름 ('n') */
+    private Character userState; /* 작성자와 현재 사용자 일치 여부 */
     private Long selectBidId;
 }

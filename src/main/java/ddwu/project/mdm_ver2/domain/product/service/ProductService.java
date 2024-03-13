@@ -32,12 +32,10 @@ public class ProductService {
     private final FavoriteRepository favoriteRepository;
     private final ReviewRepository reviewRepository;
 
-    //  일반상품 등록
     @Transactional
     public CustomResponse<Void> addProduct(ProductRequest request) {
         try {
             Category category = categoryRepository.findByCateCode(request.getCategory());
-
             if (category == null) {
                 throw new NotFoundException("카테고리를 찾을 수 없습니다: " + request.getCategory());
             }
@@ -50,7 +48,6 @@ public class ProductService {
                     .imgUrl(request.getProdImgUrl())
                     .reviewCnt(0L)
                     .build();
-
             Product addProduct = productRepository.save(product);
 
             return CustomResponse.onSuccess("상품이 등록되었습니다");
@@ -59,7 +56,6 @@ public class ProductService {
         }
     }
 
-    // 일반상품 수정
     @Transactional
     public CustomResponse<Void> updateProduct(Long prodId, ProductRequest updatedProduct) {
         try {
@@ -76,7 +72,6 @@ public class ProductService {
                 product.setImgUrl(updatedProduct.getProdImgUrl());
 
                 Product updateProduct = productRepository.save(product);
-
                 return CustomResponse.onSuccess("일반 상품이 수정되었습니다");
             }
             return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "상품을 찾을 수 없습니다.");
@@ -85,8 +80,6 @@ public class ProductService {
         }
     }
 
-
-    //  일반상품 삭제
     @Transactional
     public CustomResponse<Void> deleteProduct(Long prodId) {
         try {
@@ -100,7 +93,6 @@ public class ProductService {
         }
     }
 
-    //  일반상품 조회
     @Transactional
     public CustomResponse<List<Product>> findAllProduct() {
         try {
@@ -111,7 +103,6 @@ public class ProductService {
         }
     }
 
-    // 일반상품 정렬
     @Transactional
     public CustomResponse<List<Product>> SortProduct(String sort, String cateCode) {
         try {
@@ -137,8 +128,6 @@ public class ProductService {
         }
     }
 
-
-    // 카테고리 분류 후 일반상품 정렬
     @Transactional
     public List<Product> sortProductsByCategory(String sort, String cateCode) {
         List<Product> productList = new ArrayList<Product>();
@@ -157,12 +146,6 @@ public class ProductService {
         return productList;
     }
 
-
-    private List<Product> categorySort(String category, List<Product> defaultList, List<Product> categoryList) {
-        return StringUtils.isNotBlank(category) ? categoryList : defaultList;
-    }
-
-    //일반상품 개별 조회
     @Transactional
     public CustomResponse<ProductResponse> getProduct(Principal principal, Long prodId) {
         try {
@@ -173,7 +156,6 @@ public class ProductService {
         }
     }
 
-    //일반상품 개수 - 전체
     public CustomResponse<Long> getProductCount() {
         try {
             long count = productRepository.count();
@@ -183,7 +165,6 @@ public class ProductService {
         }
     }
 
-    //일반상품 개수 - 카테고리 분류
     @Transactional
     public CustomResponse<Long> getProductCountByCategory(String cateCode) {
         try {
@@ -194,7 +175,6 @@ public class ProductService {
         }
     }
 
-    // 일반상품 검색
     @Transactional
     public CustomResponse<List<Product>> searchProduct(String keyword) {
         try {
@@ -219,7 +199,6 @@ public class ProductService {
             favState = 'n';
         } else {
             boolean exist = favoriteRepository.existsByUserEmailAndProductId(principal.getName(), prodId);
-
             if (exist) {
                 favState = 'y';
             } else {
@@ -240,8 +219,6 @@ public class ProductService {
                         reviewList,
                         reviewRepository.countByProductId(prodId),
                         product.getReviewStarAvg());
-
         return response;
     }
-
 }

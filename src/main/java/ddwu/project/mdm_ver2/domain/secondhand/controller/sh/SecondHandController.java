@@ -66,5 +66,4 @@ public class SecondHandController implements SecondHandApi {
     public CustomResponse<Void> deleteSecondHand(Principal principal, @PathVariable("shId") Long shId) {
         return secondHandService.deleteSecondHand(principal, shId);
     }
-
 }

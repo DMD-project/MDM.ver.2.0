@@ -45,5 +45,4 @@ public class SecondHandBidController implements SecondHandBidApi{
                                             @PathVariable("shId") Long shId, @PathVariable("shBidId") Long shBidId) {
         return shBidService.deleteSecondHandBid(principal, shId, shBidId);
     }
-
 }

@@ -14,13 +14,10 @@ public interface SecondHandBidRepository extends JpaRepository<SecondHandBid, Lo
 
     List<SecondHandBid> findAllBySecondHandId(Long shId);
 
-    /* 최신순 (최신순) */
     List<SecondHandBid> findAllBySecondHandIdOrderByIdDesc(Long shId);
 
-    /* 가격 낮은 순 */
     List<SecondHandBid> findAllBySecondHandIdOrderByPriceAsc(Long shId);
 
-    /* 가격 높은 순*/
     List<SecondHandBid> findAllBySecondHandIdOrderByPriceDesc(Long shId);
 
     SecondHandBid saveAndFlush(SecondHandBid secondHanBid);

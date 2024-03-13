@@ -15,10 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User", description = "사용자 API")
 public interface UserApi {
 
-//    @Operation(summary = "카카오 로그인(access token 받기, 사용자 정보 받아 오기, jwt token 생성)")
-//    @ApiResponse(responseCode = "200", description = "받아온 사용자 정보로 jwt token 생성")
-//    public JwtToken login(@Parameter(description = "카카오 인가 코드") @RequestParam String code, Model model, HttpServletResponse response);
-
     @Operation(summary = "카카오 로그인(사용자 정보 받아오기, jwt token 생성)")
     @ApiResponse(responseCode = "200", description = "받아온 사용자 정보로 jwt token 생성")
     public JwtToken loginIos(@Parameter(description = "카카오 access token") @RequestParam String access_token);

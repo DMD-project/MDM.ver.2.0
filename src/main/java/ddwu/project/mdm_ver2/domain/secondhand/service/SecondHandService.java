@@ -37,7 +37,6 @@ public class SecondHandService {
     private final FavoriteRepository favoriteRepository;
     private final SecondHandBidService secondHandBidService;
 
-    /* 전체 상품 */
     public CustomResponse<List<SecondHand>> findAllSecondHand() {
         try {
             List<SecondHand> secondHandList = secondHandRepository.findAll();
@@ -47,11 +46,10 @@ public class SecondHandService {
         }
     }
 
-    /* 상품 정렬 */
     public CustomResponse<List<SecondHand>> sortSecondHand(String sort, String cateCode) {
         try {
             List<SecondHand> sortedSecondHandList = new ArrayList<SecondHand>();
-            if(cateCode != null && !cateCode.isEmpty()) {
+            if (cateCode != null && !cateCode.isEmpty()) {
                 sortedSecondHandList = sortSecondHandsByCategory(sort, cateCode);
             } else {
                 switch (sort) {
@@ -72,7 +70,6 @@ public class SecondHandService {
         }
     }
 
-    /* 카테고리 내 상품 정렬 */
     public List<SecondHand> sortSecondHandsByCategory(String sort, String cateCode) {
         List<SecondHand> secondHandList = new ArrayList<SecondHand>();
         switch (sort) {
@@ -89,28 +86,24 @@ public class SecondHandService {
         return secondHandList;
     }
 
-    /* 상품 상세 정보 */
     public CustomResponse<SecondHandResponse> getSecondHand(Principal principal, Long shId) {
         try {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
             SecondHandResponse response = setResponse(principal, shId);
-
             return CustomResponse.onSuccess(response);
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
 
-    /* 상품 등록 */
     public CustomResponse<SecondHand> addSecondHand(String userEmail, SecondHandRequest request) {
         try {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
             Category category = categoryRepository.findByCateCode(request.getCateCode());
-
             if (category == null) {
                 throw new NotFoundException("카테고리를 찾을 수 없습니다: " + request.getCateCode());
             }
@@ -125,7 +118,6 @@ public class SecondHandService {
                     .state('n')
                     .bidCnt(0L)
                     .build();
-
             SecondHand newSecondHand = secondHandRepository.saveAndFlush(secondHand);
             return CustomResponse.onSuccess(newSecondHand);
         } catch (Exception e) {
@@ -133,7 +125,6 @@ public class SecondHandService {
         }
     }
 
-    /* 상품 검색 */
     public CustomResponse<List<SecondHand>> searchSecondHand(String keyword) {
         try {
             if (StringUtils.isBlank(keyword)) {
@@ -147,54 +138,52 @@ public class SecondHandService {
         }
     }
 
-    /* 상품 판매 상태 변경 (판매중/판매 완료) */
     public CustomResponse<SecondHand> updateSecondHandState(Principal principal, Long shId, char state, Long shBidId) {
-       try {
-           SecondHand secondHand = secondHandRepository.findById(shId)
-                   .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
+        try {
+            SecondHand secondHand = secondHandRepository.findById(shId)
+                    .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-           SecondHandBid shBid = secondHandBidRepository.findById(shBidId)
-                   .orElseThrow(() -> new NotFoundException("중고거래 요청을 찾을 수 없습니다."));
+            SecondHandBid shBid = secondHandBidRepository.findById(shBidId)
+                    .orElseThrow(() -> new NotFoundException("중고거래 요청을 찾을 수 없습니다."));
 
-           if(principal == null) {
-               return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 거래할 수 없습니다.");
-           } else {
-               User user = userRepository.findByEmail(principal.getName())
-                       .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+            if (principal == null) {
+                return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 거래할 수 없습니다.");
+            } else {
+                User user = userRepository.findByEmail(principal.getName())
+                        .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-               if(user.getId() == secondHand.getUserId()) {
-                   if(state == 'n') {
-                       secondHand.setState('y');
-                       secondHand.setSelectBidId(shBidId);
-                       shBid.setBidState('y');
-                   } else if(state == 'y') {
-                       secondHand.setState('n');
-                       secondHand.setSelectBidId(null);
-                       shBid.setBidState('n');
-                   }
-                   return CustomResponse.onSuccess(secondHandRepository.saveAndFlush(secondHand));
-               } else {
-                   return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 거래할 수 없습니다.");
-               }
-           }
-       } catch (Exception e) {
-           return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-       }
+                if (user.getId() == secondHand.getUserId()) {
+                    if (state == 'n') {
+                        secondHand.setState('y');
+                        secondHand.setSelectBidId(shBidId);
+                        shBid.setBidState('y');
+                    } else if (state == 'y') {
+                        secondHand.setState('n');
+                        secondHand.setSelectBidId(null);
+                        shBid.setBidState('n');
+                    }
+                    return CustomResponse.onSuccess(secondHandRepository.saveAndFlush(secondHand));
+                } else {
+                    return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 거래할 수 없습니다.");
+                }
+            }
+        } catch (Exception e) {
+            return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        }
     }
 
-    /* 상품 수정 */
     public CustomResponse<SecondHand> updateSecondHand(Principal principal, Long shId, SecondHandRequest request) {
         try {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-            if(principal == null) {
+            if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 수정할 수 없습니다.");
             } else {
                 User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-                if(user.getId() == secondHand.getUserId()) {
+                if (user.getId() == secondHand.getUserId()) {
                     Category category = categoryRepository.findByCateCode(request.getCateCode());
 
                     secondHand.setCategory(category);
@@ -202,7 +191,6 @@ public class SecondHandService {
                     secondHand.setPrice(request.getPrice());
                     secondHand.setImgUrl(request.getImgUrl());
                     secondHand.setContent(request.getContent());
-
                     SecondHand updateSecondHand = secondHandRepository.saveAndFlush(secondHand);
 
                     return CustomResponse.onSuccess(updateSecondHand);
@@ -215,20 +203,19 @@ public class SecondHandService {
         }
     }
 
-    /* 상품 삭제 */
     @Transactional
     public CustomResponse<Void> deleteSecondHand(Principal principal, Long shId) {
         try {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 
-            if(principal == null) {
+            if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 삭제할 수 없습니다.");
             } else {
                 User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-                if(user.getId() == secondHand.getUserId()) {
+                if (user.getId() == secondHand.getUserId()) {
                     secondHandRepository.deleteById(shId);
                     return CustomResponse.onSuccess(null);
                 } else {
@@ -240,8 +227,7 @@ public class SecondHandService {
         }
     }
 
-    /* 특정 사용자 작성 중고거래 상품 가져오기 */
-    public CustomResponse<List<SecondHand>> getSecondHandListByUser (String userEmail) {
+    public CustomResponse<List<SecondHand>> getSecondHandListByUser(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
         try {
@@ -259,7 +245,7 @@ public class SecondHandService {
         Character favState;
         Character userState;
 
-        if(principal == null) {
+        if (principal == null) {
             favState = 'n';
             userState = 'n';
         } else {
@@ -268,13 +254,13 @@ public class SecondHandService {
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
             boolean exist = favoriteRepository.existsByUserEmailAndSecondHandId(userEmail, shId);
-            if(exist) {
+            if (exist) {
                 favState = 'y';
             } else {
                 favState = 'n';
             }
 
-            if(user.getId() != secondHand.getUserId()) {
+            if (user.getId() != secondHand.getUserId()) {
                 userState = 'n';
             } else {
                 userState = 'y';
@@ -294,7 +280,6 @@ public class SecondHandService {
                         favState,
                         userState,
                         secondHand.getSelectBidId());
-
         return response;
     }
 }

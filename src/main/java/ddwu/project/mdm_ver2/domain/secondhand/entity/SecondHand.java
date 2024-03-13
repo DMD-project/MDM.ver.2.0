@@ -32,8 +32,6 @@ public class SecondHand {
     private Long id;
 
     /* 중고거래 작성자 */
-//    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-//    @JoinColumn(name="user_id", referencedColumnName="user_id")
     @Column(name = "user_id")
     private Long userId;
 
@@ -63,7 +61,4 @@ public class SecondHand {
 
     @Column(name = "select_bid_id")
     private Long selectBidId;
-
-//    @ElementCollection(fetch = FetchType.LAZY)
-//    private List<SecondHandBid> ShBidList;
 }

@@ -14,34 +14,7 @@ import java.util.HashMap;
 @AllArgsConstructor
 public class KakaoController implements UserApi {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     private final UserService userService;
-
-//    @GetMapping("/kakao")
-//    public JwtToken login(@RequestParam String code, Model model, HttpServletResponse response) {
-//
-//        String access_token = userService.getAccessToken(code);
-//
-//        HashMap<String, Object> userInfo = userService.getKakaoUserInfo(access_token);
-//
-//        UserResponse userResponse = userService.checkKakaoUser(userInfo);
-//
-//        JwtToken jwtToken = userService.setToken(userResponse, access_token);
-//
-//        Cookie accessCookie = new Cookie("access_token", jwtToken.getAccess_token());
-//        accessCookie.setMaxAge(30 * 60); // 30분
-//        accessCookie.setPath("/");
-//        response.addCookie(accessCookie);
-//
-//        Cookie refreshCookie = new Cookie("refresh_token", jwtToken.getRefresh_token());
-//        refreshCookie.setMaxAge(14 * 24 * 60 * 60); // 2주
-//        refreshCookie.setPath("/");
-//        response.addCookie(refreshCookie);
-//
-//        userService.addUser(userResponse);
-//        return jwtToken;
-//    }
 
     @GetMapping("/kakao/ios")
     public JwtToken loginIos(@RequestParam String access_token) {

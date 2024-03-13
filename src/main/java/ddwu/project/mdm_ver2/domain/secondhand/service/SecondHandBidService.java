@@ -27,7 +27,6 @@ public class SecondHandBidService {
     private final SecondHandRepository secondHandRepository;
     private final UserRepository userRepository;
 
-    /* 전체 요청 정렬 */
     public CustomResponse<List<SecondHandBidResponse>> sortShBid(Principal principal, Long shId, String sort) {
         try {
             List<SecondHandBidResponse> sortedBidList = new ArrayList<SecondHandBidResponse>();
@@ -51,10 +50,9 @@ public class SecondHandBidService {
         }
     }
 
-    /* 가격 제안 등록 (댓글 등록) */
     public CustomResponse<SecondHandBid> addShBid(Principal principal, Long shId, SecondHandBidRequest request) {
         try {
-            if(principal == null) {
+            if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 요청을 할 수 없습니다.");
             } else {
                 User user = userRepository.findByEmail(principal.getName())
@@ -81,20 +79,19 @@ public class SecondHandBidService {
         }
     }
 
-    /* 제안 수정 */
     public CustomResponse<SecondHandBid> updateShBid(Principal principal, Long shBidId, SecondHandBidRequest request) {
         try {
             SecondHandBid secondHandBid = shBidRepository.findById(shBidId)
                     .orElseThrow(() -> new NotFoundException("상품 요청을 찾을 수 없습니다."));
 
-            if(principal == null) {
+            if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 요청을 수정할 수 없습니다.");
             } else {
                 User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-                if((user.getId()) == (secondHandBid.getBidUserId())) {
-                    if(secondHandBid != null) {
+                if ((user.getId()) == (secondHandBid.getBidUserId())) {
+                    if (secondHandBid != null) {
                         secondHandBid.setPrice(request.getPrice());
                         SecondHandBid updateSecondHandBid = shBidRepository.saveAndFlush(secondHandBid);
 
@@ -111,7 +108,6 @@ public class SecondHandBidService {
         }
     }
 
-    /* 제안 삭제 */
     @Transactional
     public CustomResponse<Void> deleteSecondHandBid(Principal principal, Long shId, Long shBidId) {
         try {
@@ -121,13 +117,13 @@ public class SecondHandBidService {
             SecondHandBid secondHandBid = shBidRepository.findById(shBidId)
                     .orElseThrow(() -> new NotFoundException("상품 요청을 찾을 수 없습니다."));
 
-            if(principal == null) {
+            if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 수정할 수 없습니다.");
             } else {
                 User user = userRepository.findByEmail(principal.getName())
                         .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-                if((user.getId()) == (secondHandBid.getBidUserId())) {
+                if ((user.getId()) == (secondHandBid.getBidUserId())) {
                     shBidRepository.deleteById(shBidId);
 
                     secondHand.setBidCnt(shBidRepository.countBySecondHandId(shId));
@@ -143,8 +139,7 @@ public class SecondHandBidService {
         }
     }
 
-    /* 특정 사용자 중고거래 요청 가져오기 */
-    public CustomResponse<List<SecondHandBid>> getSecondHandBidListByUser (String userEmail) {
+    public CustomResponse<List<SecondHandBid>> getSecondHandBidListByUser(String userEmail) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
         try {
@@ -158,8 +153,8 @@ public class SecondHandBidService {
     public List<SecondHandBidResponse> getSecondHandBidList(Principal principal, List<SecondHandBid> tmpList) {
         List<SecondHandBidResponse> shBidList = new ArrayList<>();
 
-        if(principal == null) {
-            for(SecondHandBid bid : tmpList) {
+        if (principal == null) {
+            for (SecondHandBid bid : tmpList) {
                 SecondHandBidResponse shBidResponse =
                         new SecondHandBidResponse(bid.getId(),
                                 bid.getSecondHand().getId(),
@@ -173,9 +168,9 @@ public class SecondHandBidService {
             User user = userRepository.findByEmail(principal.getName())
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-            for(SecondHandBid bid : tmpList) {
+            for (SecondHandBid bid : tmpList) {
                 Character bidUserState;
-                if(user.getId() == bid.getBidUserId()) {
+                if (user.getId() == bid.getBidUserId()) {
                     bidUserState = 'y';
                 } else {
                     bidUserState = 'n';
@@ -198,7 +193,7 @@ public class SecondHandBidService {
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
         List<SecondHandBid> shBidList = shBidRepository.findAllByBidUserId(userId);
-        for(SecondHandBid bid: shBidList) {
+        for (SecondHandBid bid : shBidList) {
             SecondHand secondHand = secondHandRepository.findById(bid.getSecondHand().getId())
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
 

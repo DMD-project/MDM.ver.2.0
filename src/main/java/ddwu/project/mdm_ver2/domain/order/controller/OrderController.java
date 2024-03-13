@@ -17,34 +17,33 @@ public class OrderController implements OrderApi{
 
     private final OrderService orderService;
 
-    // 주문 정보 수정
+    /* 주문 정보 수정 */
     @PutMapping("/update/{orderId}")
     public CustomResponse<Void> updateOrder(@PathVariable("orderId") long orderId, @RequestBody OrderDto updatedOrder) {
         return orderService.updateOrder(orderId, updatedOrder);
     }
 
-    //주문 취소
+    /* 주문 취소 */
     @DeleteMapping("/cancel/{orderId}")
     public CustomResponse<Void> cancelOrder(@PathVariable("orderId") long orderId) {
         return orderService.cancelOrder(orderId);
     }
 
-    //주문 상세 정보 조회
+    /* 주문 상세 정보 조회 */
     @GetMapping("/{orderId}")
     public CustomResponse<Order> getOrderDetail(@PathVariable("orderId") long orderId) {
         return orderService.getOrderDetail(orderId);
     }
 
-    // 장바구니 상품 구매 추가
+    /* 장바구니 상품 구매 추가 */
     @PostMapping("/cart/add")
     public CustomResponse<Void> purchaseItemsFromCart(Principal principal, @RequestBody List<Long> itemIds) {
         return orderService.purchaseItemsFromCart(principal.getName(), itemIds);
     }
 
-    // 일반상품 바로 구매
+    /* 일반상품 바로 구매 */
     @PostMapping("/proudct/{proudctId}/{purchasedQty}")
-    public CustomResponse<Void> purchaseItems(Principal principal, @PathVariable Long proudctId,
-                                                    @PathVariable int purchasedQty) {
+    public CustomResponse<Void> purchaseItems(Principal principal, @PathVariable Long proudctId, @PathVariable int purchasedQty) {
         return orderService.purchaseItems(principal.getName(), proudctId, purchasedQty);
     }
 }

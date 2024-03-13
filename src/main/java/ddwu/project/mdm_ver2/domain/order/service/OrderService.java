@@ -109,7 +109,6 @@ public class OrderService {
     public CustomResponse<Void> purchaseItems(String userEmail, Long productId, int purchasedQty) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
 
-
         boolean alreadyJoined = orderRepository.existsByEmailAndProduct(userEmail, product);
         if (alreadyJoined) {
             return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "이미 해당 공동구매에 참여하였습니다.");

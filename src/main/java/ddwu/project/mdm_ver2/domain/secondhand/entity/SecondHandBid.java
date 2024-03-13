@@ -35,8 +35,6 @@ public class SecondHandBid {
     private SecondHand secondHand;
 
     /* 요청자 (가격 제안 댓글 작성자) */
-//    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-//    @JoinColumn(name="user_id", referencedColumnName="user_id")
     @Column(name = "sh_bid_user_id")
     private Long bidUserId;
 

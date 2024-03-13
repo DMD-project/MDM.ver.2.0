@@ -29,7 +29,6 @@ public class ReviewService {
     private final ProductRepository productRepository;
     private final OrderService orderService;
 
-    /* 리뷰 정렬 */
     public CustomResponse<List<Review>> sortReview(Long prodId, String sort) {
         try {
             List<Review> sortedReviewList;
@@ -41,7 +40,7 @@ public class ReviewService {
                 case "lowstar":
                     sortedReviewList = reviewRepository.findAllByProductIdOrderByStar(prodId);
                     break;
-                case"highstar":
+                case "highstar":
                     sortedReviewList = reviewRepository.findAllByProductIdOrderByStarDesc(prodId);
                     break;
                 default:
@@ -50,12 +49,11 @@ public class ReviewService {
             }
 
             return CustomResponse.onSuccess(sortedReviewList);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), e.getMessage());
         }
     }
 
-    /* 리뷰 등록 */
     public CustomResponse<Review> addReview(String userEmail, Long prodId, ReviewRequest request) {
         try {
             User user = userRepository.findByEmail(userEmail)
@@ -67,17 +65,17 @@ public class ReviewService {
             boolean reviewState = false;
 
             List<Order> orderList = orderService.getOrderByUser(userEmail).getContent();
-            for(Order order: orderList) {
+            for (Order order : orderList) {
                 List<Items> items = order.getCartItems();
-                for(Items item: items) {
+                for (Items item : items) {
                     Long orderProdId = item.getId();
-                    if(orderProdId.equals(prodId)) {
+                    if (orderProdId.equals(prodId)) {
                         reviewState = true;
                     }
                 }
             }
 
-            if(reviewState) {
+            if (reviewState) {
                 Review review = Review.builder()
                         .user(user)
                         .product(product)
@@ -85,7 +83,6 @@ public class ReviewService {
                         .date(request.getDate())
                         .content(request.getContent())
                         .build();
-
                 reviewRepository.saveAndFlush(review);
 
                 product.setReviewCnt(reviewRepository.countByProductId(prodId));
@@ -96,12 +93,11 @@ public class ReviewService {
             } else {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 구매한 사용자만 작성이 가능합니다.");
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-    /* 리뷰 수정 */
     public CustomResponse<Review> updateReview(Principal principal, Long prodId, Long reviewId, ReviewRequest request) {
         try {
             Product product = productRepository.findById(prodId)
@@ -110,13 +106,12 @@ public class ReviewService {
             Review review = reviewRepository.findById(reviewId)
                     .orElseThrow(() -> new NotFoundException("리뷰를 찾을 수 없습니다."));
 
-            if(principal == null) {
+            if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "리뷰를 수정할 수 없습니다.");
             } else {
-                if((principal.getName()).equals(review.getUser().getEmail())) {
+                if ((principal.getName()).equals(review.getUser().getEmail())) {
                     review.setStar(request.getStar());
                     review.setContent(request.getContent());
-
                     Review updateReview = reviewRepository.saveAndFlush(review);
 
                     product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
@@ -132,7 +127,6 @@ public class ReviewService {
         }
     }
 
-    /* 리뷰 삭제 */
     @Transactional
     public CustomResponse<Void> deleteReview(Principal principal, Long prodId, Long reviewId) {
         try {
@@ -142,14 +136,14 @@ public class ReviewService {
             Review review = reviewRepository.findById(reviewId)
                     .orElseThrow(() -> new NotFoundException("리뷰를 찾을 수 없습니다."));
 
-            if(principal == null) {
+            if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "리뷰를 삭제할 수 없습니다.");
             } else {
-                if((principal.getName()).equals(review.getUser().getEmail())) {
+                if ((principal.getName()).equals(review.getUser().getEmail())) {
                     reviewRepository.deleteById(reviewId);
                     product.setReviewCnt(reviewRepository.countByProductId(prodId));
 
-                    if(product.getReviewCnt() == 0) {
+                    if (product.getReviewCnt() == 0) {
                         product.setReviewStarAvg(0);
                     } else {
                         product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
@@ -166,7 +160,6 @@ public class ReviewService {
         }
     }
 
-    /* 특정 사용자 리뷰 가져오기 */
     public CustomResponse<List<Review>> getUserReviewList(String userEmail) {
         try {
             List<Review> userReviewList = reviewRepository.findAllByUserEmail(userEmail);
@@ -181,7 +174,7 @@ public class ReviewService {
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
         List<Review> reviewList = reviewRepository.findAllByUserEmail(user.getEmail());
-        for(Review review : reviewList) {
+        for (Review review : reviewList) {
             Product product = productRepository.findById(review.getProduct().getId())
                     .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
 

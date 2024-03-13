@@ -15,6 +15,7 @@ import java.util.List;
 
 @Tag(name = "Product", description = "일반상품 API")
 public interface ProductApi {
+
     @Operation(summary = "상품 목록 조회", description = "모든 상품 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공")
     CustomResponse<List<Product>> getProductList();
@@ -25,7 +26,6 @@ public interface ProductApi {
             @Parameter(description = "정렬 방법", required = false, schema = @Schema(allowableValues = {"lowprice", "highprice", "newest"})) @RequestParam(name = "sortBy") String sortBy,
             @Parameter(description = "카테고리 코드", required = false, schema = @Schema(allowableValues = {"FUR", "FAB", "AD", "STO", "DEC", "LIT", "PLA"})) @RequestParam(name = "cateCode", required = false, defaultValue = "") String cateCode);
 
-
     @Operation(summary = "상품 개별 조회", description = "특정 상품을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "상품 조회 성공")
     CustomResponse<ProductResponse> getProduct(
@@ -34,11 +34,9 @@ public interface ProductApi {
 
     @Operation(summary = "상품 개수 조회", description = "상품의 총 개수를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "상품 개수 조회 성공")
-    CustomResponse<Long> getProductCount(
-            @Parameter(description = "카테고리 코드", required = false) String cateCode);
+    CustomResponse<Long> getProductCount(@Parameter(description = "카테고리 코드", required = false) String cateCode);
 
     @Operation(summary = "상품 검색", description = "지정된 키워드로 상품을 검색합니다.")
     @ApiResponse(responseCode = "200", description = "상품 검색 성공")
-    CustomResponse<List<Product>> searchProduct(
-            @Parameter(description = "상품이름 검색", required = true) String keyword);
+    CustomResponse<List<Product>> searchProduct(@Parameter(description = "상품 이름 검색", required = true) String keyword);
 }

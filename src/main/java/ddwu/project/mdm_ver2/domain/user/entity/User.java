@@ -34,13 +34,8 @@ public class User {
     @Column(name = "user_profile_img_url")
     private String profileImgUrl;
 
-//    @JsonManagedReference
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-//    private Cart cart;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role")
-//    @ColumnDefault("user")
     private Role role;
 
     @Column(name = "user_street_addr")
@@ -86,27 +81,7 @@ public class User {
         this.email = email;
     }
 
-    public String getProfileImgUrl() {
-        return profileImgUrl;
-    }
-
-    public void setProfileImgUrl(String profileImgUrl) {
-        this.profileImgUrl = profileImgUrl;
-    }
-
-//    public Cart getCart() {
-//        return cart;
-//    }
-//
-//    public void setCart(Cart cart) {
-//        this.cart = cart;
-//    }
-
     public Role getRole() {
         return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 }

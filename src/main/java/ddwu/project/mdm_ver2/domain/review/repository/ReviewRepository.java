@@ -13,13 +13,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findAllByProductId(Long prodId);
 
-    /* 최신순 */
     List<Review> findAllByProductIdOrderByIdDesc(Long prodId);
 
-    /* 별점 낮은 순 */
     List<Review> findAllByProductIdOrderByStar(Long prodId);
 
-    /* 별점 높은 순 */
     List<Review> findAllByProductIdOrderByStarDesc(Long prodId);
 
     Review saveAndFlush(Review review);

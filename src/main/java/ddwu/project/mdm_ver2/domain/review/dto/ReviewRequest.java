@@ -12,10 +12,8 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewRequest {
-
     private Long prodId;
     private int star;
     private Date date;
     private String content;
-
 }

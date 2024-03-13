@@ -12,12 +12,9 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SecondHandRequest {
-
-//    private Long userId; /* 중고거래 요청자 (가격 제안) */
     private String name;
     private String cateCode;
     private int price;
     private String imgUrl;
     private String content;
-
 }

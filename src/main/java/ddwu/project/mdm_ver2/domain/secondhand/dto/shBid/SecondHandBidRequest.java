@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SecondHandBidRequest {
-
     private Long shId;
     private int price;
 }

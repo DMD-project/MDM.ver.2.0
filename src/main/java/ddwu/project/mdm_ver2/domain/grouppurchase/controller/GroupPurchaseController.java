@@ -3,6 +3,7 @@ package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseDto;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
+import ddwu.project.mdm_ver2.domain.order.dto.OrderDto;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -45,8 +46,8 @@ public class GroupPurchaseController implements GroupPurcahseApi {
 
     /* 공동구매 참여 */
     @PostMapping("/order/{gpId}/{purchasedQty}")
-    public CustomResponse<String> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty) {
-        return groupPurchaseService.joinGroupPurchase(principal, gpId, purchasedQty);
+    public CustomResponse<String> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty, @RequestBody OrderDto orderDto) {
+        return groupPurchaseService.joinGroupPurchase(principal, gpId, purchasedQty, orderDto);
     }
 
     /* 공동구매 검색 */

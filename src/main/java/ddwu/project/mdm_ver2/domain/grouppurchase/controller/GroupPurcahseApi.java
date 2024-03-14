@@ -2,6 +2,7 @@ package ddwu.project.mdm_ver2.domain.grouppurchase.controller;
 
 import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseDto;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
+import ddwu.project.mdm_ver2.domain.order.dto.OrderDto;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -56,7 +57,7 @@ public interface GroupPurcahseApi {
             @ApiResponse(responseCode = "405", description = "공동구매 참여 가능한 기간이 아님"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    CustomResponse<String> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty);
+    CustomResponse<String> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty, OrderDto orderDto);
 
     @Operation(summary = "공동구매 검색")
     @ApiResponses(value = {

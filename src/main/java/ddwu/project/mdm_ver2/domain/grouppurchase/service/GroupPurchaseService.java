@@ -7,8 +7,10 @@ import ddwu.project.mdm_ver2.domain.grouppurchase.dto.GroupPurchaseRequest;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GPStatus;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseRepository;
+import ddwu.project.mdm_ver2.domain.order.dto.OrderDto;
 import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.order.repository.OrderRepository;
+import ddwu.project.mdm_ver2.domain.order.service.OrderService;
 import ddwu.project.mdm_ver2.domain.user.entity.User;
 import ddwu.project.mdm_ver2.domain.user.repository.UserRepository;
 import ddwu.project.mdm_ver2.global.exception.CustomResponse;
@@ -34,6 +36,7 @@ public class GroupPurchaseService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     public CustomResponse<Void> addGroupPurchase(GroupPurchaseRequest request) {
         try {
@@ -194,7 +197,7 @@ public class GroupPurchaseService {
         return CustomResponse.onSuccess(groupPurchaseRepository.count());
     }
 
-    public CustomResponse<String> joinGroupPurchase(Principal principal, Long gpId, int purchasedQty) {
+    public CustomResponse<String> joinGroupPurchase(Principal principal, Long gpId, int purchasedQty, OrderDto orderDto) {
         try {
             if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "공동구매에 참여할 수 없습니다.");
@@ -221,6 +224,7 @@ public class GroupPurchaseService {
                     order.setPrice(groupPurchase.getPrice() * purchasedQty);
                     order.setQty(purchasedQty);
 
+                    orderService.updateOrderDto(order, orderDto);
                     orderRepository.save(order);
 
                     int nowQty = groupPurchase.getNowQty() + purchasedQty;

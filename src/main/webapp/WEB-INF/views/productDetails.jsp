@@ -476,7 +476,7 @@
                     let prod_price = data.content.price;
                     let prod_content = data.content.content;
 
-                    $("#prod_img").attr('src', prod_imgUrl);
+                    $("#prod_img").attr('src', '../../images/product/' + prod_imgUrl);
                     $("#prod_img").attr('alt', prod_imgUrl);
                     $("#prod_name").html(prod_name);
                     $("#prod_price").html(prod_price);

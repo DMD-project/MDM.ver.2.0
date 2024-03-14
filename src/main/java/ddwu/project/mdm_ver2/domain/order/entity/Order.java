@@ -53,7 +53,7 @@ public class Order { /* 일반상품 즉시 주문, 일반상품 (장바구니) 
     @JoinColumn(name = "prod_id")
     private Product product;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gp_id")
     private GroupPurchase groupPurchase;
 
@@ -64,9 +64,9 @@ public class Order { /* 일반상품 즉시 주문, 일반상품 (장바구니) 
         return cartItems;
     }
 
-    public void Address(String zipcode, String streetAder, String detailAddr) {
+    public void Address(String zipcode, String streetAddr, String detailAddr) {
         this.zipcode = zipcode;
-        this.streetAddr = streetAder;
+        this.streetAddr = streetAddr;
         this.detailAddr = detailAddr;
     }
 }

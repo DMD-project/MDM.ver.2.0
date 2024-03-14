@@ -1,5 +1,7 @@
 package ddwu.project.mdm_ver2.domain.order.controller;
 
+import ddwu.project.mdm_ver2.domain.order.dto.OrderAddrRequest;
+import ddwu.project.mdm_ver2.domain.order.dto.OrderCartRequest;
 import ddwu.project.mdm_ver2.domain.order.dto.OrderDto;
 import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.order.service.OrderService;
@@ -8,7 +10,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class OrderController implements OrderApi{
 
     /* 주문 정보 수정 */
     @PutMapping("/update/{orderId}")
-    public CustomResponse<Void> updateOrder(@PathVariable("orderId") long orderId, @RequestBody OrderDto updatedOrder) {
+    public CustomResponse<Void> updateOrder(@PathVariable("orderId") long orderId, @RequestBody OrderAddrRequest updatedOrder) {
         return orderService.updateOrder(orderId, updatedOrder);
     }
 
@@ -35,15 +36,15 @@ public class OrderController implements OrderApi{
         return orderService.getOrderDetail(orderId);
     }
 
-    /* 장바구니 상품 구매 추가 */
+    /* 장바구니 상품 구매 */
     @PostMapping("/cart/add")
-    public CustomResponse<Void> purchaseItemsFromCart(Principal principal, @RequestBody List<Long> itemIds) {
-        return orderService.purchaseItemsFromCart(principal.getName(), itemIds);
+    public CustomResponse<Void> purchaseItemsFromCart(Principal principal, @RequestBody OrderCartRequest cartRequest) {
+        return orderService.purchaseItemsFromCart(principal.getName(), cartRequest);
     }
 
     /* 일반상품 바로 구매 */
     @PostMapping("/proudct/{proudctId}/{purchasedQty}")
-    public CustomResponse<Void> purchaseItems(Principal principal, @PathVariable Long proudctId, @PathVariable int purchasedQty) {
-        return orderService.purchaseItems(principal.getName(), proudctId, purchasedQty);
+    public CustomResponse<Void> purchaseItems(Principal principal, @PathVariable Long proudctId, @PathVariable int purchasedQty, @RequestBody OrderDto orderDto) {
+        return orderService.purchaseItems(principal.getName(), proudctId, purchasedQty, orderDto);
     }
 }

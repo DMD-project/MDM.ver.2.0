@@ -5,6 +5,8 @@ import ddwu.project.mdm_ver2.domain.cartItem.entity.Items;
 import ddwu.project.mdm_ver2.domain.cartItem.repository.ItemsRepository;
 import ddwu.project.mdm_ver2.domain.grouppurchase.entity.GroupPurchase;
 import ddwu.project.mdm_ver2.domain.grouppurchase.repository.GroupPurchaseRepository;
+import ddwu.project.mdm_ver2.domain.order.dto.OrderAddrRequest;
+import ddwu.project.mdm_ver2.domain.order.dto.OrderCartRequest;
 import ddwu.project.mdm_ver2.domain.order.dto.OrderDto;
 import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.order.repository.OrderRepository;
@@ -30,12 +32,10 @@ public class OrderService {
     private final GroupPurchaseRepository groupPurchaseRepository;
     private final ProductRepository productRepository;
 
-    public CustomResponse<Void> updateOrder(long orderId, OrderDto updatedOrder) {
+    public CustomResponse<Void> updateOrder(long orderId, OrderAddrRequest updatedOrder) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isPresent()) {
             Order existingOrder = optionalOrder.get();
-            existingOrder.setName(updatedOrder.getName());
-            existingOrder.setContact(updatedOrder.getContact());
             existingOrder.setZipcode(updatedOrder.getZipcode());
             existingOrder.setStreetAddr(updatedOrder.getStreetAddr());
             existingOrder.setDetailAddr(updatedOrder.getDetailAddr());
@@ -78,10 +78,22 @@ public class OrderService {
         }
     }
 
-    public CustomResponse<Void> purchaseItemsFromCart(String userEmail, List<Long> itemIds) {
+    public void updateOrderDto(Order order, OrderDto orderDto) {
+        if (orderDto != null) {
+            order.setName(orderDto.getName());
+            order.setContact(orderDto.getContact());
+            order.setZipcode(orderDto.getZipcode());
+            order.setStreetAddr(orderDto.getStreetAddr());
+            order.setDetailAddr(orderDto.getDetailAddr());
+        }
+    }
+
+    public CustomResponse<Void> purchaseItemsFromCart(String userEmail, OrderCartRequest cartRequest) {
         Order order = new Order();
         int totalPrice = 0;
         int totalQty = 0;
+        List<Long> itemIds = cartRequest.getItemIds();
+
 
         for (Long itemId : itemIds) {
             Items item = itemsRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
@@ -101,12 +113,15 @@ public class OrderService {
         order.setQty(totalQty);
         order.setEmail(userEmail);
 
+        OrderDto orderDto = cartRequest.getOrderDto();
+        updateOrderDto(order, orderDto);
+
         Order savedOrder = orderRepository.save(order);
 
         return CustomResponse.onSuccess("장바구니 상품 주문이 승인되었습니다.");
     }
 
-    public CustomResponse<Void> purchaseItems(String userEmail, Long productId, int purchasedQty) {
+    public CustomResponse<Void> purchaseItems(String userEmail, Long productId, int purchasedQty, OrderDto orderDto) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
 
         boolean alreadyJoined = orderRepository.existsByEmailAndProduct(userEmail, product);
@@ -118,6 +133,8 @@ public class OrderService {
         order.setProduct(product);
         order.setPrice(product.getPrice() * purchasedQty);
         order.setQty(purchasedQty);
+
+        updateOrderDto(order, orderDto);
 
         orderRepository.save(order);
 

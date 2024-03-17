@@ -196,7 +196,7 @@
                                     for(let i = 0; i < data.content.length; i++) {
                                         grouppurchase_info += "<li>"
                                                         + "<a href='/gp/" + data.content[i].id + "/view'>" + "<p>"
-                                                        + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
+                                                        + "<img src='../../images/grouppurchase/" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
                                                         + "<span>" + data.content[i].name + "</span>" + "<br/>"
                                                         + "<span><b>" + data.content[i].price + "원</b></span>"
                                                         + "</a>"

@@ -30,6 +30,6 @@ public class CartService {
             return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "사용자 이메일 " + userEmail + "에 대한 장바구니를 찾을 수 없습니다.");
         }
         cartRepository.delete(cart);
-        return CustomResponse.onSuccess(null);
+        return CustomResponse.onSuccess("장바구니가 삭제되었습니다.");
     }
 }

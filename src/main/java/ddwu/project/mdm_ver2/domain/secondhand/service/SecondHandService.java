@@ -98,7 +98,7 @@ public class SecondHandService {
         }
     }
 
-    public CustomResponse<Void> addSecondHand(String userEmail, SecondHandRequest request) {
+    public CustomResponse<Long> addSecondHand(String userEmail, SecondHandRequest request) {
         try {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
@@ -120,7 +120,7 @@ public class SecondHandService {
                     .build();
             secondHandRepository.saveAndFlush(secondHand);
 
-            return CustomResponse.onSuccess("상품이 등록되었습니다");
+            return CustomResponse.onSuccess(secondHand.getId());
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }

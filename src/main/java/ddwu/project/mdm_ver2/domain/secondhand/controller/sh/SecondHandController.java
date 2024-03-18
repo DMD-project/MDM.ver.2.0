@@ -39,7 +39,7 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 등록 */
     @PostMapping("/add")
-    public CustomResponse<Void> addSecondHand(Principal principal, @RequestBody SecondHandRequest request) {
+    public CustomResponse<Long> addSecondHand(Principal principal, @RequestBody SecondHandRequest request) {
         return secondHandService.addSecondHand(principal.getName(), request);
     }
 

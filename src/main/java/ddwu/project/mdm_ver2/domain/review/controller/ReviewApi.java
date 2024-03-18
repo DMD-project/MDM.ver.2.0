@@ -31,7 +31,7 @@ public interface ReviewApi {
             @ApiResponse(responseCode = "200", description = "리뷰 작성 성공"),
             @ApiResponse(responseCode = "500", description = "리뷰 작성 실패")
     })
-    public CustomResponse<Review> addReview(@Parameter(description = "현재 사용자 객체") Principal principal,
+    public CustomResponse<Void> addReview(@Parameter(description = "현재 사용자 객체") Principal principal,
                                             @Parameter(description = "현재 상품 아이디") @PathVariable("prodId") Long prodId,
                                             @Parameter(description = "새 리뷰 작성 내용") @RequestBody ReviewRequest request);
 
@@ -42,7 +42,7 @@ public interface ReviewApi {
             @ApiResponse(responseCode = "405", description = "해당 리뷰를 수정할 수 없는 사용자"),
             @ApiResponse(responseCode = "500", description = "리뷰 수정 실패")
     })
-    public CustomResponse<Review> updateReview(@Parameter(description = "현재 사용자 객체") Principal principal,
+    public CustomResponse<Void> updateReview(@Parameter(description = "현재 사용자 객체") Principal principal,
                                                @Parameter(description = "현재 상품 아이디") @PathVariable("prodId") Long prodId,
                                                @Parameter(description = "현재 상품의 리뷰 아이디") @PathVariable("reviewId") Long reviewId,
                                                @Parameter(description = "리뷰 수정 내용") @RequestBody ReviewRequest request);

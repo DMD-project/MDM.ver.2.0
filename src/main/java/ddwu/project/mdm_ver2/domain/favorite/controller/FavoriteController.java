@@ -18,10 +18,10 @@ public class FavoriteController implements FavoriteApi{
     private FavoriteService favoriteService;
 
     @PostMapping("/favState/{favState}")
-    public CustomResponse<Favorite> changeFavoriteState(Principal principal,
-                                                        @PathVariable(value="favType", required=true) String favType,
-                                                        @PathVariable(value="typeId", required=true) long typeId,
-                                                        @PathVariable(value="favState", required = true) Character favState) {
+    public CustomResponse<Void> changeFavoriteState(Principal principal,
+                                                    @PathVariable(value = "favType", required = true) String favType,
+                                                    @PathVariable(value = "typeId", required = true) long typeId,
+                                                    @PathVariable(value = "favState", required = true) Character favState) {
         return favoriteService.setFavoriteState(principal.getName(), favType, typeId, favState);
     }
 }

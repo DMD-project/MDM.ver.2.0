@@ -50,7 +50,7 @@ public class SecondHandBidService {
         }
     }
 
-    public CustomResponse<SecondHandBid> addShBid(Principal principal, Long shId, SecondHandBidRequest request) {
+    public CustomResponse<Void> addShBid(Principal principal, Long shId, SecondHandBidRequest request) {
         try {
             if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 요청을 할 수 없습니다.");
@@ -72,14 +72,14 @@ public class SecondHandBidService {
                 secondHand.setBidCnt(shBidRepository.countBySecondHandId(shId));
                 secondHandRepository.saveAndFlush(secondHand);
 
-                return CustomResponse.onSuccess(secondHandBid);
+                return CustomResponse.onSuccess("가격 제안이 등록되었습니다.");
             }
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-    public CustomResponse<SecondHandBid> updateShBid(Principal principal, Long shBidId, SecondHandBidRequest request) {
+    public CustomResponse<Void> updateShBid(Principal principal, Long shBidId, SecondHandBidRequest request) {
         try {
             SecondHandBid secondHandBid = shBidRepository.findById(shBidId)
                     .orElseThrow(() -> new NotFoundException("상품 요청을 찾을 수 없습니다."));
@@ -93,9 +93,9 @@ public class SecondHandBidService {
                 if ((user.getId()) == (secondHandBid.getBidUserId())) {
                     if (secondHandBid != null) {
                         secondHandBid.setPrice(request.getPrice());
-                        SecondHandBid updateSecondHandBid = shBidRepository.saveAndFlush(secondHandBid);
+                        shBidRepository.saveAndFlush(secondHandBid);
 
-                        return CustomResponse.onSuccess(updateSecondHandBid);
+                        return CustomResponse.onSuccess("가격 제안이 수정되었습니다.");
                     } else {
                         return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "상품 요청을 찾을 수 없습니다.");
                     }

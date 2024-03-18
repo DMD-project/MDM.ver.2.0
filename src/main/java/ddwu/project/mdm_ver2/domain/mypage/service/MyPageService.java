@@ -29,28 +29,28 @@ public class MyPageService {
         return userRepository.existsByNickname(nickname);
     }
 
-    public CustomResponse<User> setUserNickname(String userEmail, String nickname) {
+    public CustomResponse<Void> setUserNickname(String userEmail, String nickname) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
         try {
             user.setNickname(nickname);
-            User updateUser = userRepository.saveAndFlush(user);
-            return CustomResponse.onSuccess(updateUser);
+            userRepository.saveAndFlush(user);
+            return CustomResponse.onSuccess("닉네임이 수정되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
     }
 
-    public CustomResponse<User> setUserAddress(String userEmail, AddressRequest request) {
+    public CustomResponse<Void> setUserAddress(String userEmail, AddressRequest request) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
         try {
             user.setStreetAddr(request.getStreetAddr());
             user.setDetailAddr(request.getDetailAddr());
             user.setZipcode(request.getZipcode());
-            User updateUser = userRepository.saveAndFlush(user);
+            userRepository.saveAndFlush(user);
 
-            return CustomResponse.onSuccess(updateUser);
+            return CustomResponse.onSuccess("주소가 수정되었습니다.");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }

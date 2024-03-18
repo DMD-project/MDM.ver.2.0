@@ -27,14 +27,14 @@ public class SecondHandBidController implements SecondHandBidApi{
 
     /* 가격 제안 등록 (댓글 등록) */
     @PostMapping("/add")
-    public CustomResponse<SecondHandBid> addShBid(Principal principal, @PathVariable("shId") Long shId,
+    public CustomResponse<Void> addShBid(Principal principal, @PathVariable("shId") Long shId,
                                                   @RequestBody SecondHandBidRequest request) {
         return shBidService.addShBid(principal, shId, request);
     }
 
     /* 제안 수정 */
     @PostMapping("/update/{shBidId}")
-    public CustomResponse<SecondHandBid> updateShBid(Principal principal,
+    public CustomResponse<Void> updateShBid(Principal principal,
                                                      @PathVariable("shBidId") Long shBidId, @RequestBody SecondHandBidRequest request) {
         return shBidService.updateShBid(principal, shBidId, request);
     }

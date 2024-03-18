@@ -98,7 +98,7 @@ public class SecondHandService {
         }
     }
 
-    public CustomResponse<SecondHand> addSecondHand(String userEmail, SecondHandRequest request) {
+    public CustomResponse<Void> addSecondHand(String userEmail, SecondHandRequest request) {
         try {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
@@ -118,8 +118,9 @@ public class SecondHandService {
                     .state('n')
                     .bidCnt(0L)
                     .build();
-            SecondHand newSecondHand = secondHandRepository.saveAndFlush(secondHand);
-            return CustomResponse.onSuccess(newSecondHand);
+            secondHandRepository.saveAndFlush(secondHand);
+
+            return CustomResponse.onSuccess("상품이 등록되었습니다");
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
@@ -138,7 +139,7 @@ public class SecondHandService {
         }
     }
 
-    public CustomResponse<SecondHand> updateSecondHandState(Principal principal, Long shId, char state, Long shBidId) {
+    public CustomResponse<Void> updateSecondHandState(Principal principal, Long shId, char state, Long shBidId) {
         try {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
@@ -162,7 +163,8 @@ public class SecondHandService {
                         secondHand.setSelectBidId(null);
                         shBid.setBidState('n');
                     }
-                    return CustomResponse.onSuccess(secondHandRepository.saveAndFlush(secondHand));
+                    secondHandRepository.saveAndFlush(secondHand);
+                    return CustomResponse.onSuccess("판매 상태가 변경되었습니다.");
                 } else {
                     return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 거래할 수 없습니다.");
                 }
@@ -172,7 +174,7 @@ public class SecondHandService {
         }
     }
 
-    public CustomResponse<SecondHand> updateSecondHand(Principal principal, Long shId, SecondHandRequest request) {
+    public CustomResponse<Void> updateSecondHand(Principal principal, Long shId, SecondHandRequest request) {
         try {
             SecondHand secondHand = secondHandRepository.findById(shId)
                     .orElseThrow(() -> new NotFoundException("중고거래 상품을 찾을 수 없습니다."));
@@ -191,9 +193,9 @@ public class SecondHandService {
                     secondHand.setPrice(request.getPrice());
                     secondHand.setImgUrl(request.getImgUrl());
                     secondHand.setContent(request.getContent());
-                    SecondHand updateSecondHand = secondHandRepository.saveAndFlush(secondHand);
+                    secondHandRepository.saveAndFlush(secondHand);
 
-                    return CustomResponse.onSuccess(updateSecondHand);
+                    return CustomResponse.onSuccess("상품이 수정되었습니다.");
                 } else {
                     return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 수정할 수 없습니다.");
                 }

@@ -29,8 +29,6 @@ import java.util.List;
 @RequestMapping("/mypage")
 public class MyPageController implements MyPageApi {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    
     private final MyPageService myPageService;
     private final FavoriteService favoriteService;
     private final ReviewService reviewService;
@@ -46,20 +44,20 @@ public class MyPageController implements MyPageApi {
 
     /* 닉네임 중복 확인 */
     @GetMapping("/check/{userNickname}")
-    public boolean checkNickname(@PathVariable(value="userNickname", required=true) String nickname, Model model) {
+    public boolean checkNickname(@PathVariable(value = "userNickname", required = true) String nickname) {
         // 중복 -> true, 중복X -> false
         return myPageService.checkNicknameDup(nickname);
     }
 
     /* 닉네임 변경 */
     @PostMapping("/nickname/{userNickname}")
-    public CustomResponse<User> setUserNickname(Principal principal, @PathVariable(value="userNickname", required=true) String nickname) {
+    public CustomResponse<Void> setUserNickname(Principal principal, @PathVariable(value = "userNickname", required = true) String nickname) {
         return myPageService.setUserNickname(principal.getName(), nickname);
     }
 
     /* 주소 설정, 변경 */
     @PostMapping("/address")
-    public CustomResponse<User> setUserAddr(Principal principal, @RequestBody AddressRequest request) {
+    public CustomResponse<Void> setUserAddr(Principal principal, @RequestBody AddressRequest request) {
         return myPageService.setUserAddress(principal.getName(), request);
     }
 

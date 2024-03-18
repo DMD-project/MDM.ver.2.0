@@ -167,8 +167,8 @@ public class UserService {
         return user;
     }
 
-    public User addUser(UserResponse userResponse) {
-        return userRepository.saveAndFlush(userResponse.toEntity());
+    public void addUser(UserResponse userResponse) {
+        userRepository.saveAndFlush(userResponse.toEntity());
     }
 
     public CustomResponse<JwtToken> reissue(HttpServletRequest request) {

@@ -47,7 +47,7 @@ public interface SecondHandApi {
             @ApiResponse(responseCode = "200", description = "상품 추가 성공"),
             @ApiResponse(responseCode = "500", description = "상품 추가 실패")
     })
-    public CustomResponse<SecondHand> addSecondHand(@Parameter(description = "현재 사용자 객체") Principal principal,
+    public CustomResponse<Void> addSecondHand(@Parameter(description = "현재 사용자 객체") Principal principal,
                                                     @Parameter(description = "새 중고 거래 상품 내용") @RequestBody SecondHandRequest request);
 
     @Operation(summary = "중고 거래 상품 검색")
@@ -63,7 +63,7 @@ public interface SecondHandApi {
             @ApiResponse(responseCode = "405", description = "상품 삭제 권한 없음"),
             @ApiResponse(responseCode = "500", description = "상품 수정 실패")
     })
-    public CustomResponse<SecondHand> updateSecondHand(@Parameter(description = "현재 사용자 객체") Principal principal,
+    public CustomResponse<Void> updateSecondHand(@Parameter(description = "현재 사용자 객체") Principal principal,
                                                        @Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
                                                        @Parameter(description = "중고 거래 상품 수정 내용") @RequestBody SecondHandRequest request);
 
@@ -73,7 +73,7 @@ public interface SecondHandApi {
             @ApiResponse(responseCode = "405", description = "판매 상태 변경 권한 없음"),
             @ApiResponse(responseCode = "500", description = "판매 상태 변경 실패")
     })
-    public CustomResponse<SecondHand> updateSecondHandState(@Parameter(description = "현재 사용자 객체") Principal principal,
+    public CustomResponse<Void> updateSecondHandState(@Parameter(description = "현재 사용자 객체") Principal principal,
                                                             @Parameter(description = "현재 중고 거래 상품 아이디") @PathVariable("shId") Long shId,
                                                             @Parameter(description = "현재 사용자의 중고 거래 상품 판매 상태") @PathVariable("state") char state,
                                                             @Parameter(description = "거래할 중고 거래 요청") Long shBidId);

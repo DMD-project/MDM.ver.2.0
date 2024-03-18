@@ -39,7 +39,7 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 등록 */
     @PostMapping("/add")
-    public CustomResponse<SecondHand> addSecondHand(Principal principal, @RequestBody SecondHandRequest request) {
+    public CustomResponse<Void> addSecondHand(Principal principal, @RequestBody SecondHandRequest request) {
         return secondHandService.addSecondHand(principal.getName(), request);
     }
 
@@ -51,13 +51,13 @@ public class SecondHandController implements SecondHandApi {
 
     /* 상품 수정 */
     @PutMapping("/update/{shId}")
-    public CustomResponse<SecondHand> updateSecondHand(Principal principal, @PathVariable("shId") Long shId, @RequestBody SecondHandRequest request) {
+    public CustomResponse<Void> updateSecondHand(Principal principal, @PathVariable("shId") Long shId, @RequestBody SecondHandRequest request) {
         return secondHandService.updateSecondHand(principal, shId, request);
     }
 
     /* 상품 판매 상태 변경 (판매중/판매 완료) */
     @PostMapping("/update/{shId}/state/{state}/select/{shBidId}")
-    public CustomResponse<SecondHand> updateSecondHandState(Principal principal, @PathVariable("shId") Long shId, @PathVariable("state") char state, @PathVariable("shBidId") Long shBidId) {
+    public CustomResponse<Void> updateSecondHandState(Principal principal, @PathVariable("shId") Long shId, @PathVariable("state") char state, @PathVariable("shBidId") Long shBidId) {
         return secondHandService.updateSecondHandState(principal, shId, state, shBidId);
     }
 

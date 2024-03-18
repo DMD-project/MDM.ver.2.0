@@ -29,7 +29,7 @@ public class FavoriteService {
     private final SecondHandRepository secondHandRepository;
     private final GroupPurchaseRepository groupPurchaseRepository;
 
-    public CustomResponse<Favorite> setFavoriteState(String userEmail, String type, Long typeId, Character favState) {
+    public CustomResponse<Void> setFavoriteState(String userEmail, String type, Long typeId, Character favState) {
         try {
             Favorite favorite = null;
             switch (type) {
@@ -44,9 +44,10 @@ public class FavoriteService {
                     break;
             }
             if (favorite != null) {
-                return CustomResponse.onSuccess(addFavorite(favorite));
+                addFavorite(favorite);
+                return CustomResponse.onSuccess("찜 등록되었습니다.");
             } else {
-                return CustomResponse.onSuccess(null);
+                return CustomResponse.onSuccess("찜 해제되었습니다.");
             }
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());

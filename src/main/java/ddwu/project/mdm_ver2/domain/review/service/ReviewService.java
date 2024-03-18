@@ -54,7 +54,7 @@ public class ReviewService {
         }
     }
 
-    public CustomResponse<Review> addReview(String userEmail, Long prodId, ReviewRequest request) {
+    public CustomResponse<Void> addReview(String userEmail, Long prodId, ReviewRequest request) {
         try {
             User user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
@@ -89,7 +89,7 @@ public class ReviewService {
                 product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
                 productRepository.saveAndFlush(product);
 
-                return CustomResponse.onSuccess(review);
+                return CustomResponse.onSuccess("리뷰가 등록되었습니다.");
             } else {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "상품을 구매한 사용자만 작성이 가능합니다.");
             }
@@ -98,7 +98,7 @@ public class ReviewService {
         }
     }
 
-    public CustomResponse<Review> updateReview(Principal principal, Long prodId, Long reviewId, ReviewRequest request) {
+    public CustomResponse<Void> updateReview(Principal principal, Long prodId, Long reviewId, ReviewRequest request) {
         try {
             Product product = productRepository.findById(prodId)
                     .orElseThrow(() -> new NotFoundException("상품을 찾을 수 없습니다."));
@@ -112,12 +112,12 @@ public class ReviewService {
                 if ((principal.getName()).equals(review.getUser().getEmail())) {
                     review.setStar(request.getStar());
                     review.setContent(request.getContent());
-                    Review updateReview = reviewRepository.saveAndFlush(review);
+                    reviewRepository.saveAndFlush(review);
 
                     product.setReviewStarAvg(reviewRepository.getReviewStarAvg(prodId));
                     productRepository.saveAndFlush(product);
 
-                    return CustomResponse.onSuccess(updateReview);
+                    return CustomResponse.onSuccess("리뷰가 수정되었습니다.");
                 } else {
                     return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "리뷰를 수정할 수 없습니다.");
                 }

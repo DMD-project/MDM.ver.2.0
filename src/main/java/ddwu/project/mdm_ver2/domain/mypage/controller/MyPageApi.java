@@ -1,6 +1,7 @@
 package ddwu.project.mdm_ver2.domain.mypage.controller;
 
 import ddwu.project.mdm_ver2.domain.favorite.entity.Favorite;
+import ddwu.project.mdm_ver2.domain.mypage.dto.AddressRequest;
 import ddwu.project.mdm_ver2.domain.order.entity.Order;
 import ddwu.project.mdm_ver2.domain.review.entity.Review;
 import ddwu.project.mdm_ver2.domain.secondhand.entity.SecondHand;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.Principal;
 import java.util.List;
@@ -31,7 +33,23 @@ public interface MyPageApi {
 
     @Operation(summary = "닉네임 중복 확인")
     @ApiResponse(responseCode = "200", description = "닉네임 중복 여부 확인 성공")
-    public boolean checkNickname(@PathVariable(value = "userNickname", required = true) String nickname, Model model);
+    public boolean checkNickname(@PathVariable(value = "userNickname", required = true) String nickname);
+
+    @Operation(summary = "닉네임 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "닉네임 수정 성공"),
+            @ApiResponse(responseCode = "500", description = "닉네임 수정 실패")
+    })
+    public CustomResponse<Void> setUserNickname(@Parameter(description = "현재 사용자 객체") Principal principal,
+                                                @Parameter(description = "변경 닉네임") @PathVariable(value = "userNickname", required = true) String nickname);
+
+    @Operation(summary = "주소 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "주소 수정 성공"),
+            @ApiResponse(responseCode = "500", description = "주소 수정 실패")
+    })
+    public CustomResponse<Void> setUserAddr(@Parameter(description = "현재 사용자 객체") Principal principal,
+                                            @Parameter(description = "변경 주소") @RequestBody AddressRequest request);
 
     @Operation(summary = "사용자 찜 리스트 조회")
     @ApiResponses(value = {

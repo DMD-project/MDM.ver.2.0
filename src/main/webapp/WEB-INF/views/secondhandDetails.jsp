@@ -293,7 +293,7 @@
                 },
                 success: function(data) {
                     if(data.statusCode != 200) {
-                        alert(data.message);
+                        alert("상품을 삭제할 수 없습니다.");
                         return;
                     } else {
                         alert("삭제가 완료되었습니다.");

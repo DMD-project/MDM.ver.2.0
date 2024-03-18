@@ -219,7 +219,7 @@ public class SecondHandService {
 
                 if (user.getId() == secondHand.getUserId()) {
                     secondHandRepository.deleteById(shId);
-                    return CustomResponse.onSuccess(null);
+                    return CustomResponse.onSuccess("상품이 삭제되었습니다.");
                 } else {
                     return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "중고 거래 상품을 삭제할 수 없습니다.");
                 }

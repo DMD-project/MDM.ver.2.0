@@ -161,7 +161,7 @@
                                 return;
                             } else {
                                 alert("상품이 등록되었습니다.");
-                                location.href="http://localhost:8080/secondhand/" + data.content.id + "/view";
+                                location.href="http://localhost:8080/secondhand/" + data.content + "/view";
                             }
                         }
                     })

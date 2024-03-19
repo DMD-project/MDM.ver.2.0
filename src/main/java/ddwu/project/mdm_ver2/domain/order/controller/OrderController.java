@@ -43,8 +43,8 @@ public class OrderController implements OrderApi{
     }
 
     /* 일반상품 바로 구매 */
-    @PostMapping("/proudct/{proudctId}/{purchasedQty}")
-    public CustomResponse<Void> purchaseItems(Principal principal, @PathVariable Long proudctId, @PathVariable int purchasedQty, @RequestBody OrderDto orderDto) {
-        return orderService.purchaseItems(principal.getName(), proudctId, purchasedQty, orderDto);
+    @PostMapping("/product/{productId}/{purchasedQty}")
+    public CustomResponse<Void> purchaseItems(Principal principal, @PathVariable Long productId, @PathVariable int purchasedQty, @RequestBody OrderDto orderDto) {
+        return orderService.purchaseItems(principal.getName(), productId, purchasedQty, orderDto);
     }
 }

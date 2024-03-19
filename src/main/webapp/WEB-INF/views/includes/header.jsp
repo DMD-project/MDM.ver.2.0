@@ -6,11 +6,15 @@
 <head>
     <meta charset="UTF-8">
     <title>header</title>
-
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-applesdgothicneo@1.0/all.min.css">
     <script src="https://kit.fontawesome.com/0dff8da39e.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script> <!-- 외부 스크립트 불러오기 -->
-
     <style>
+        body {
+            font-family: 'Apple SD Gothic Neo';
+            font-style: normal;
+            font-weight: 400;
+        }
         .header {
             background-color: #F9F1E7;
             padding: 10px 0;

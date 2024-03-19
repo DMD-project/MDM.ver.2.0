@@ -67,6 +67,51 @@
             color: #333333;
             outline: none;
         }
+        .content_box {
+            display: flex;
+            float: left;
+            width: 80%;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        #update_order, #update_order_submit {
+            background-color: #FF7500;
+            color: #FFFFFF;
+            float: right;
+            font-size: 14px;
+            padding: 5px 7px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #delete_order {
+            background-color: #616161;
+            color: #FFFFFF;
+            float: right;
+            font-size: 14px;
+            padding: 5px 7px;
+            margin-left: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .new_order_address input {
+            border: 1px solid #C2C2C2;
+            height: 30px;
+            padding-left: 10px;
+            margin-top: 7px;
+        }
+        .new_order_address input:read-only {
+            background-color: #EEEEEE;
+            color: #C2C2C2;
+        }
+        #zipcode {
+            background-color: #FFEDDE;
+            color: #FF7500;
+            font-size: 15px;
+            border: 1px solid #FF7500;
+            border-radius: 7px;
+            padding: 5px 10px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -129,6 +174,7 @@
     <%@ include file="includes/footer.jsp" %>
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
         function getCookie(name) {
             const cookies = document.cookie.split(';');
@@ -180,9 +226,126 @@
                 },
                 success: function(data) {
                     console.log(data);
+
+                    let order_arr = data.content;
+                    let order_box = "";
+                    $.each(order_arr, function(idx, value) {
+                        if (value.groupPurchase == null) {
+
+                            order_box += "<div class='content_box'>";
+                                    if (value.product == null) {
+                                        order_box += "<img src='../../images/product/" + value.cartItems[0].product.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>";
+                                    } else {
+                                        order_box += "<img src='../../images/product/" + value.product.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>";
+                                    }
+                                        order_box += "<div style='display: flex; flex-direction: column; width: 680px;'>"
+                                                   + "<div id=" + value.id + ">";
+                                    if (value.product == null) {
+                                        order_box += "<span style='font-size: 20px; font-weight: bold;'>" + value.cartItems[0].product.name + "&nbsp;&nbsp;외&nbsp;" + (value.cartItems.length - 1) + "</span>";
+                                    } else {
+                                        order_box += "<span style='font-size: 20px; font-weight: bold;'>" + value.product.name + "</span>";
+                                    }
+                                        order_box += "<span id='delete_order'>주문 취소</span>"
+                                                    + "<span id='update_order'>배송지 수정</span>"
+                                                + "</div>"
+                                                + "<div style='color: #B0B0B0; font-size: 13px;'>배송지</div>"
+                                                + "<div style='font-size: 14px;'>(" + value.zipcode + ")</div>"
+                                                + "<div style='font-size: 14px;'>" + value.streetAddr + ", " + value.detailAddr + "</div>"
+                                                + "<div style='font-size: 15px; margin-top: 10px;'>총 " + value.qty + "개</div>"
+                                                + "<div style='font-size: 25px; font-weight: bold;'>" + value.price + "원</div>"
+                                            + "</div>"
+                                        + "</div>";
+                        }
+                    });
+                    $("#list_wrapper").html(order_box);
                 }
             });
         }
+
+        $(document).on('click', '#update_order', function() {
+            let update_order_box = "";
+            update_order_box += "<div class='new_order_address'>"
+                                    + "<input id='new_zipcode' type='text' style='width: 80px;' readonly>" + "<button id='zipcode'>우편번호</button>" + "<br/>"
+                                    + "<input id='new_address_01' type='text' style='width: 220px;' readonly>" + "<br/>"
+                                    + "<input id='new_address_02' type='text' style='width: 220px;'>"
+                              + "</div>";
+
+            $(this).parent().nextAll().remove();
+            $(this).parent().after(update_order_box);
+
+            let btn = "";
+            btn += "<span id='update_order_submit'>등록</span>"
+                    + "<span id='cancel' style='float: right;color: #FF7500; font-size: 14px; padding: 5px 0px; margin-right: 10px;'>취소</span>";
+
+            $(this).after(btn);
+            $(this).prev().remove();
+            $(this).remove();
+        });
+
+        $(document).on('click', '#update_order_submit', function() {
+            let orderId = $(this).parent().attr("id");
+            let new_zipcode = $("#new_zipcode").val();
+            let new_addr_01 = $("#new_address_01").val();
+            let new_addr_02 = $("#new_address_02").val();
+
+            if (new_zipcode == "" || new_addr_01 == "" || new_addr_02 == "")
+                alert('배송지 정보를 입력해 주세요');
+            else {
+                $.ajax ({
+                    type: 'PUT',
+                    url: '/order/update/' + orderId,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    data: JSON.stringify (
+                        {
+                            "zipcode" : new_zipcode,
+                            "streetAddr" : new_addr_01,
+                            "detailAddr" : new_addr_02
+                        }
+                    ),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(data) {
+                        printMyOrder();
+                    }
+                })
+            }
+        });
+
+        $(document).on('click', '#zipcode', function() {
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    var addr = '';
+
+                    if (data.userSelectedType === 'R') {
+                        addr = data.roadAddress;
+                    } else {
+                        addr = data.jibunAddress;
+                    }
+
+                    $('#new_zipcode').val(data.zonecode);
+                    $('#new_address_01').val(addr);
+                    $('#new_address_02').focus();
+                }
+            }).open();
+        });
+
+        $(document).on('click', '#delete_order', function() {
+            let orderId = $(this).parent().attr('id');
+
+            $.ajax ({
+                type: 'DELETE',
+                url: '/order/cancel/' + orderId,
+                beforeSend: function(xhr) {
+                    var token = getCookie("access_token");
+                    xhr.setRequestHeader("Authorization", "Bearer " + token);
+                },
+                success: function(data) {
+                    printMyOrder();
+                }
+            })
+        });
 
         $(document).on('click', '#update_user_info', function() {
             let new_content = "";

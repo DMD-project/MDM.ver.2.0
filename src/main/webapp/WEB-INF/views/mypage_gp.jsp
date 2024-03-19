@@ -195,24 +195,24 @@
                     let order_arr = data.content;
                     let order_box = "";
                     $.each(order_arr, function(idx, value) {
-                    order_box += "<div class='content_box'>"
-                                    + "<a href='/gp/" + value.groupPurchase.id + "/view'>"
-                                    + "<img src='../../images/grouppurchase/" + value.groupPurchase.imgUrl + "' style='width: 115px; height: 135px; margin-right: 30px;'>"
-                                    + "</a>"
-                                    + "<div style='display: flex; flex-direction: column; width: 680px;'>"
-                                        + "<div>" + printStatus(value.groupPurchase.state) + "</div>"
+                        order_box += "<div class='content_box'>"
                                         + "<a href='/gp/" + value.groupPurchase.id + "/view'>"
-                                        + "<div style='font-size: 20px; font-weight: bold; margin-top: 10px;'>" + value.groupPurchase.name + "</div>"
+                                        + "<img src='../../images/grouppurchase/" + value.groupPurchase.imgUrl + "' style='width: 115px; height: 135px; margin-right: 30px;'>"
                                         + "</a>"
-                                        + "<div style='font-size: 14px; color: #B0B0B0; margin-top: 3px;'>"
-                                            + "<span>" + value.groupPurchase.start + "</span>"
-                                            + "<span>~</span>"
-                                            + "<span>" + value.groupPurchase.end + "</span>"
+                                        + "<div style='display: flex; flex-direction: column; width: 680px;'>"
+                                            + "<div>" + printStatus(value.groupPurchase.state) + "</div>"
+                                            + "<a href='/gp/" + value.groupPurchase.id + "/view'>"
+                                            + "<div style='font-size: 20px; font-weight: bold; margin-top: 10px;'>" + value.groupPurchase.name + "</div>"
+                                            + "</a>"
+                                            + "<div style='font-size: 14px; color: #B0B0B0; margin-top: 3px;'>"
+                                                + "<span>" + value.groupPurchase.start + "</span>"
+                                                + "<span>~</span>"
+                                                + "<span>" + value.groupPurchase.end + "</span>"
+                                            + "</div>"
+                                            + "<div style='font-size: 15px; margin-top: 20px;'>" + value.qty + "개</div>"
+                                            + "<div style='font-size: 25px; font-weight: bold;'>" + value.price + "원</div>"
                                         + "</div>"
-                                        + "<div style='font-size: 15px; margin-top: 20px;'>" + value.qty + "개</div>"
-                                        + "<div style='font-size: 20px;'>" + value.price + "원</div>"
-                                    + "</div>"
-                                + "</div>";
+                                    + "</div>";
                     });
                     $("#list_wrapper").html(order_box);
                 }

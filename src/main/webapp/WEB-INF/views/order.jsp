@@ -225,7 +225,6 @@
                     ),
                     contentType: 'application/json; charset=utf-8',
                     success: function(data) {
-                        console.log(data);
                         alert('주문이 성공적으로 완료 되었습니다.');
                         location.href="/product/list/view";
                     }
@@ -256,7 +255,6 @@
                     ),
                     contentType: 'application/json; charset=utf-8',
                     success: function(data) {
-                        console.log(data);
                         alert('공동구매 참여가 성공적으로 완료 되었습니다.');
                         location.href="/gp/list/view";
                     }
@@ -291,7 +289,6 @@
                     ),
                     contentType: 'application/json; charset=utf-8',
                     success: function(data) {
-                        console.log(data);
                         alert('주문이 성공적으로 완료 되었습니다.');
                         location.href="/product/list/view";
                     }
@@ -359,8 +356,6 @@
                 $.ajax ({
                     url: '/gp/' + gpId,
                     success: function(data) {
-                        console.log(data);
-
                         let product_price = data.content.groupPurchase.price * purchasedQty;
                         let shipping_fee = 3000;
 

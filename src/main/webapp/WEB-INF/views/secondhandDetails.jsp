@@ -207,8 +207,6 @@
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 success: function(data) {
-                    console.log(data);
-
                     let imgUrl = data.content.imgUrl;
                     let name = data.content.name;
                     let price = data.content.price;
@@ -391,8 +389,6 @@
                     url: '/shBid/' + shId + '/add',
                     beforeSend: function(xhr) {
                         var token = getCookie("access_token");
-                        console.log("Token:", token);
-
                         if(!token) {
                             alert("로그인이 필요합니다.");
                             window.location.href='/login';
@@ -412,7 +408,7 @@
                             return;
                         } else {
                             alert("구매 희망가가 등록되었습니다.");
-                            location.href="http://localhost:8080/secondhand/" + data.content.secondHand.id + "/view";
+                            location.href="/secondhand/" + data.content.secondHand.id + "/view";
                         }
                     }
                 })
@@ -524,7 +520,7 @@
                 },
                 success: function(data) {
                     alert("요청 삭제가 완료되었습니다.");
-                    location.href="http://localhost:8080/secondhand/" + shId + "/view";
+                    location.href="/secondhand/" + shId + "/view";
                 }
             });
         });

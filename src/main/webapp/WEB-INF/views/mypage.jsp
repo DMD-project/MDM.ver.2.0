@@ -225,8 +225,6 @@
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 success: function(data) {
-                    console.log(data);
-
                     let order_arr = data.content;
                     let order_box = "";
                     $.each(order_arr, function(idx, value) {

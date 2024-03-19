@@ -238,7 +238,6 @@
                     "cateCode" : cateCode
                 },
                 success: function(data) {
-                    console.log(data);
                     $("#count").html(data.content.length);
 
                     let grouppurchase_info = "";

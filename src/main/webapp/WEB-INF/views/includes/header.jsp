@@ -139,14 +139,11 @@
     }
 
     function logout() {
-         var token = getCookie("access_token");
-         console.log("Token:", token);
-
+        var token = getCookie("access_token");
         if (!token) {
             alert("로그인되어 있지 않습니다.");
             return;
         }
-
         var token = getCookie("access_token");
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "/kakao/logout", true);

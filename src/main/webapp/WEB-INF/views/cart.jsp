@@ -154,23 +154,19 @@
                 url: '/cart',
                 beforeSend: function(xhr) {
                     var token = getCookie("access_token");
-                    console.log("Token:", token);
-
                     if (!token) {
                         alert("로그인이 필요합니다.");
-                        location.href="http://localhost:8080/login";
+                        location.href="/login";
                     }
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 error: function(xhr, status, error){
                     if(status == 404) {
                         alert("장바구니 불러오기에 실패하였습니다.");
-                        location.href="http://localhost:8080";
+                        location.href="/";
                     }
                 },
                 success: function(data) {
-                    console.log(data);
-
                     let product_total = data.content.price;
                     let product_qty = data.content.count;
                     let shipping_fee = 3000;
@@ -287,7 +283,6 @@
                     type: 'DELETE',
                     beforeSend: function(xhr) {
                         var token = getCookie("access_token");
-                        console.log(token);
                         xhr.setRequestHeader("Authorization", "Bearer " + token);
                     },
                     url: '/cartItem/delete/selected',
@@ -316,7 +311,6 @@
                     url: '/cartItem/decrease/' + id,
                     beforeSend: function(xhr) {
                         var token = getCookie("access_token");
-                        console.log("Token:", token);
                         xhr.setRequestHeader("Authorization", "Bearer " + token);
                     },
                     error: function(xhr, status, error){
@@ -341,7 +335,6 @@
                 url: '/cartItem/increase/' + id,
                 beforeSend: function(xhr) {
                     var token = getCookie("access_token");
-                    console.log("Token:", token);
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                  error: function(xhr, status, error){

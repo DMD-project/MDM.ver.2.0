@@ -330,8 +330,6 @@
                 url: '/cartItem/add/' + prodId + '/' + count,
                 beforeSend: function(xhr) {
                     var token = getCookie("access_token");
-                    console.log("Token:", token);
-
                     if (!token) {
                         alert("로그인이 필요합니다.");
                         window.location.href='/login';
@@ -339,7 +337,6 @@
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 success: function(result) {
-                    console.log(result);
                     alert('장바구니에 상품이 추가되었습니다.');
                 }
 
@@ -396,8 +393,6 @@
                     url: '/review/' + prodId + '/add',
                     beforeSend: function(xhr) {
                         var token = getCookie("access_token");
-                        console.log("Token:", token);
-
                         if (!token) {
                             alert("로그인이 필요합니다.");
                             window.location.href='/login';
@@ -442,8 +437,6 @@
                     "sortBy" : sortBy
                 },
                 success: function(data) {
-                    console.log(data);
-
                     let review_arr = data.content;
                     let review_box = "";
                     $.each(review_arr, function(idx, value) {
@@ -495,7 +488,6 @@
                     let review_arr = data.content.reviewList;
                     let review_box = "";
                     $.each(review_arr, function(idx, value) {
-                        console.log(value);
                         review_box += "<div class='review_box' data-value='" + value.id +"'>"
                                         + "<div id='delete_review' style='float: right; margin-left: 10px; color: #FF7500;'><i class='fa-solid fa-xmark'></i></div>"
                                         + "<div id='update_review' style='float: right; font-size: 14px; color: #FF7500;'>수정</div>"
@@ -550,8 +542,6 @@
                     url: '/review/' + prodId + '/update/' + reviewId,
                     beforeSend: function(xhr) {
                         var token = getCookie("access_token");
-                        console.log("Token:", token);
-
                         if (!token) {
                             alert("로그인이 필요합니다.");
                         }
@@ -591,8 +581,6 @@
                 url: '/review/' + prodId + '/delete/' + reviewId,
                 beforeSend: function(xhr) {
                     var token = getCookie("access_token");
-                    console.log("Token:", token);
-
                     if (!token) {
                         alert("로그인이 필요합니다.");
                     }

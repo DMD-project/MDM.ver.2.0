@@ -280,7 +280,6 @@
                     "sortBy" : "highprice"
                 },
                 success: function(data) {
-                    console.log(data);
                     let shBid_arr = data.content;
                     let shBid_list = "";
                     $.each(shBid_arr, function(idx, value) {

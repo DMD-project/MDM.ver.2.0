@@ -137,8 +137,6 @@
                         url: '/secondhand/add',
                         beforeSend: function(xhr) {
                             var token = getCookie("access_token");
-                            console.log("Token:", token);
-
                             if (!token) {
                                 alert("로그인이 필요합니다.");
                                 window.location.href='/login';
@@ -161,7 +159,7 @@
                                 return;
                             } else {
                                 alert("상품이 등록되었습니다.");
-                                location.href="http://localhost:8080/secondhand/" + data.content + "/view";
+                                location.href="/secondhand/" + data.content + "/view";
                             }
                         }
                     })

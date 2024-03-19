@@ -188,8 +188,6 @@
         $.ajax ({
             url: '/gp/' + gpId,
             success: function(data) {
-                console.log(data);
-
                 let gp_imgUrl = data.content.groupPurchase.imgUrl;
                 let gp_name = data.content.groupPurchase.name;
                 let gp_participants_qty = data.content.participantCount;

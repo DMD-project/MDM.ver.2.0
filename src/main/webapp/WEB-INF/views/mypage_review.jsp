@@ -234,8 +234,6 @@
                     xhr.setRequestHeader("Authorization", "Bearer " + token);
                 },
                 success: function(data) {
-                    console.log(data);
-
                     let review_arr = data.content;
                     let review_box = "";
                     $.each(review_arr, function(idx, value) {
@@ -320,7 +318,6 @@
                     url: '/review/' + prodId + '/update/' + reviewId,
                     beforeSend: function(xhr) {
                         var token = getCookie("access_token");
-                        console.log("Token:", token);
                         xhr.setRequestHeader("Authorization", "Bearer " + token);
                     },
                     contentType: 'application/json',

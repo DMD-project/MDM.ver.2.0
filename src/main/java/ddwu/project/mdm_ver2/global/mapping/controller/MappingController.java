@@ -135,4 +135,9 @@ public class MappingController {
     public String getFAQ() {
         return "mypage_FAQ";
     }
+
+    @GetMapping("/order/finish/view")
+    public String orderFinish() {
+        return "order_finish";
+    }
 }

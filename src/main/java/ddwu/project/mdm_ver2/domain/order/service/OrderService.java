@@ -34,13 +34,14 @@ public class OrderService {
 
     public CustomResponse<Void> updateOrder(long orderId, OrderAddrRequest updatedOrder) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
+
         if (optionalOrder.isPresent()) {
             Order existingOrder = optionalOrder.get();
             existingOrder.setZipcode(updatedOrder.getZipcode());
             existingOrder.setStreetAddr(updatedOrder.getStreetAddr());
             existingOrder.setDetailAddr(updatedOrder.getDetailAddr());
 
-            Order savedOrder = orderRepository.save(existingOrder);
+            orderRepository.save(existingOrder);
             return CustomResponse.onSuccess("주문이 수정되었습니다.");
         } else {
             return CustomResponse.onFailure(HttpStatus.NOT_FOUND.value(), "주문을 찾을 수 없습니다.");
@@ -59,7 +60,6 @@ public class OrderService {
         }
 
         orderRepository.deleteById(orderId);
-
         return CustomResponse.onSuccess("주문이 취소되었습니다.");
     }
 
@@ -94,9 +94,9 @@ public class OrderService {
         int totalQty = 0;
         List<Long> itemIds = cartRequest.getItemIds();
 
-
         for (Long itemId : itemIds) {
-            Items item = itemsRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
+            Items item = itemsRepository.findById(itemId)
+                    .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
 
             Cart cart = item.getCart();
             cart.getCartItems().remove(item);
@@ -109,6 +109,7 @@ public class OrderService {
             totalPrice += item.getPrice();
             totalQty += item.getCount();
         }
+
         order.setPrice(totalPrice);
         order.setQty(totalQty);
         order.setEmail(userEmail);
@@ -116,18 +117,15 @@ public class OrderService {
         OrderDto orderDto = cartRequest.getOrderDto();
         updateOrderDto(order, orderDto);
 
-        Order savedOrder = orderRepository.save(order);
+        orderRepository.save(order);
 
         return CustomResponse.onSuccess("장바구니 상품 주문이 승인되었습니다.");
     }
 
     public CustomResponse<Void> purchaseItems(String userEmail, Long productId, int purchasedQty, OrderDto orderDto) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Product not found with ID: " + productId));
 
-        boolean alreadyJoined = orderRepository.existsByEmailAndProduct(userEmail, product);
-        if (alreadyJoined) {
-            return CustomResponse.onFailure(HttpStatus.BAD_REQUEST.value(), "이미 해당 공동구매에 참여하였습니다.");
-        }
         Order order = new Order();
         order.setEmail(userEmail);
         order.setProduct(product);

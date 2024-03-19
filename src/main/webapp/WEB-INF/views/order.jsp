@@ -126,9 +126,9 @@
                 </div>
                 <div class="order_address_address">
                     <span>주소</span>
-                    <input id="order_address_zipcode"type="text"><button id="zipcode">우편번호</button><br/>
+                    <input id="order_address_zipcode"type="text" readonly><button id="zipcode">우편번호</button><br/>
                     <span></span>
-                    <input id="order_address_address_01"type="text" style="width: 300px;"><br/>
+                    <input id="order_address_address_01"type="text" style="width: 300px;" readonly><br/>
                     <span></span>
                     <input id="order_address_address_02"type="text" style="width: 300px;">
                 </div>
@@ -210,18 +210,92 @@
                         var token = getCookie("access_token");
                         if (!token) {
                             alert("로그인이 필요합니다.");
-                            location.href="http://localhost:8080/login";
+                            location.href="/login";
                         }
                         xhr.setRequestHeader("Authorization", "Bearer " + token);
                     },
+                    data: JSON.stringify (
+                        {
+                            "name": order_name,
+                            "contact": order_phone,
+                            "zipcode": zipcode,
+                            "streetAddr": addr_01,
+                            "detailAddr": addr_02
+                        }
+                    ),
+                    contentType: 'application/json; charset=utf-8',
                     success: function(data) {
                         console.log(data);
+                        alert('주문이 성공적으로 완료 되었습니다.');
+                        location.href="/product/list/view";
+                    }
+                })
+            } else if (from == "gp") {
+                let gpId = urlParams.get('gpId');
+                let purchasedQty = urlParams.get('purchasedQty');
+
+                $.ajax ({
+                    type: 'POST',
+                    url: '/gp/order/' + gpId + "/" + purchasedQty,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        if (!token) {
+                            alert("로그인이 필요합니다.");
+                            location.href="/login";
+                        }
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    data: JSON.stringify (
+                        {
+                            "name": order_name,
+                            "contact": order_phone,
+                            "zipcode": zipcode,
+                            "streetAddr": addr_01,
+                            "detailAddr": addr_02
+                        }
+                    ),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(data) {
+                        console.log(data);
+                        alert('공동구매 참여가 성공적으로 완료 되었습니다.');
+                        location.href="/gp/list/view";
                     }
                 })
 
             } else if (from == "cart") {
+                let param_list = urlParams.get('item_list');
+                let item_list = param_list.split(",");
 
-
+                $.ajax ({
+                    type: 'POST',
+                    url: '/order/cart/add',
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        if (!token) {
+                            alert("로그인이 필요합니다.");
+                            location.href="/login";
+                        }
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    data: JSON.stringify (
+                        {
+                            "itemIds" : item_list,
+                            "orderDto" : {
+                                "name": order_name,
+                                "contact": order_phone,
+                                "zipcode": zipcode,
+                                "streetAddr": addr_01,
+                                "detailAddr": addr_02
+                            }
+                        }
+                    ),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function(data) {
+                        console.log(data);
+                        alert('주문이 성공적으로 완료 되었습니다.');
+                        location.href="/product/list/view";
+                    }
+                })
             }
         });
 
@@ -261,7 +335,7 @@
 
                         let item_box = "";
                         item_box += "<div class='order_item'>"
-                                        + "<img src='" + data.content.imgUrl + "' style='width: 90px; height: 100px; margin-right: 30px;'>"
+                                        + "<img src='../../images/product/" + data.content.imgUrl + "' style='width: 90px; height: 100px; margin-right: 30px;'>"
                                         + "<div>"
                                             + "<div style='font-size: 20px; font-weight: bold; margin-top: 5px;'>" + data.content.name + "</div>"
                                             + "<div style='margin-top: 20px;'>" + count + "개</div>"
@@ -280,6 +354,40 @@
                         $("#total_price").html(total_price);
                     }
                 })
+            } else if (from == "gp") {
+                let gpId = urlParams.get('gpId');
+                let purchasedQty = urlParams.get('purchasedQty');
+
+                $.ajax ({
+                    url: '/gp/' + gpId,
+                    success: function(data) {
+                        console.log(data);
+
+                        let product_price = data.content.groupPurchase.price * purchasedQty;
+                        let shipping_fee = 3000;
+
+                        let item_box = "";
+                        item_box += "<div class='order_item'>"
+                                        + "<img src='../../images/grouppurchase/" + data.content.groupPurchase.imgUrl + "' style='width: 90px; height: 100px; margin-right: 30px;'>"
+                                        + "<div>"
+                                            + "<div style='font-size: 20px; font-weight: bold; margin-top: 5px;'>" + data.content.groupPurchase.name + "</div>"
+                                            + "<div style='margin-top: 20px;'>" + purchasedQty + "개</div>"
+                                            + "<div style='font-size: 25px; font-weight: bold;'>" + product_price + "원</div>"
+                                        + "</div>"
+                                    + "</div>";
+                        $("#order_item_wrapper").html(item_box);
+
+                        if (50000 <= product_price)
+                            shipping_fee = 0;
+
+                        let total_price = product_price + shipping_fee;
+
+                        $("#product_price").html(product_price);
+                        $("#shipping_fee").html(shipping_fee);
+                        $("#total_price").html(total_price);
+                    }
+                })
+
             } else if (from == "cart") {
                 let param_list = urlParams.get('item_list');
                 let item_list = param_list.split(",");
@@ -290,7 +398,7 @@
                         var token = getCookie("access_token");
                         if (!token) {
                             alert("로그인이 필요합니다.");
-                            location.href="http://localhost:8080/login";
+                            location.href="/login";
                         }
                         xhr.setRequestHeader("Authorization", "Bearer " + token);
                     },
@@ -306,7 +414,7 @@
                             product_price += value.price;
 
                             item_box += "<div class='order_item'>"
-                                            + "<img src='" + value.product.imgUrl + "' style='width: 90px; height: 100px; margin-right: 30px;'>"
+                                            + "<img src='../../images/product/" + value.product.imgUrl + "' style='width: 90px; height: 100px; margin-right: 30px;'>"
                                             + "<div>"
                                                 + "<div style='font-size: 20px; font-weight: bold; margin-top: 5px;'>" + value.product.name + "</div>"
                                                 + "<div style='margin-top: 20px;'>" + value.count + "개</div>"

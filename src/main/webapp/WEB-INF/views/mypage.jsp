@@ -293,6 +293,7 @@
                     ),
                     contentType: 'application/json; charset=utf-8',
                     success: function(data) {
+                        alert('배송지 정보가 수정되었습니다.');
                         printMyOrder();
                     }
                 })
@@ -318,19 +319,26 @@
         });
 
         $(document).on('click', '#delete_order', function() {
-            let orderId = $(this).parent().attr('id');
+            let conf = confirm('주문을 취소하시겠습니까?');
 
-            $.ajax ({
-                type: 'DELETE',
-                url: '/order/cancel/' + orderId,
-                beforeSend: function(xhr) {
-                    var token = getCookie("access_token");
-                    xhr.setRequestHeader("Authorization", "Bearer " + token);
-                },
-                success: function(data) {
-                    printMyOrder();
-                }
-            })
+            if(conf == true) {
+                let orderId = $(this).parent().attr('id');
+
+                $.ajax ({
+                    type: 'DELETE',
+                    url: '/order/cancel/' + orderId,
+                    beforeSend: function(xhr) {
+                        var token = getCookie("access_token");
+                        xhr.setRequestHeader("Authorization", "Bearer " + token);
+                    },
+                    success: function(data) {
+                        alert('주문을 취소하였습니다.');
+                        printMyOrder();
+                    }
+                })
+            } else if(conf == false) {
+                return;
+            }
         });
 
         $(document).on('click', '#update_user_info', function() {

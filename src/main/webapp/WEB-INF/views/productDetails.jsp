@@ -1,12 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>Product Details</title>
-
     <style>
         body {
           background-color: #F9F1E7;
@@ -14,49 +12,38 @@
         .sample {
           display : flex;
           justify-content: center;
-
           margin-top: 30px;
           margin-bottom: 50px;
         }
         .product_img {
           background-color: white;
-
           width: 500px;
           height: 500px;
-
           border: none;
         }
-
         .product_info_wrapper {
             padding: 0 30px;
         }
         .product_info {
           background-color: white;
-
           width: 400px;
           height: 330px;
-
           padding: 35px 0 40px 50px;
           margin: auto;
         }
         .button_wrapper {
           width: 450px;
-
           display : flex;
           justify-content: center;
-
           margin-top: 30px;
         }
-
         #add_cart {
               background-color: #F9F1E7;
               color: #FF7500;
               font-size: 20px;
               text-align: center;
-
               width: 240px;
               height: 60px;
-
               border: 1px solid #FF7500;
               border-radius: 10px;
         }
@@ -65,26 +52,20 @@
               color: white;
               font-size: 20px;
               text-align: center;
-
               width: 250px;
               height: 60px;
-
               border: none;
               border-radius: 10px;
               margin-left: 5%;
          }
-
         .info_nav_bar {
              background-color: #F5F5F5;
-
              height: 60px;
              line-height: 60px;
-
              padding-left: 150px;
         }
         .info_nav_bar div {
             width: 150px;
-
             text-align: center;
             float: left;
         }
@@ -92,14 +73,10 @@
             color: #FF7500;
             border-bottom: 3px solid #FF7500;
         }
-    </style>
-    <style>
         .review_avg {
             background-color: #FFF6EA;
-
             width: 600px;
             height: 80px;
-
             border-radius: 10px;
             padding: 30px 50px;
             margin-top: 10px;
@@ -128,7 +105,6 @@
         #review_submit {
             background-color: #FF7500;
             color: #FFFFFF;
-
             padding: 6px 13px;
             border: none;
             border-radius: 10px;
@@ -141,7 +117,6 @@
             height: 80px;
             padding: 10px 20px 20px 20px;
             margin-bottom: 20px;
-
             border: 1px solid #EE842A;
             border-radius: 10px;
         }
@@ -232,7 +207,6 @@
                     <span>원</span>
                 </div>
             </div>
-
             <div class="button_wrapper">
                 <button id="add_cart"><b>장바구니</b></button>
                 <button id="order"><b>바로 구매</b></button>
@@ -244,17 +218,13 @@
         <div class="info_nav_bar_border">상품 정보</div>
         <div>리뷰</div>
     </div>
-
     <div style="background-color: #FFFFFF; padding: 50px 160px;">
         <span id="prod_content"></span>
     </div>
-
-
     <div class="info_nav_bar">
         <div>상품 정보</div>
         <div class="info_nav_bar_border">리뷰</div>
     </div>
-
     <div style="background-color: white; padding: 50px 160px;">
         <div class="review_wrapper" style="width: 700px; margin: auto;">
             <div><span style="color: #616161;"><b>후기</span><span id="review_count" style="color: #FF7500; padding-left: 5px;">review_count</span></b></div>
@@ -266,7 +236,6 @@
                     </span>
                 </div>
             </div>
-
             <div style="margin-bottom: 50px;">
                 <span style="color: #616161;"><b>후기 작성</b></span>
                 <div class="ratingStar" style="width: 300px; margin: 5px;">
@@ -279,25 +248,20 @@
                 <textarea id="textarea" style="width:650px; height: 100px; padding: 20px;" placeholder="후기를 작성해주세요."></textarea>
                 <button id="review_submit" style="float: right; margin-right: 10px;">등록</button>
             </div>
-
             <div>
                 <div class="review_sortBy" style="margin-left: 480px; margin-bottom: 10px;">
                     <span data-value="newest" style="padding-right: 10px; font-size: 15px;">최신순</span>
                     <span data-value="highstar" style="padding-right: 10px; font-size: 15px;">평점 높은순</span>
                     <span data-value="lowstar" style="font-size: 15px;">평점 낮은순</span>
                 </div>
-
-                <div id="review_list">
-
-                </div>
+                <div id="review_list"></div>
             </div>
         </div>
     </div>
 
-    <%@ include file="includes/footer.jsp" %>
-
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
+
         $(document).ready(function() {
             printProductDetails();
         });
@@ -339,8 +303,7 @@
                 success: function(result) {
                     alert('장바구니에 상품이 추가되었습니다.');
                 }
-
-            });
+            })
         });
 
         $(document).on('click', '#order', function() {
@@ -420,7 +383,7 @@
                         }
 
                     }
-                });
+                })
             }
 
         });
@@ -452,7 +415,7 @@
                     $("#review_list").empty();
                     $("#review_list").html(review_box);
                 }
-            });
+            })
         });
 
         function printProductDetails() {
@@ -565,7 +528,7 @@
                             printProductDetails();
                         }
                     }
-                });
+                })
             }
         });
 
@@ -614,6 +577,8 @@
         }
 
     </script>
+
+    <%@ include file="includes/footer.jsp" %>
 
 </body>
 </html>

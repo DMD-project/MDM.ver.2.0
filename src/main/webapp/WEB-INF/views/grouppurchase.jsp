@@ -1,23 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>All Grouppurchase</title>
-</head>
-<body>
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<!doctype html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>All product</title>
-
     <style>
         body {
             background-color: #F9F1E7;
@@ -77,9 +64,7 @@
             text-decoration: none;
             color: black;
         }
-
     </style>
-
 </head>
 
 <body>
@@ -88,11 +73,9 @@
 
     <div class="category_bar">
         <div><h3>공동구매</h3></div>
-
         <div class="search_bar">
             <input type="text" id="keyword" placeholder="검색어를 입력하세요." />
         </div>
-
         <table style="text-align: center; font-size: 14px; margin: auto;">
             <tr>
                 <td>
@@ -150,7 +133,6 @@
     <div class="content_wrapper">
         <div class="top_wrapper">
             <div class="count" style="float: left;"><b>총<span id="count" style="padding-left: 8px; padding-right: 3px;">product_count</span>개</b></div>
-
             <div class="sort" style="float: right;">
                 <div class="sort_type">
                     <select id="sortSelect">
@@ -161,14 +143,12 @@
                 </div>
             </div>
         </div>
-
-        <div id="gp_list">
-
-        </div>
+        <div id="gp_list"></div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
+
         $(document).ready(function() {
             printGroupPurchase("newest", "");
 
@@ -192,7 +172,6 @@
 
                                     let grouppurchase_info = "";
                                     grouppurchase_info += "<ul>";
-
                                     for(let i = 0; i < data.content.length; i++) {
                                         grouppurchase_info += "<li>"
                                                         + "<a href='/gp/" + data.content[i].id + "/view'>" + "<p>"
@@ -211,7 +190,7 @@
                                     $("#gp_list").html(grouppurchase_info);
                                 }
                             }
-                        });
+                        })
                     }
                 }
             });
@@ -260,7 +239,7 @@
                     $("#gp_list").empty();
                     $("#gp_list").html(grouppurchase_info);
                 }
-            });
+            })
         }
 
         function printStatus(state) {
@@ -276,14 +255,12 @@
                     status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; border-radius: 7px;'>마감</span>"
                             + "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-left: 5px; border-radius: 7px;'>실패</span>";
                 }
-
                 return status;
         }
 
     </script>
 
     <%@ include file="includes/footer.jsp" %>
-
 
 </body>
 </html>

@@ -1,12 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>order</title>
-
     <style>
         body {
             background-color: #F9F1E7;
@@ -81,7 +79,6 @@
             padding: 25px 30px;
             margin-top: 20px;
         }
-
     </style>
 </head>
 <body>
@@ -90,13 +87,10 @@
 
     <h2 style="color: #666666; text-align: center; margin-bottom: 25px;">주문/결제</h2>
     <div class="content_wrapper">
-
         <div class="content_left">
-
             <div class="order_user_info">
                 <span style="font-size: 17px; color: #616161;"><b>주문자</b></span>
                 <hr style="border: 1px solid #FFAB64;">
-
                 <div class="order_user_name">
                     <span>이름</span>
                     <input id="order_user_name" type="text" style="width: 300px;">
@@ -112,7 +106,6 @@
             <div class="order_address">
                 <span style="font-size: 17px; color: #616161;"><b>배송지</b></span>
                 <hr style="border: 1px solid #FFAB64;">
-
                 <div class="order_address_name">
                     <span>받는사람</span>
                     <input id="order_address_name" type="text" style="width: 300px;">
@@ -136,15 +129,12 @@
             <div class="order_product">
                 <span style="font-size: 17px; color: #616161;"><b>주문 상품</b></span>
                 <hr style="border: 1px solid #FFAB64;">
-                <div id="order_item_wrapper">
-
-                </div>
+                <div id="order_item_wrapper"></div>
             </div>
             <div class="order_payment">
                 <span style="font-size: 17px; color: #616161;"><b>결제 수단</b></span>
                 <hr style="border: 1px solid #FFAB64;">
             </div>
-
         </div>
 
         <div class="content_right">
@@ -160,20 +150,16 @@
                     <div style="float: right;"><span id="shipping_fee" style="padding-right: 5px;">shipping_fee</span>원</div>
                 </div>
                 <br/>
-
                 <div class="total_price" style="padding-top: 50px;">
                     <div style="float: left; font-size: 18px;"><b>최종 결제 금액</b></div>
                     <div style="float: right;"><span id="total_price" style="font-size: 25px; font-weight: bold; padding-right: 5px;">total_price</span>원</div>
                 </div>
             </div>
-
             <div class="button_wrapper">
                 <button id="submit"><b>결제하기</b></button>
             </div>
         </div>
     </div>
-
-    <%@ include file="includes/footer.jsp" %>
 
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
@@ -380,7 +366,6 @@
                         $("#total_price").html(total_price);
                     }
                 })
-
             } else if (from == "cart") {
                 let param_list = urlParams.get('item_list');
                 let item_list = param_list.split(",");
@@ -431,6 +416,8 @@
         }
 
     </script>
+
+    <%@ include file="includes/footer.jsp" %>
 
 </body>
 </html>

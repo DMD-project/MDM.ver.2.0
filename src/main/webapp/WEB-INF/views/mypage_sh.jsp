@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>mypage</title>
-
     <script src="https://kit.fontawesome.com/0dff8da39e.js" crossorigin="anonymous"></script>
     <style>
         a {
@@ -18,7 +17,6 @@
         .mypage_content {
             background-color: #F9F1E7;
             color: #333333;
-
             height: 200px;
             padding: 20px 60px;
         }
@@ -28,7 +26,6 @@
         .mypage_content_main {
             margin-top: 70px;
         }
-
         .under_content {
             display : flex;
             justify-content: center;
@@ -122,12 +119,10 @@
     <%@ include file="includes/header.jsp" %>
 
     <div class="mypage_content">
-
         <div class="mypage_content_header">
             <div style="float: left; color: #FF7500; font-size: 20px;"><b>마이페이지</b></div>
             <div style="float: right;"><span class="link" onclick="location.href='/mypage/faq/view'">자주 묻는 질문</span></div>
         </div>
-
         <div class="mypage_content_main">
             <div style="float: left;">
                 <div class="user_profile_img" style="float:left; padding-left: 10px; padding-right: 30px;"><i class="fa-solid fa-circle-user fa-6x"></i></div>
@@ -142,7 +137,6 @@
                     <span id="user_email" style="margin-left: 5px;">user_email@gmail.com</span>
                 </div>
             </div>
-
             <div style="float: right; padding-top: 30px; ">
                 <div class="review" style="float: right; padding-right: 120px; align: right;">
                     <span class="link"><i class="fa-solid fa-pencil fa-2x" style="padding-bottom: 10px;"></i><br/>후기 작성</span></div>
@@ -164,27 +158,21 @@
                 <li><span class="link" onclick="location.href='/mypage/review/view'">내가 작성한 후기</span></li>
             </ul>
         </nav>
-
         <div class="under_content_main" style="width: 100%; padding-top: 45px; padding-left: 30px;">
             <span style="padding: 10px; font-size: 25px; font-weight: bold; color: #FF7500;">중고거래 판매 내역</span>
-            <div id="list_wrapper">
-
-
-            </div>
+            <div id="list_wrapper"></div>
         </div>
     </div>
 
-    <%@ include file="includes/footer.jsp" %>
-
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
+
         function getCookie(name) {
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i].trim();
-                if (cookie.startsWith(name + '=')) {
+                if (cookie.startsWith(name + '='))
                     return cookie.substring(name.length + 1);
-                }
             }
             return null;
         }
@@ -252,7 +240,7 @@
                     });
                     $("#list_wrapper").html(sh_box);
                 }
-            });
+            })
         }
 
         function printState(state) {
@@ -451,7 +439,7 @@
                             $('.nickname_possible').css('display', 'inline-block');
                         }
                     }
-                });
+                })
             }
         }
 
@@ -469,7 +457,7 @@
                     success: function(data) {
                         printUserInfo();
                     }
-                });
+                })
             }
         });
 
@@ -479,5 +467,8 @@
         });
 
     </script>
+
+    <%@ include file="includes/footer.jsp" %>
+
 </body>
 </html>

@@ -6,9 +6,9 @@
     <title>footer</title>
     <style>
         .wrapper {
-          background-color: #FFFFFF;
-          width: 100%;
-          padding: 30px 0 40px 50px;
+            background-color: #FFFFFF;
+            width: 100%;
+            padding: 30px 0 40px 50px;
         }
         .wrapper div {
             color: #616161;
@@ -32,7 +32,6 @@
         <div style="font-size: 14px;"><i class="fa-solid fa-phone"></i>12345678765</div>
         <div style="font-size: 14px;"><i class="fa-solid fa-link"></i>www.m2dm.com</div>
     </div>
-
 
 </body>
 </html>

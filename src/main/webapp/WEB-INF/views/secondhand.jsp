@@ -1,12 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>All product</title>
-
     <style>
         body {
             background-color: #F9F1E7;
@@ -76,9 +74,7 @@
             text-decoration: none;
             color: black;
         }
-
     </style>
-
 </head>
 
 <body>
@@ -87,11 +83,9 @@
 
     <div class="category_bar">
         <div><h3>중고거래</h3></div>
-
         <div class="search_bar">
             <input type="text" id="keyword" placeholder="검색어를 입력하세요." />
         </div>
-
         <table style="text-align: center; font-size: 14px; margin: auto;">
             <tr>
                 <td>
@@ -149,7 +143,6 @@
     <div class="content_wrapper">
         <div class="top_wrapper">
             <div class="count" style="float: left;"><b>총<span id="count" style="padding-left: 8px; padding-right: 3px;">product_count</span>개</b></div>
-
             <div class="sort" style="float: right;">
                 <div class="sort_type">
                     <select id="sortSelect">
@@ -159,19 +152,14 @@
                     </select>
                 </div>
             </div>
-
             <button id="addSecondhand" onclick="location.href='/secondhand/add/view'" style="float: right; margin-right: 15px;">상품 등록</button>
         </div>
-
-        <div id="secondhand_list">
-
-        </div>
+        <div id="secondhand_list"></div>
     </div>
-
-
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
+
         $(document).ready(function() {
             printSecondHand();
 
@@ -214,7 +202,7 @@
                                     $("#secondhand_list").html(secondhand_info);
                                 }
                             }
-                        });
+                        })
                     }
                 }
             });
@@ -244,7 +232,6 @@
                     $("#count").html(data.content.length);
 
                     let secondhand_info = "";
-
                     secondhand_info += "<ul>";
                     for(let i = 0; i < data.content.length; i++) {
                         secondhand_info += "<li>"
@@ -253,7 +240,7 @@
                                             + "<span>" + data.content[i].name + "</span>" + "<br/>"
                                             + "<span><b>" + data.content[i].price + "원</b></span>"
                                             + "</a>"
-                                            + "</li>";
+                                        + "</li>";
                         if(i % 4 == 3) {
                             secondhand_info += "</ul>";
                             secondhand_info += "<br/><ul>";
@@ -262,13 +249,12 @@
                     $("#secondhand_list").empty();
                     $("#secondhand_list").html(secondhand_info);
                 }
-            });
+            })
         }
 
     </script>
 
     <%@ include file="includes/footer.jsp" %>
-
 
 </body>
 </html>

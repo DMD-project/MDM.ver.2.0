@@ -1,12 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>All product</title>
-
     <style>
         body {
             background-color: #F9F1E7;
@@ -75,11 +73,9 @@
 
     <div class="category_bar">
         <div><h3>쇼핑</h3></div>
-
         <div class="search_bar">
             <input type="text" id="keyword" placeholder="검색어를 입력하세요." />
         </div>
-
         <table style="text-align: center; font-size: 14px; margin: auto;">
             <tr>
                 <td>
@@ -137,7 +133,6 @@
     <div class="content_wrapper">
         <div class="top_wrapper">
             <div class="count" style="float: left;"><b>총<span id="count" style="padding-left: 8px; padding-right: 3px;">product_count</span>개</b></div>
-
             <div class="sort" style="float: right;">
                 <div class="sort_type">
                     <select id="sortSelect">
@@ -148,15 +143,13 @@
                 </div>
             </div>
         </div>
-
-        <div id="product_list">
-
-        </div>
+        <div id="product_list"></div>
     </div>
 
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
+
         $(document).ready(function() {
             let urlParams = new URL(location.href).searchParams;
             let cateCode = urlParams.get('cateCode');
@@ -203,7 +196,7 @@
                                     $("#product_list").html(product_info);
                                 }
                             }
-                        });
+                        })
                     }
                 }
             });
@@ -252,13 +245,12 @@
                     $("#product_list").empty();
                     $("#product_list").html(product_info);
                 }
-            });
+            })
         }
 
     </script>
 
     <%@ include file="includes/footer.jsp" %>
-
 
 </body>
 </html>

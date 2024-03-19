@@ -1,12 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>Secondhand Detail</title>
-
     <style>
         body {
           background-color: #F9F1E7;
@@ -137,7 +135,6 @@
             border-radius: 5px;
             padding: 5px;
         }
-
     </style>
 </head>
 <body>
@@ -145,7 +142,6 @@
     <%@ include file="includes/header.jsp" %>
 
     <div class="sample">
-
         <div class="sh_img">
             <img id="prod_img" src="" alt="">
         </div>
@@ -153,7 +149,6 @@
             <div class="product_info">
                 <div id="status_bar" style="margin-bottom: 10px;"></div>
                 <span id="sh_name" style="font-size: 30px; font-weight: bold;">sh_name</span>
-
                 <div style="margin-top:20px;">
                     <span style="color: #616161; font-size: 15px;">상품 가격</span><br/>
                     <span id="sh_price" style="font-size: 30px; font-weight: bold;"><b>sh_price</b></span>
@@ -162,27 +157,21 @@
                 <div style='overflow: scroll; width: 85%; margin-top: 5px; height: 120px;'>
                     <span style='color: #616161; font-size: 15px;'>요청 내역</span>
                     <span id="bid_count" style='color: #FF7500; font-weight: bold;'>0</span>
-                        <div id='shBid_list' style='padding: 13px 10px;'>
-
-                        </div>
+                        <div id='shBid_list' style='padding: 13px 10px;'></div>
                 </div>
                 <div class="sh_bid" style="margin-top: 5px; display: block;">
                     <span style="color: #616161; font-size: 15px;">구매 희망가</span><br/>
                     <input type="text" id="bid_price" placeholder="희망가 입력" style="font-size: 20px;">
                     <span style="padding-left: 5px;">원</span>
                 </div>
-
             </div>
-
             <div id="submit_btn" class="button_wrapper"></div>
-
         </div>
     </div>
 
     <div class="info_nav_bar">
         <div class="info_nav_bar_border">상품 정보</div>
     </div>
-
     <div style="background-color: #FFFFFF; padding: 50px 160px;">
         <span id="sh_content"></span>
     </div>
@@ -267,7 +256,7 @@
                     });
                     $("#shBid_list").html(bid_box);
                 }
-            });
+            })
         }
 
         $(document).on('click', '#cancel', function() {
@@ -492,7 +481,7 @@
                         location.href="/secondhand/" + shId + "/view";
                     }
                 }
-            });
+            })
         });
 
         $(document).on('click', '#delete_bid', function() {
@@ -522,7 +511,7 @@
                     alert("요청 삭제가 완료되었습니다.");
                     location.href="/secondhand/" + shId + "/view";
                 }
-            });
+            })
         });
 
     </script>

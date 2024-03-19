@@ -1,15 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>cart</title>
-
     <script src="https://kit.fontawesome.com/0dff8da39e.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
-
     <style>
         body {
             background-color: #F9F1E7;
@@ -35,7 +32,6 @@
         }
         .price_info {
             background-color: #FFFFFF;
-
             width: 360px;
             height: 160px;
             padding: 30px 40px 30px 40px;
@@ -48,10 +44,8 @@
             color: white;
             font-size: 20px;
             text-align: center;
-
             width: 440px;
             height: 60px;
-
             border: none;
             border-radius: 10px;
         }
@@ -89,7 +83,6 @@
 
     <h2 style="color: #666666; text-align: center; margin-bottom: 25px;">장바구니</h2>
     <div class="content_wrapper">
-
         <div class="content_left">
             <div class="cart_header" style="padding: 0 15px;">
                 <div style="float: left; color: #616161;">
@@ -97,10 +90,7 @@
                 </div>
                 <div class="delete_item" style="float: right; color: #616161;">선택 삭제</div>
             </div>
-            <div class="cart_content" id="cartItem_list">
-
-
-            </div>
+            <div class="cart_content" id="cartItem_list"></div>
         </div>
 
         <div class="content_right">
@@ -119,7 +109,6 @@
                     <div style="float: left;">총 상품수</div>
                     <div style="float: right;"><span id="product_qty" style="padding-right: 5px;">product_qty</span>개</div>
                 </div>
-
                 <div class="total_price">
                     <div style="float: left; font-size: 18px;"><b>결제 금액</b></div>
                     <div style="float: right;"><span id="total_price" style="font-size: 25px; font-weight: bold; padding-right: 5px;">total_price</span>원</div>
@@ -134,13 +123,13 @@
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
+
         function getCookie(name) {
             const cookies = document.cookie.split(';');
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i].trim();
-                if (cookie.startsWith(name + '=')) {
+                if (cookie.startsWith(name + '='))
                     return cookie.substring(name.length + 1);
-                }
             }
             return null;
         }
@@ -204,7 +193,7 @@
                     }
                     $("#cartItem_list").html(cart_item_info);
                 }
-            });
+            })
         }
 
         $(document).on('click', '#submit', function() {
@@ -292,7 +281,7 @@
                     success: function() {
                         printCartItems();
                     }
-                });
+                })
             }
         });
 
@@ -319,7 +308,7 @@
                     success: function(data) {
                         printCartItems();
                     }
-                });
+                })
             }
         });
 
@@ -343,7 +332,7 @@
                  success: function(data) {
                     printCartItems();
                  }
-            });
+            })
         });
 
     </script>

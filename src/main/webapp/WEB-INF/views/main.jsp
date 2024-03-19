@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <title>Main</title>
@@ -88,7 +88,6 @@
 
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
     <script>
         $('.slick').slick({
             autoplay: true,
@@ -162,8 +161,6 @@
         </div>
     </div>
 
-    <%@ include file="includes/footer.jsp" %>
-
     <script>
         $(document).ready(function() {
             printProduct();
@@ -203,9 +200,12 @@
                     $("#product_list").empty();
                     $("#product_list").html(product_info);
                 }
-            });
+            })
         }
+
     </script>
+
+    <%@ include file="includes/footer.jsp" %>
 
 </body>
 </html>

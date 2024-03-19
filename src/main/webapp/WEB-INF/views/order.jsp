@@ -47,12 +47,12 @@
             margin-top: 7px;
         }
         #zipcode {
-            background-color: #FFFFFF;
-            color: #FFAB64;
+            background-color: #FFEDDE;
+            color: #FF7500;
             font-size: 15px;
             width: 80px;
             height: 35px;
-            border: 1px solid #FFAB64;
+            border: 1px solid #FF7500;
             border-radius: 7px;
             margin-left: 10px;
         }
@@ -312,8 +312,6 @@
 
                     $('#order_address_zipcode').val(data.zonecode);
                     $('#order_address_address_01').val(addr);
-                    $('#order_address_zipcode').attr('readonly', true);
-                    $('#order_address_address_01').attr('readonly', true);
                     $('#order_address_address_02').focus();
                 }
             }).open();

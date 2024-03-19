@@ -180,105 +180,115 @@
             let addr_01 = $('#order_address_address_01').val();
             let addr_02 = $('#order_address_address_02').val();
 
-            if (user_name == "" || user_phone == "010")
+            if (user_name == "" || user_phone == "010") {
                 alert('주문자 정보를 입력해 주세요.');
-            else if (order_name == "" || order_phone == "010" || zipcode == "" || addr_01 == "" || addr_02 == "")
+            } else if (order_name == "" || order_phone == "010" || zipcode == "" || addr_01 == "" || addr_02 == "") {
                 alert('배송지 정보를 입력해 주세요');
+            } else {
+                if (from == "product") {
+                    let productId = urlParams.get('prodId');
+                    let purchasedQty = urlParams.get('count');
 
-            if (from == "product") {
-                let productId = urlParams.get('prodId');
-                let purchasedQty = urlParams.get('count');
-
-                $.ajax ({
-                    type: 'POST',
-                    url: '/order/product/' + productId + '/' + purchasedQty,
-                    beforeSend: function(xhr) {
-                        var token = getCookie("access_token");
-                        if (!token) {
-                            alert("로그인이 필요합니다.");
-                            location.href="/login";
-                        }
-                        xhr.setRequestHeader("Authorization", "Bearer " + token);
-                    },
-                    data: JSON.stringify (
-                        {
-                            "name": order_name,
-                            "contact": order_phone,
-                            "zipcode": zipcode,
-                            "streetAddr": addr_01,
-                            "detailAddr": addr_02
-                        }
-                    ),
-                    contentType: 'application/json; charset=utf-8',
-                    success: function(data) {
-                        alert('주문이 성공적으로 완료 되었습니다.');
-                        location.href="/product/list/view";
-                    }
-                })
-            } else if (from == "gp") {
-                let gpId = urlParams.get('gpId');
-                let purchasedQty = urlParams.get('purchasedQty');
-
-                $.ajax ({
-                    type: 'POST',
-                    url: '/gp/order/' + gpId + "/" + purchasedQty,
-                    beforeSend: function(xhr) {
-                        var token = getCookie("access_token");
-                        if (!token) {
-                            alert("로그인이 필요합니다.");
-                            location.href="/login";
-                        }
-                        xhr.setRequestHeader("Authorization", "Bearer " + token);
-                    },
-                    data: JSON.stringify (
-                        {
-                            "name": order_name,
-                            "contact": order_phone,
-                            "zipcode": zipcode,
-                            "streetAddr": addr_01,
-                            "detailAddr": addr_02
-                        }
-                    ),
-                    contentType: 'application/json; charset=utf-8',
-                    success: function(data) {
-                        alert('공동구매 참여가 성공적으로 완료 되었습니다.');
-                        location.href="/gp/list/view";
-                    }
-                })
-
-            } else if (from == "cart") {
-                let param_list = urlParams.get('item_list');
-                let item_list = param_list.split(",");
-
-                $.ajax ({
-                    type: 'POST',
-                    url: '/order/cart/add',
-                    beforeSend: function(xhr) {
-                        var token = getCookie("access_token");
-                        if (!token) {
-                            alert("로그인이 필요합니다.");
-                            location.href="/login";
-                        }
-                        xhr.setRequestHeader("Authorization", "Bearer " + token);
-                    },
-                    data: JSON.stringify (
-                        {
-                            "itemIds" : item_list,
-                            "orderDto" : {
+                    $.ajax ({
+                        type: 'POST',
+                        url: '/order/product/' + productId + '/' + purchasedQty,
+                        beforeSend: function(xhr) {
+                            var token = getCookie("access_token");
+                            if (!token) {
+                                alert("로그인이 필요합니다.");
+                                location.href="/login";
+                            }
+                            xhr.setRequestHeader("Authorization", "Bearer " + token);
+                        },
+                        data: JSON.stringify (
+                            {
                                 "name": order_name,
                                 "contact": order_phone,
                                 "zipcode": zipcode,
                                 "streetAddr": addr_01,
                                 "detailAddr": addr_02
                             }
+                        ),
+                        contentType: 'application/json; charset=utf-8',
+                        error: function(xhr, data) {
+                            alert(data.message);
+                            history.back(-2);
+                        },
+                        success: function(data) {
+                            location.href="/order/finish/view";
                         }
-                    ),
-                    contentType: 'application/json; charset=utf-8',
-                    success: function(data) {
-                        alert('주문이 성공적으로 완료 되었습니다.');
-                        location.href="/product/list/view";
-                    }
-                })
+                    })
+                } else if (from == "gp") {
+                    let gpId = urlParams.get('gpId');
+                    let purchasedQty = urlParams.get('purchasedQty');
+
+                    $.ajax ({
+                        type: 'POST',
+                        url: '/gp/order/' + gpId + "/" + purchasedQty,
+                        beforeSend: function(xhr) {
+                            var token = getCookie("access_token");
+                            if (!token) {
+                                alert("로그인이 필요합니다.");
+                                location.href="/login";
+                            }
+                            xhr.setRequestHeader("Authorization", "Bearer " + token);
+                        },
+                        data: JSON.stringify (
+                            {
+                                "name": order_name,
+                                "contact": order_phone,
+                                "zipcode": zipcode,
+                                "streetAddr": addr_01,
+                                "detailAddr": addr_02
+                            }
+                        ),
+                        contentType: 'application/json; charset=utf-8',
+                        error: function(xhr, data) {
+                            alert(data.message);
+                            history.back(-2);
+                        },
+                        success: function(data) {
+                            alert('공동구매 참여가 성공적으로 완료 되었습니다.');
+                            location.href="/order/finish/view";
+                        }
+                    })
+                } else if (from == "cart") {
+                    let param_list = urlParams.get('item_list');
+                    let item_list = param_list.split(",");
+
+                    $.ajax ({
+                        type: 'POST',
+                        url: '/order/cart/add',
+                        beforeSend: function(xhr) {
+                            var token = getCookie("access_token");
+                            if (!token) {
+                                alert("로그인이 필요합니다.");
+                                location.href="/login";
+                            }
+                            xhr.setRequestHeader("Authorization", "Bearer " + token);
+                        },
+                        data: JSON.stringify (
+                            {
+                                "itemIds" : item_list,
+                                "orderDto" : {
+                                    "name": order_name,
+                                    "contact": order_phone,
+                                    "zipcode": zipcode,
+                                    "streetAddr": addr_01,
+                                    "detailAddr": addr_02
+                                }
+                            }
+                        ),
+                        contentType: 'application/json; charset=utf-8',
+                        error: function(xhr, data) {
+                            alert(data.message);
+                            history.back(-2);
+                        },
+                        success: function(data) {
+                            location.href="/order/finish/view";
+                        }
+                    })
+                }
             }
         });
 

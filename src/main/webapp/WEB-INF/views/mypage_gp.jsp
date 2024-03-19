@@ -197,7 +197,7 @@
                     $.each(order_arr, function(idx, value) {
                     order_box += "<div class='content_box'>"
                                     + "<a href='/gp/" + value.groupPurchase.id + "/view'>"
-                                    + "<img src='" + value.groupPurchase.imgUrl + "' style='width: 115px; height: 135px; margin-right: 30px;'>"
+                                    + "<img src='../../images/grouppurchase/" + value.groupPurchase.imgUrl + "' style='width: 115px; height: 135px; margin-right: 30px;'>"
                                     + "</a>"
                                     + "<div style='display: flex; flex-direction: column; width: 680px;'>"
                                         + "<div>" + printStatus(value.groupPurchase.state) + "</div>"

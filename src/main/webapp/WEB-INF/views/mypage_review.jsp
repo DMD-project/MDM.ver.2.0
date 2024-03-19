@@ -241,7 +241,7 @@
                     $.each(review_arr, function(idx, value) {
                         review_box += "<div class='content_box'>"
                                         + "<a href='/product/" + value.product.id + "/view'>"
-                                        + "<img src='" + value.product.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
+                                        + "<img src='../../images/product/" + value.product.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
                                         + "<div style='display:flex; flex-direction: column; width: 680px; margin-top: 10px;'>"
                                             + "<div id='" + value.product.id + "' class='" + value.id +"'>"
                                                 + "<span style='font-size: 20px; font-weight: bold;'>" + value.product.name + "</span>"

@@ -190,7 +190,7 @@
                         cart_item_info += "<div class='cartItem_wrapper' value='" + data.content.cartItems[i].id +"'>"
                                             + "<input type='checkbox' class='cartItem_checkbox' style='margin-right: 15px;' checked='checked' value='" + data.content.cartItems[i].id + "'>"
                                             + "<a href='/product/" + data.content.cartItems[i].product.id + "/view'>"
-                                            + "<img src='" + data.content.cartItems[i].product.imgUrl + "style='width: 110px; height: 130px; margin-right: 30px;'>"
+                                            + "<img src='../../images/product/" + data.content.cartItems[i].product.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
                                             + "<div style='display: flex; flex-direction: column;'>"
                                                 + "<div style='font-size: 22px; margin-top: 20px;'><b>" + data.content.cartItems[i].product.name + "</b></div>"
                                                 + "</a>"

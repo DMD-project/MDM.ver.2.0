@@ -233,13 +233,12 @@
                     $("#count").html(data.content.length);
 
                     let product_info = "";
-
                     product_info += "<ul>";
                     for (let i = 0; i < data.content.length; i++) {
 
                         product_info += "<li>"
                                         + "<a href='/product/" + data.content[i].id + "/view'>" + "<p>"
-                                        + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
+                                        + "<img src='../../images/product/" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
                                         + "<span>" + data.content[i].name + "</span>" + "<br/>"
                                         + "<span><b>" + data.content[i].price + "원</b></span>"
                                         + "</a>"

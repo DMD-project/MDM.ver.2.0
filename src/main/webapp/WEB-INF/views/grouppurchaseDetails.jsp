@@ -105,7 +105,7 @@
 <div class="sample">
 
     <div class="gp_img">
-        <img id="prod_img" src="" alt="">
+        <img id="prod_img" src="" alt="" style="width: 500px; height: 500px;">
     </div>
     <div class="gp_info_wrapper">
         <div class="gp_info">
@@ -177,6 +177,7 @@
     let maxQty = 0;
     $(document).ready(function() {
         printGPDetails();
+        check_myGP();
     });
 
     function printGPDetails() {
@@ -197,7 +198,7 @@
 
                 maxQty = data.content.groupPurchase.maxQty;
 
-                $("#prod_img").attr('src', gp_imgUrl);
+                $("#prod_img").attr('src', "../../images/grouppurchase/" + gp_imgUrl);
                 $("#prod_img").attr('alt', gp_imgUrl);
                 $("#gp_name").html(gp_name);
                 $("#gp_participants").html(gp_participants_qty);
@@ -248,6 +249,35 @@
         })
     }
 
+    function check_myGP() {
+        let url = window.location.href;
+        let splitUrl = url.split("/");
+
+        let gpId = splitUrl[splitUrl.length - 2];
+
+        $.ajax ({
+            url: '/mypage/gp',
+            beforeSend: function(xhr) {
+                var token = getCookie("access_token");
+                if (!token) {
+                    alert("로그인이 필요합니다.");
+                    location.href="/login";
+                }
+                xhr.setRequestHeader("Authorization", "Bearer " + token);
+            },
+            success: function(data) {
+                let my_gp = data.content;
+                $.each(my_gp, function(idx, value) {
+                    if (value.groupPurchase.id == gpId) {
+                        $(".submit").css("background-color", "#868686");
+                        $(".submit").attr("disabled", true);
+                        $(".submit").text("참여 완료");
+                    }
+                });
+            }
+        })
+    }
+
     $(document).on('click', '#count_minus', function() {
         let count_value = $('#count_value').val();
         if (count_value == 1)
@@ -274,38 +304,8 @@
 
         let gpId = splitUrl[splitUrl.length - 2];
         let purchasedQty = $('#count_value').val();
-        $.ajax ({
-            type: 'POST',
-            url: '/gp/order/' + gpId + "/" + purchasedQty,
-            data: {
-                "gpId" : gpId,
-                "purchasedQty" : purchasedQty
-            },
-            beforeSend: function(xhr) {
-                var token = getCookie("access_token");
-                console.log("Token:", token);
 
-                if(!token) {
-                    alert("로그인이 필요합니다.");
-                    location.href="http://localhost:8080/login";
-                    return;
-                }
-                xhr.setRequestHeader("Authorization", "Bearer " + token);
-            },
-            success: function(data) {
-                if(data.statusCode != 200) {
-                    alert(data.message);
-                    return;
-                }
-                else {
-                    if(confirm("참여가 완료되었습니다.\n마이페이지에서 확인하기") == true) {
-                        location.href="http://localhost:8080/mypage/gp/view";
-                    } else {
-                        location.reload();
-                    }
-                }
-            }
-        })
+        location.href='/order/view?from=gp&gpId=' + gpId + '&purchasedQty=' + purchasedQty;
     });
 
 </script>

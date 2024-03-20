@@ -57,7 +57,7 @@ public interface GroupPurcahseApi {
             @ApiResponse(responseCode = "405", description = "공동구매 참여 가능한 기간이 아님"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
-    CustomResponse<String> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty, OrderDto orderDto);
+    CustomResponse<Void> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty, OrderDto orderDto);
 
     @Operation(summary = "공동구매 검색")
     @ApiResponses(value = {

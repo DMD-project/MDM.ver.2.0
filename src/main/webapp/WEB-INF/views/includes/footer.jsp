@@ -7,8 +7,7 @@
     <style>
         .wrapper {
             background-color: #FFFFFF;
-            width: 100%;
-            padding: 30px 0 40px 50px;
+정            padding: 30px 0 40px 50px;
         }
         .wrapper div {
             color: #616161;

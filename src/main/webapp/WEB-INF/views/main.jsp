@@ -4,16 +4,10 @@
 <html lang="ko">
 <head>
     <title>Main</title>
-
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-
     <style>
         body {
             background-color: #F9F1E7;
-        }
-        .photo_banner {
-            background-color: #FFFFFF;
-            height: 400px;
         }
         .slick-arrow {
             position: absolute;
@@ -91,7 +85,7 @@
     <script>
         $('.slick').slick({
             autoplay: true,
-            autoplaySpeed: 2000,
+            autoplaySpeed: 1500,
         });
     </script>
 

@@ -91,13 +91,11 @@
                 <a href="/"><img src="../../images/m2dm.png" style="width: 200px; height: auto;"></a>
             </div>
             <ul class="navbar_menu">
-                <li><a href="#"><b>커뮤니티</b></a></li>
                 <li><a href="/product/list/view"><b>쇼핑</b></a></li>
                 <li><a href="/gp/list/view"><b>공동구매</b></a></li>
                 <li><a href="/secondhand/list/view"><b>중고거래</b></a></li>
             </ul>
             <ul class="navbar_icons">
-                <a href="#"><i class="fa-solid fa-heart"></i></a>
                 <a href="/cart/view"><i class="fa-solid fa-cart-shopping"></i></a>
                 <a href="/mypage/view"><i class="fa-solid fa-user"></i></a>
             </ul>

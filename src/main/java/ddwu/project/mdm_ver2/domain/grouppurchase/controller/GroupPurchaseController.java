@@ -46,7 +46,7 @@ public class GroupPurchaseController implements GroupPurcahseApi {
 
     /* 공동구매 참여 */
     @PostMapping("/order/{gpId}/{purchasedQty}")
-    public CustomResponse<String> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty, @RequestBody OrderDto orderDto) {
+    public CustomResponse<Void> joinGroupPurchase(Principal principal, @PathVariable Long gpId, @PathVariable int purchasedQty, @RequestBody OrderDto orderDto) {
         return groupPurchaseService.joinGroupPurchase(principal, gpId, purchasedQty, orderDto);
     }
 

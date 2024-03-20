@@ -197,7 +197,7 @@ public class GroupPurchaseService {
         return CustomResponse.onSuccess(groupPurchaseRepository.count());
     }
 
-    public CustomResponse<String> joinGroupPurchase(Principal principal, Long gpId, int purchasedQty, OrderDto orderDto) {
+    public CustomResponse<Void> joinGroupPurchase(Principal principal, Long gpId, int purchasedQty, OrderDto orderDto) {
         try {
             if (principal == null) {
                 return CustomResponse.onFailure(HttpStatus.METHOD_NOT_ALLOWED.value(), "공동구매에 참여할 수 없습니다.");

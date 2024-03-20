@@ -243,7 +243,7 @@
                     $.each(bid_arr, function(idx, value) {
                         let isBidUser = value.bidUserState;
                         bid_box += "<div id='" + value.bidId + "' data-price='" + value.price + "' data-state='" + value.bidState + "' style='margin-bottom: 10px;'>"
-                                    + "<span id='bid_price'>" + value.price + "원</span>";
+                                    + "<span id='bid'>" + value.price + "원</span>";
                                 if (soldout == 'n') {
                                     if (isWriter == 'y') {
                                         bid_box += "<span id='bid_accept'>거래</span>";
@@ -397,7 +397,7 @@
                             return;
                         } else {
                             alert("구매 희망가가 등록되었습니다.");
-                            location.href="/secondhand/" + data.content.secondHand.id + "/view";
+                            location.href="/secondhand/" + shId + "/view";
                         }
                     }
                 })

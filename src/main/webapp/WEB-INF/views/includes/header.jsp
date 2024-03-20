@@ -58,7 +58,7 @@
           list-style: none;
           display: flex;
           margin: 0;
-          padding-left: 400px;
+          padding-left: 600px;
         }
         .navbar_icons i {
             padding: 0px 8px;

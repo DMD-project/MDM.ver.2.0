@@ -137,12 +137,6 @@
                     <span id="user_email" style="margin-left: 5px;">user_email@gmail.com</span>
                 </div>
             </div>
-            <div style="float: right; padding-top: 30px; ">
-                <div class="review" style="float: right; padding-right: 120px; align: right;">
-                    <span class="link"><i class="fa-solid fa-pencil fa-2x" style="padding-bottom: 10px;"></i><br/>후기 작성</span></div>
-                <div class="favorite" style="float: right; padding-right: 30px;">
-                    <span class="link"><i class="fa-regular fa-heart fa-2x" style="padding-bottom: 10px;"></i><br/>관심 상품</span></div>
-            </div>
         </div>
     </div>
 
@@ -150,7 +144,6 @@
         <nav class="nav_mypage">
             <ul>
                 <li style="font-size: 20px; color: #333333;"><b>나의 쇼핑 활동</b></li>
-                <li><span class="link">관심 상품</span></li>
                 <li><span class="link" onclick="location.href='/mypage/view'">구매 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/gp/view'">공동구매 참여 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/sh/view'" style="color: #FF7500;">중고거래 판매 내역</span></li>

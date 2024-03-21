@@ -43,6 +43,20 @@
         <img src="../images/kakao_sync_large_wide.png" class="kakao"/>
     </a>
 
+    <!-- 회원가입 폼 -->
+    <form id="signupForm">
+        <input type="text" id="email" name="email" placeholder="이메일">
+        <input type="password" id="password" name="password" placeholder="비밀번호">
+        <button type="button" onclick="signup()">회원가입</button>
+    </form>
+
+    <!-- 로그인 폼 -->
+    <form id="loginForm">
+        <input type="text" id="loginEmail" name="email" placeholder="이메일">
+        <input type="password" id="loginPassword" name="password" placeholder="비밀번호">
+        <button type="button" onclick="login()">로그인</button>
+    </form>
+
     <script>
         Kakao.init('6e1fedab86d6b96e90375545f2dc62da');
 
@@ -51,6 +65,50 @@
                     redirectUri: 'http://localhost:8080/kakao',
                 });
         }
+
+      function signup() {
+             var email = document.getElementById('email').value;
+             var password = document.getElementById('password').value;
+
+             var xhr = new XMLHttpRequest();
+             xhr.open('POST', '/signup', true);
+             xhr.setRequestHeader('Content-Type', 'application/json');
+
+             xhr.onreadystatechange = function() {
+                 if (xhr.readyState === 4) {
+                     if (xhr.status === 200) {
+                         console.log('Signup successful');
+                     } else {
+                         console.error('Error in signup:', xhr.statusText);
+                         document.getElementById('error-message').innerText = 'Signup failed. Please try again.';
+                     }
+                 }
+             };
+
+             xhr.send(JSON.stringify({ email: email, password: password }));
+         }
+
+         function login() {
+             var email = document.getElementById('loginEmail').value;
+             var password = document.getElementById('loginPassword').value;
+
+             var xhr = new XMLHttpRequest();
+             xhr.open('POST', '/login', true);
+             xhr.setRequestHeader('Content-Type', 'application/json');
+
+             xhr.onreadystatechange = function() {
+                 if (xhr.readyState === 4) {
+                     if (xhr.status === 200) {
+                         console.log('Login successful');
+                     } else {
+                         console.error('Error in login:', xhr.statusText);
+                         document.getElementById('error-message').innerText = 'Login failed. Please check your credentials and try again.';
+                     }
+                 }
+             };
+
+             xhr.send(JSON.stringify({ email: email, password: password }));
+         }
     </script>
 
 </body>

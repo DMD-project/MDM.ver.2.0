@@ -13,17 +13,22 @@ import ddwu.project.mdm_ver2.global.exception.CustomResponse;
 import ddwu.project.mdm_ver2.global.jwt.JwtProvider;
 import ddwu.project.mdm_ver2.global.jwt.JwtToken;
 import ddwu.project.mdm_ver2.global.redis.RedisUtil;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.webjars.NotFoundException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -266,5 +271,86 @@ public class UserService {
         } catch (Exception e) {
             return CustomResponse.onFailure(HttpStatus.INTERNAL_SERVER_ERROR.value(), "회원 탈퇴에 실패하였습니다.");
         }
+    }
+
+    public JwtToken generalSignup(String email, String password, HttpServletResponse response) {
+        User user = new User();
+        UUID uuid = UUID.randomUUID();
+        long id = uuid.getMostSignificantBits() & Long.MAX_VALUE; // UUID를 Long 값으로 변환
+        user.setId(id);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setRole(Role.valueOf("USER"));
+
+        userRepository.save(user);
+        String accessToken = jwtProvider.createAccessToken(user.getId(), null);
+        String refreshToken = jwtProvider.createRefreshToken(user.getId(), null);
+
+        Cookie accessCookie = new Cookie("access_token", accessToken);
+        accessCookie.setMaxAge(30 * 60); // 30분
+        accessCookie.setPath("/");
+        response.addCookie(accessCookie);
+
+        Cookie refreshCookie = new Cookie("refresh_token", refreshToken);
+        refreshCookie.setMaxAge(14 * 24 * 60 * 60); // 2주
+        refreshCookie.setPath("/");
+        response.addCookie(refreshCookie);
+
+        return new JwtToken(accessToken, refreshToken);
+    }
+
+
+    public JwtToken generalLogin(String email, String password, HttpServletResponse response) {
+        System.out.println(email);
+        System.out.println(password);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("해당 이메일로 가입된 사용자가 없습니다."));
+
+        if (!user.getPassword().equals(password)) {
+            throw new SecurityException("비밀번호가 일치하지 않습니다.");
+        }
+
+        String accessToken = jwtProvider.createAccessToken(user.getId(), null);
+        String refreshToken = jwtProvider.createRefreshToken(user.getId(), null);
+
+        Cookie accessCookie = new Cookie("access_token", accessToken);
+        accessCookie.setMaxAge(30 * 60); // 30분
+        accessCookie.setPath("/");
+        response.addCookie(accessCookie);
+
+        Cookie refreshCookie = new Cookie("refresh_token", refreshToken);
+        refreshCookie.setMaxAge(14 * 24 * 60 * 60); // 2주
+        refreshCookie.setPath("/");
+        response.addCookie(refreshCookie);
+
+        return new JwtToken(accessToken, refreshToken);
+    }
+
+
+    public JwtToken iOSgeneralSignup(String email, String password) {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+
+        userRepository.save(user);
+        String accessToken = jwtProvider.createAccessToken(user.getId(), null);
+        String refreshToken = jwtProvider.createRefreshToken(user.getId(), null);
+
+        return new JwtToken(accessToken, refreshToken);
+    }
+
+
+    public JwtToken iOSgeneralLogin(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("해당 이메일로 가입된 사용자가 없습니다."));
+
+        if (!user.getPassword().equals(password)) {
+            throw new SecurityException("비밀번호가 일치하지 않습니다.");
+        }
+
+        String accessToken = jwtProvider.createAccessToken(user.getId(), null);
+        String refreshToken = jwtProvider.createRefreshToken(user.getId(), null);
+
+        return new JwtToken(accessToken, refreshToken);
     }
 }

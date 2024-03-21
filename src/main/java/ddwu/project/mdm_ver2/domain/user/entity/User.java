@@ -31,6 +31,9 @@ public class User {
     @Column(name = "user_email")
     private String email;
 
+    @Column(name = "user_password")
+    private String password;
+
     @Column(name = "user_profile_img_url")
     private String profileImgUrl;
 

@@ -1,9 +1,6 @@
 package ddwu.project.mdm_ver2.global.mapping.controller;
 
-import ddwu.project.mdm_ver2.domain.cart.service.CartService;
-import ddwu.project.mdm_ver2.domain.grouppurchase.service.GroupPurchaseService;
-import ddwu.project.mdm_ver2.domain.product.service.ProductService;
-import ddwu.project.mdm_ver2.domain.secondhand.service.SecondHandService;
+import ddwu.project.mdm_ver2.domain.user.dto.GeneralRequest;
 import ddwu.project.mdm_ver2.domain.user.dto.UserResponse;
 import ddwu.project.mdm_ver2.domain.user.service.UserService;
 import ddwu.project.mdm_ver2.global.jwt.JwtToken;
@@ -13,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
@@ -55,6 +54,18 @@ public class MappingController {
         response.addCookie(refreshCookie);
 
         userService.addUser(userResponse);
+        return "redirect:/";
+    }
+
+    @PostMapping("/signup")
+    public String generalSignup(@RequestBody GeneralRequest request, HttpServletResponse response) {
+        JwtToken token = userService.generalSignup(request.getEmail(), request.getPassword(), response);
+        return "redirect:/";
+    }
+
+    @PostMapping("/login")
+    public String generalLogin(@RequestBody GeneralRequest request, HttpServletResponse response) {
+        JwtToken token = userService.generalLogin(request.getEmail(), request.getPassword(), response);
         return "redirect:/";
     }
 

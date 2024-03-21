@@ -19,9 +19,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.webjars.NotFoundException;
 
 import java.io.*;
@@ -33,7 +32,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     @Value("${kakao.rest-api-key}")
     private String restApiKey;
 
@@ -48,6 +46,7 @@ public class UserService {
     private final SecondHandBidService shBidService;
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
+    private final PasswordEncoder passwordEncoder;
 
     public String getAccessToken(String code) {
 
@@ -278,13 +277,13 @@ public class UserService {
 
         UUID uuid = UUID.randomUUID();
         long id = Math.abs(uuid.getMostSignificantBits()) % 1000000000L; // 양수로 변환 및 9자리로 제한
-        String setId = "1" + String.valueOf(id);
+        String setId = "2" + String.valueOf(id);
         long resId = Long.parseLong(setId);
 
         user.setId(resId);
         user.setNickname(setDefaultNickname(setId));
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRole(Role.valueOf("USER"));
 
         userRepository.save(user);
@@ -308,7 +307,7 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("해당 이메일로 가입된 사용자가 없습니다."));
 
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new SecurityException("비밀번호가 일치하지 않습니다.");
         }
 
@@ -333,13 +332,14 @@ public class UserService {
 
         UUID uuid = UUID.randomUUID();
         long id = Math.abs(uuid.getMostSignificantBits()) % 1000000000L; // 양수로 변환 및 9자리로 제한
-        String setId = "1" + String.valueOf(id);
+        String setId = "2" + String.valueOf(id);
         long resId = Long.parseLong(setId);
 
         user.setId(resId);
         user.setNickname(setDefaultNickname(setId));
         user.setEmail(email);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole(Role.valueOf("USER"));
 
         userRepository.save(user);
         String accessToken = jwtProvider.createAccessToken(user.getId(), null);
@@ -352,7 +352,7 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("해당 이메일로 가입된 사용자가 없습니다."));
 
-        if (!user.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new SecurityException("비밀번호가 일치하지 않습니다.");
         }
 

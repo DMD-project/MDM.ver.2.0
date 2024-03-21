@@ -275,9 +275,14 @@ public class UserService {
 
     public JwtToken generalSignup(String email, String password, HttpServletResponse response) {
         User user = new User();
+
         UUID uuid = UUID.randomUUID();
-        long id = uuid.getMostSignificantBits() & Long.MAX_VALUE; // UUID를 Long 값으로 변환
-        user.setId(id);
+        long id = Math.abs(uuid.getMostSignificantBits()) % 1000000000L; // 양수로 변환 및 9자리로 제한
+        String setId = "1" + String.valueOf(id);
+        long resId = Long.parseLong(setId);
+
+        user.setId(resId);
+        user.setNickname(setDefaultNickname(setId));
         user.setEmail(email);
         user.setPassword(password);
         user.setRole(Role.valueOf("USER"));
@@ -299,13 +304,10 @@ public class UserService {
         return new JwtToken(accessToken, refreshToken);
     }
 
-
     public JwtToken generalLogin(String email, String password, HttpServletResponse response) {
-        System.out.println(email);
-        System.out.println(password);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("해당 이메일로 가입된 사용자가 없습니다."));
-        System.out.println(user.getPassword() + "\n입력: " + password);
+
         if (!user.getPassword().equals(password)) {
             throw new SecurityException("비밀번호가 일치하지 않습니다.");
         }
@@ -326,9 +328,16 @@ public class UserService {
         return new JwtToken(accessToken, refreshToken);
     }
 
-
-    public JwtToken iOSgeneralSignup(String email, String password) {
+    public JwtToken iosGeneralSignup(String email, String password) {
         User user = new User();
+
+        UUID uuid = UUID.randomUUID();
+        long id = Math.abs(uuid.getMostSignificantBits()) % 1000000000L; // 양수로 변환 및 9자리로 제한
+        String setId = "1" + String.valueOf(id);
+        long resId = Long.parseLong(setId);
+
+        user.setId(resId);
+        user.setNickname(setDefaultNickname(setId));
         user.setEmail(email);
         user.setPassword(password);
 
@@ -339,8 +348,7 @@ public class UserService {
         return new JwtToken(accessToken, refreshToken);
     }
 
-
-    public JwtToken iOSgeneralLogin(String email, String password) {
+    public JwtToken iosGeneralLogin(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("해당 이메일로 가입된 사용자가 없습니다."));
 

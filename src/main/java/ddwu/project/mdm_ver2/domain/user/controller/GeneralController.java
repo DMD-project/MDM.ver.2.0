@@ -29,14 +29,14 @@ public class GeneralController {
     }
 
     @PostMapping("/ios/signup")
-    public CustomResponse<JwtToken> iOSgeneralSignup(@RequestBody GeneralRequest request) {
-        JwtToken token = userService.iOSgeneralSignup(request.getEmail(), request.getPassword());
+    public CustomResponse<JwtToken> iosGeneralSignup(@RequestBody GeneralRequest request) {
+        JwtToken token = userService.iosGeneralSignup(request.getEmail(), request.getPassword());
         return CustomResponse.onSuccess(token);
     }
 
     @PostMapping("/ios/login")
-    public CustomResponse<JwtToken> iOSgeneralLogin(@RequestParam String email, @RequestParam String password) {
-        JwtToken token = userService.iOSgeneralLogin(email, password);
+    public CustomResponse<JwtToken> iosGeneralLogin(@RequestParam String email, @RequestParam String password) {
+        JwtToken token = userService.iosGeneralLogin(email, password);
         return CustomResponse.onSuccess(token);
     }
 }

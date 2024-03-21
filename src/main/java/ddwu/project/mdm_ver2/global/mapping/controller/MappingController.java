@@ -60,17 +60,16 @@ public class MappingController {
         return "redirect:/";
     }
 
-    @PostMapping("/signup")
+    @GetMapping("/general/signup/view")
     public String generalSignup(@RequestBody GeneralRequest request, HttpServletResponse response) {
-        JwtToken token = userService.generalSignup(request.getEmail(), request.getPassword(), response);
-        return "redirect:/";
+        return "join";
     }
 
-    @PostMapping("/login")
-    public String generalLogin(@RequestBody GeneralRequest request, HttpServletResponse response) {
-        JwtToken token = userService.generalLogin(request.getEmail(), request.getPassword(), response);
-        return "redirect:/";
-    }
+//    @PostMapping("/login")
+//    public String generalLogin(@RequestBody GeneralRequest request, HttpServletResponse response) {
+//        JwtToken token = userService.generalLogin(request.getEmail(), request.getPassword(), response);
+//        return "redirect:/";
+//    }
 
     @GetMapping("/product/list/view")
     public String getProductList() {

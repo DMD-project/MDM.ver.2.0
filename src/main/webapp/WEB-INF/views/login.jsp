@@ -104,7 +104,7 @@
         $(document).on('click', '#login', function() {
             var email = $('#user_email').val();
             var password = $('#user_password').val();
-            alert(email + " " + password);
+
             if (email == "" || password == "")
                 alert('가입 정보를 입력해 주세요.');
             else {

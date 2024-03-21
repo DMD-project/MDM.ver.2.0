@@ -17,6 +17,7 @@
         .content_wrapper {
             display : flex;
             justify-content: center;
+            margin-bottom: 100px;
         }
         .content_left {
             width: 600px;
@@ -97,21 +98,21 @@
             <div class="price_info">
                 <div class="product_total" style="padding-bottom: 10px;">
                     <div style="float: left;">총 상품 금액</div>
-                    <div style="float: right;"><span id="product_total" style="padding-right: 5px;">product_total</span>원</div>
+                    <div style="float: right;"><span id="product_total" style="padding-right: 5px;">0</span>원</div>
                 </div>
                 <br/>
                 <div class="shipping_fee" style="padding-bottom: 10px;">
                     <div style="float: left;">배송비</div>
-                    <div style="float: right;"><span id="shipping_fee" style="padding-right: 5px;">shipping_fee</span>원</div>
+                    <div style="float: right;"><span id="shipping_fee" style="padding-right: 5px;">0</span>원</div>
                 </div>
                 <br/>
                 <div class="product_qty" style="padding-bottom: 80px;">
                     <div style="float: left;">총 상품수</div>
-                    <div style="float: right;"><span id="product_qty" style="padding-right: 5px;">product_qty</span>개</div>
+                    <div style="float: right;"><span id="product_qty" style="padding-right: 5px;">0</span>개</div>
                 </div>
                 <div class="total_price">
                     <div style="float: left; font-size: 18px;"><b>결제 금액</b></div>
-                    <div style="float: right;"><span id="total_price" style="font-size: 25px; font-weight: bold; padding-right: 5px;">total_price</span>원</div>
+                    <div style="float: right;"><span id="total_price" style="font-size: 25px; font-weight: bold; padding-right: 5px;">0</span>원</div>
                 </div>
             </div>
 
@@ -156,42 +157,44 @@
                     }
                 },
                 success: function(data) {
-                    let product_total = data.content.price;
-                    let product_qty = data.content.count;
-                    let shipping_fee = 3000;
+                    if (data.message = "OK") {
+                        let product_total = data.content.price;
+                        let product_qty = data.content.count;
+                        let shipping_fee = 0;
 
-                    if (50000 <= product_total)
-                        shipping_fee = 0;
+                        if (0 < product_total && product_total < 50000)
+                            shipping_fee = 3000;
 
-                    let total_price = product_total + shipping_fee;
+                        let total_price = product_total + shipping_fee;
 
-                    $("#product_total").html(product_total);
-                    $("#shipping_fee").html(shipping_fee);
-                    $("#product_qty").html(product_qty);
-                    $("#total_price").html(total_price);
+                        $("#product_total").html(product_total);
+                        $("#shipping_fee").html(shipping_fee);
+                        $("#product_qty").html(product_qty);
+                        $("#total_price").html(total_price);
 
-                    let cart_item_info = "";
-                    for(let i = 0; i < data.content.cartItems.length; i++) {
-                        cart_item_info += "<div class='cartItem_wrapper' value='" + data.content.cartItems[i].id +"'>"
-                                            + "<input type='checkbox' class='cartItem_checkbox' style='margin-right: 15px;' checked='checked' value='" + data.content.cartItems[i].id + "'>"
-                                            + "<a href='/product/" + data.content.cartItems[i].product.id + "/view'>"
-                                            + "<img src='../../images/product/" + data.content.cartItems[i].product.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
-                                            + "<div style='display: flex; flex-direction: column;'>"
-                                                + "<div style='font-size: 22px; margin-top: 20px;'><b>" + data.content.cartItems[i].product.name + "</b></div>"
-                                                + "</a>"
-                                                + "<div class='setPriceInfo' style='width: 380px; margin-top: 35px;'>"
-                                                    + "<div class='count_wrapper' style='float:left;'>"
-                                                        + "<button type='button' id='count_minus' value='" + data.content.cartItems[i].id + "'> - </button>"
-                                                        + "<input type='text' id='count_value' value='" + data.content.cartItems[i].count + "' readonly>"
-                                                        + "<button type='button' id='count_plus' value='" + data.content.cartItems[i].id + "'> + </button>"
-                                                    + "</div>"
-                                                    + "<div style='float: right; margin-left: 0; font-size: 25px;'><b>원</b></div>"
-                                                    + "<div id='product_price' style='float: right; font-size: 25px;'><b>" + data.content.cartItems[i].price + "</b></div>"
-                                                +"</div>"
-                                            + "</div>"
-                                        + "</div>";
+                        let cart_item_info = "";
+                        for(let i = 0; i < data.content.cartItems.length; i++) {
+                            cart_item_info += "<div class='cartItem_wrapper' value='" + data.content.cartItems[i].id +"'>"
+                                                + "<input type='checkbox' class='cartItem_checkbox' style='margin-right: 15px;' checked='checked' value='" + data.content.cartItems[i].id + "'>"
+                                                + "<a href='/product/" + data.content.cartItems[i].product.id + "/view'>"
+                                                + "<img src='../../images/product/" + data.content.cartItems[i].product.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
+                                                + "<div style='display: flex; flex-direction: column;'>"
+                                                    + "<div style='font-size: 22px; margin-top: 20px;'><b>" + data.content.cartItems[i].product.name + "</b></div>"
+                                                    + "</a>"
+                                                    + "<div class='setPriceInfo' style='width: 380px; margin-top: 35px;'>"
+                                                        + "<div class='count_wrapper' style='float:left;'>"
+                                                            + "<button type='button' id='count_minus' value='" + data.content.cartItems[i].id + "'> - </button>"
+                                                            + "<input type='text' id='count_value' value='" + data.content.cartItems[i].count + "' readonly>"
+                                                            + "<button type='button' id='count_plus' value='" + data.content.cartItems[i].id + "'> + </button>"
+                                                        + "</div>"
+                                                        + "<div style='float: right; margin-left: 0; font-size: 25px;'><b>원</b></div>"
+                                                        + "<div id='product_price' style='float: right; font-size: 25px;'><b>" + data.content.cartItems[i].price + "</b></div>"
+                                                    +"</div>"
+                                                + "</div>"
+                                            + "</div>";
+                        }
+                        $("#cartItem_list").html(cart_item_info);
                     }
-                    $("#cartItem_list").html(cart_item_info);
                 }
             })
         }

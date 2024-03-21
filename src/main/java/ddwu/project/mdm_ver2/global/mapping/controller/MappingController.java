@@ -32,6 +32,9 @@ public class MappingController {
         return "login";
     }
 
+    @GetMapping("/join")
+    public String join() {  return "join"; }
+
     @GetMapping("/kakao")
     public String login(@RequestParam String code, Model model, HttpServletResponse response) {
 
@@ -67,11 +70,6 @@ public class MappingController {
     public String generalLogin(@RequestBody GeneralRequest request, HttpServletResponse response) {
         JwtToken token = userService.generalLogin(request.getEmail(), request.getPassword(), response);
         return "redirect:/";
-    }
-
-    @GetMapping("/logout")
-    public String logout() {
-        return "logut";
     }
 
     @GetMapping("/product/list/view")

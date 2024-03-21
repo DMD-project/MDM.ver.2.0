@@ -4,7 +4,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>login</title>
+    <title>join</title>
     <style>
         body {
             background-color: #F9F1E7;
@@ -22,11 +22,13 @@
             padding-bottom: 20px;
         }
         .context {
-            color: #C2C2C2;
-            font-size: 15px;
+            color: #616161;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
         }
         input {
-            width: 300px;
+            width: 100%;
             height: 40px;
             border: 1px solid #C2C2C2;
             padding-left: 10px;
@@ -35,9 +37,9 @@
         input::placeholder {
             color: #C2C2C2;
         }
-        #login {
+        button {
             background-color: #FF7500;
-            color: #FFFFFF;
+            color: white;
             font-size: 20px;
             text-align: center;
             width: 315px;
@@ -46,62 +48,37 @@
             border-radius: 10px;
             margin-top: 10px;
         }
-        #join {
-            background-color: #FFD6A4;
-            color: #FF7500;
-            font-size: 20px;
-            text-align: center;
-            width: 315px;
-            height: 50px;
-            border: 1px solid #FF7500;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-        .kakao {
-            width: 315px;
-            margin-top: 3px;
-        }
     </style>
 </head>
+
 <body>
 
     <%@ include file="includes/header.jsp" %>
 
-    <div style="width: 315px; margin: auto; margin-bottom: 100px;">
+    <div style="width: 300px; margin: auto; margin-bottom: 100px;">
         <div style="text-align: center;">
             <img src="../images/logo.png" class="logo">
-            <div>
-                <span style="font-size: 14px; color: #C2C2C2;">SNS계정으로 간편 로그인</span>
-                <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"
-                        integrity="sha384-6MFdIr0zOira1CHQkedUqJVql0YtcZA1P0nbPrQYJXVJZUkTk/oX4U9GhUIs3/z8"
-                        crossorigin="anonymous"></script>
-                <a href="javascript:loginWithKakao()"><img src="../images/kakao_sync_large_wide.png" class="kakao"/></a>
-            </div>
+            <div class="context">회원가입</div>
         </div>
-        <div style="margin-top: 20px;">
+        <div>
             <span>이메일</span><br/>
-            <input id="user_email" type="text" placeholder="이메일을 입력해 주세요.">
+            <input id="user_email" type="text" placeholder="사용할 이메일을 입력해 주세요.">
         </div>
         <div>
             <span>비밀번호</span><br/>
-            <input id="user_password" type="password" placeholder="비밀번호를 입력해 주세요.">
+            <input id="user_password" type="password" placeholder="사용할 비밀번호를 입력해 주세요.">
         </div>
         <div style="text-align: center;">
-            <button id="login">로그인</button>
-            <button id="join">회원가입</button>
+            <button id="submit">가입하기</button>
         </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
-        Kakao.init('6e1fedab86d6b96e90375545f2dc62da');
-        function loginWithKakao() {
-            Kakao.Auth.authorize({
-                redirectUri: 'http://localhost:8080/kakao',
-            });
-        }
 
-        $(document).on('click', '#login', function() {
+        function checkEmail() {}
+
+        $(document).on('click', '#submit', function() {
             var email = $('#user_email').val();
             var password = $('#user_password').val();
 
@@ -110,7 +87,7 @@
             else {
                 $.ajax ({
                     type: 'POST',
-                    url: '/login',
+                    url: '/signup',
                     data: JSON.stringify (
                         {
                             "email" : email,
@@ -118,18 +95,12 @@
                         }
                     ),
                     contentType : 'application/json',
-                    error: function(request, status, error) {
-                        alert('로그인 정보가 일치하지 않습니다.');
-                    },
                     success: function(data) {
-                        location.href="/";
+                        alert('회원가입이 성공적으로 이루어졌습니다.\n로그인 페이지로 이동합니다.');
+                        location.href="/login";
                     }
                 })
             }
-        });
-
-        $(document).on('click', '#join', function() {
-            location.href="/join";
         });
 
     </script>

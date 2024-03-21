@@ -87,7 +87,7 @@
             else {
                 $.ajax ({
                     type: 'POST',
-                    url: '/signup',
+                    url: '/general/signup',
                     data: JSON.stringify (
                         {
                             "email" : email,

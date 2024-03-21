@@ -305,7 +305,7 @@ public class UserService {
         System.out.println(password);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("해당 이메일로 가입된 사용자가 없습니다."));
-
+        System.out.println(user.getPassword() + "\n입력: " + password);
         if (!user.getPassword().equals(password)) {
             throw new SecurityException("비밀번호가 일치하지 않습니다.");
         }

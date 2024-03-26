@@ -67,7 +67,9 @@
         <div>
             <span>비밀번호</span><br/>
             <input id="user_password" type="password" placeholder="사용할 비밀번호를 입력해 주세요.">
+            <span style="font-size: 13px; color: #BEBEBE;">* 영문, 숫자 조합 8자리~16자리 </span>
         </div>
+
         <div style="text-align: center;">
             <button id="submit">가입하기</button>
         </div>
@@ -76,7 +78,21 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
 
-        function checkEmail() {}
+        function validateEmail(sEmail) {
+            var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            if (filter.test(sEmail))
+                return true;
+            else
+                return false;
+        }
+
+        function validatePassword(sPassword) {
+            var filter = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,16}$/;
+            if (filter.test(sPassword))
+                return true;
+            else
+                return false;
+        }
 
         $(document).on('click', '#submit', function() {
             var email = $('#user_email').val();
@@ -84,6 +100,10 @@
 
             if (email == "" || password == "")
                 alert('가입 정보를 입력해 주세요.');
+            else if (!validateEmail(email))
+                alert('잘못된 이메일 입니다.');
+            else if (!validatePassword(password))
+                alert('잘못된 비밀번호 입니다.');
             else {
                 $.ajax ({
                     type: 'POST',

@@ -143,7 +143,7 @@
 
     <div class="sample">
         <div class="sh_img">
-            <img id="prod_img" src="" alt="">
+            <img id="prod_img" src="" alt="" style="width: 500px; height: 500px;">
         </div>
         <div class="product_info_wrapper">
             <div class="product_info">
@@ -202,7 +202,7 @@
                     let content = data.content.content;
                     let bid_count = data.content.secondHandBidList.length;
 
-                    $("#prod_img").attr('src', imgUrl);
+                    $("#prod_img").attr('src', '../../images/secondhand/' + imgUrl);
                     $("#prod_img").attr('alt', imgUrl);
                     $("#sh_name").html(name);
                     $("#sh_price").html(price);

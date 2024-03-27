@@ -183,14 +183,17 @@
 
                                     let secondhand_info = "";
                                     secondhand_info += "<ul>";
-
                                     for(let i = 0; i < data.content.length; i++) {
                                         secondhand_info += "<li>"
                                                         + "<a href='/secondhand/" + data.content[i].id + "/view'>" + "<p>"
-                                                        + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
-                                                        + "<span>" + data.content[i].name + "</span>" + "<br/>"
-                                                        + "<span><b>" + data.content[i].price + "원</b></span>"
-                                                        + "</a>"
+                                                        if (data.content[i].state == 'y') {
+                                                            secondhand_info += "<img src='../../images/secondhand/" + data.content[i].imgUrl + "' style='width: 100%; height: 214px; filter: grayscale(100%);'>" + "<br/>";
+                                                        } else {
+                                                            secondhand_info += "<img src='../../images/secondhand/" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>";
+                                                        }
+                                        secondhand_info += "<span>" + data.content[i].name + "</span>" + "<br/>"
+                                                            + "<span><b>" + data.content[i].price + "원</b></span>"
+                                                            + "</a>"
                                                         + "</li>";
 
                                         if (i % 4 == 3) {
@@ -235,9 +238,14 @@
                     secondhand_info += "<ul>";
                     for(let i = 0; i < data.content.length; i++) {
                         secondhand_info += "<li>"
+                                            + "<div style='text-align: left;'>" + printStatus(data.content[i].state) + "</div>"
                                             + "<a href='/secondhand/" + data.content[i].id + "/view'>" + "<p>"
-                                            + "<img src='" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>"
-                                            + "<span>" + data.content[i].name + "</span>" + "<br/>"
+                                            if (data.content[i].state == 'y') {
+                                                secondhand_info += "<img src='../../images/secondhand/" + data.content[i].imgUrl + "' style='width: 100%; height: 214px; filter: grayscale(100%);'>" + "<br/>";
+                                            } else {
+                                                secondhand_info += "<img src='../../images/secondhand/" + data.content[i].imgUrl + "' style='width: 100%; height: 214px;'>" + "<br/>";
+                                            }
+                        secondhand_info += "<span>" + data.content[i].name + "</span>" + "<br/>"
                                             + "<span><b>" + data.content[i].price + "원</b></span>"
                                             + "</a>"
                                         + "</li>";
@@ -246,10 +254,21 @@
                             secondhand_info += "<br/><ul>";
                         }
                     }
+
                     $("#secondhand_list").empty();
                     $("#secondhand_list").html(secondhand_info);
                 }
             })
+        }
+
+        function printStatus(state) {
+            let status = "";
+            if (state == 'y') {
+                status += "<span style='background-color: #616161; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>판매 완료</span>";
+            } else if (state == 'n') {
+                status += "<span style='background-color: #84D444; color: #FFFFFF; font-size: 14px; padding: 3px 7px; margin-bottom: 5px; border-radius: 7px;'>판매 중</span>";
+            }
+            return status;
         }
 
     </script>

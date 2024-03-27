@@ -9,14 +9,6 @@
         body {
             background-color: #F9F1E7;
         }
-        .slick-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 5;
-        }
-        .slick-prev {    left: 0;}
-        .slick-next {    right: 0;}
         .category_bar {
             background-color: #F9F1E7;
             text-align: center;
@@ -86,6 +78,7 @@
         $('.slick').slick({
             autoplay: true,
             autoplaySpeed: 1500,
+            arrows: false
         });
     </script>
 

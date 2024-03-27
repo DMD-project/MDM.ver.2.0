@@ -219,7 +219,9 @@
                                     }
                                         order_box += "<div style='display: flex; flex-direction: column; width: 680px;'>"
                                                    + "<div id=" + value.id + ">";
-                                    if (value.product == null) {
+                                    if (value.product == null && value.cartItems.length == 1 ) {
+                                        order_box += "<span style='font-size: 20px; font-weight: bold;'>" + value.cartItems[0].product.name + "</span>";
+                                    } else if (value.product == null && 1 < value.cartItems.length) {
                                         order_box += "<span style='font-size: 20px; font-weight: bold;'>" + value.cartItems[0].product.name + "&nbsp;&nbsp;외&nbsp;" + (value.cartItems.length - 1) + "</span>";
                                     } else {
                                         order_box += "<span style='font-size: 20px; font-weight: bold;'>" + value.product.name + "</span>";

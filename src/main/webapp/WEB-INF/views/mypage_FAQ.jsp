@@ -118,7 +118,7 @@
     <div class="mypage_content">
         <div class="mypage_content_header">
             <div style="float: left; color: #FF7500; font-size: 20px;"><b>마이페이지</b></div>
-            <div style="float: right;"><span class="link" onclick="location.href='/mypage/faq/view'" >자주 묻는 질문</span></div>
+            <div style="float: right;"><span class="link" onclick="location.href='/mypage/faq/view'">자주 묻는 질문</span></div>
         </div>
         <div class="mypage_content_main">
             <div style="float: left;">
@@ -141,7 +141,7 @@
         <nav class="nav_mypage">
             <ul>
                 <li style="font-size: 20px; color: #333333;"><b>나의 쇼핑 활동</b></li>
-                <li><span class="link" onclick="location.href='/mypage/view'" style="color: #FF7500;">구매 내역</span></li>
+                <li><span class="link" onclick="location.href='/mypage/view'">구매 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/gp/view'">공동구매 참여 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/sh/view'">중고거래 판매 내역</span></li>
                 <li><span class="link" onclick="location.href='/mypage/shBid/view'">중고거래 요청 내역</span></li>
@@ -149,8 +149,41 @@
             </ul>
         </nav>
         <div class="under_content_main" style="width: 100%; padding-top: 45px; padding-left: 30px;">
-            <span style="padding: 10px; font-size: 25px; font-weight: bold; color: #FF7500;">구매 내역</span>
-            <div id="list_wrapper"></div>
+            <span style="padding: 10px; font-size: 25px; font-weight: bold; color: #FF7500;">자주 묻는 질문</span>
+            <div id="list_wrapper">
+                <div style="display: flex;">
+                    <div style="font-size: 60px; font-weight: bold; color: #616161;">Q</div>
+                    <div style="font-size: 20px; font-weight: bold; color: #616161; margin-left: 15px; margin-top: 30px;">교환/반품 신청은 어떻게 하나요?</div>
+                </div>
+                <div style="display: flex;">
+                    <div style="font-size: 60px; font-weight: bold; color: #EE842A;">A</div>
+                    <div style="font-size: 15px; color: #616161; margin-left: 15px; margin-top: 15px;">
+                        ∙ 수령일 기준 7일 이내 교환/반품에 대한 청약 철회 의사를 밝혀주시면 처리가 가능합니다.<br>
+                        ∙ 교환/반품 절차: 마이페이지 -> 주문내역 -> 교환/반품 신청 -> 수거 기사님 방문예정
+                    </div>
+                </div>
+                <div style="display: flex; margin-top: 10px;">
+                    <div style="font-size: 60px; font-weight: bold; color: #616161;">Q</div>
+                    <div style="font-size: 20px; font-weight: bold; color: #616161; margin-left: 15px; margin-top: 30px;">교환/반품시 배송비는 어떻게 되나요?</div>
+                </div>
+                <div style="display: flex;">
+                    <div style="font-size: 60px; font-weight: bold; color: #EE842A;">A</div>
+                    <div style="font-size: 15px; color: #616161; margin-left: 15px; margin-top: 15px;">
+                        ∙ 단순 변심으로 인한 교환/환불 시 왕복 배송비가 발생됩니다.<br>
+                        ∙ 제품 불량으로 인한 교환/환불 시 배송비는 발생되지 않습니다.
+                    </div>
+                </div>
+                <div style="display: flex; margin-top: 10px;">
+                    <div style="font-size: 60px; font-weight: bold; color: #616161;">Q</div>
+                    <div style="font-size: 20px; font-weight: bold; color: #616161; margin-left: 15px; margin-top: 30px;">배송은 언제 되나요?</div>
+                </div>
+                <div style="display: flex;">
+                    <div style="font-size: 60px; font-weight: bold; color: #EE842A;">A</div>
+                    <div style="font-size: 15px; color: #616161; margin-left: 15px; margin-top: 20px;">
+                    ∙ 영업일 기준 오후 1시 이전 결제 주문 완료 건: 당일 출고 됩니다. (일부 상품 제외)
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -197,143 +230,6 @@
                 }
             });
         }
-
-        function printMyOrder() {
-            $.ajax ({
-                url: '/mypage/order',
-                beforeSend: function(xhr) {
-                    var token = getCookie("access_token");
-                    xhr.setRequestHeader("Authorization", "Bearer " + token);
-                },
-                success: function(data) {
-                    let order_arr = data.content;
-                    let order_box = "";
-                    $.each(order_arr, function(idx, value) {
-                        if (value.groupPurchase == null) {
-                            order_box += "<div class='content_box'>";
-                                    if (value.product == null) {
-                                        order_box += "<img src='../../images/product/" + value.cartItems[0].product.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>";
-                                    } else {
-                                        order_box += "<img src='../../images/product/" + value.product.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>";
-                                    }
-                                        order_box += "<div style='display: flex; flex-direction: column; width: 680px;'>"
-                                                   + "<div id=" + value.id + ">";
-                                    if (value.product == null && value.cartItems.length == 1 ) {
-                                        order_box += "<span style='font-size: 20px; font-weight: bold;'>" + value.cartItems[0].product.name + "</span>";
-                                    } else if (value.product == null && 1 < value.cartItems.length) {
-                                        order_box += "<span style='font-size: 20px; font-weight: bold;'>" + value.cartItems[0].product.name + "&nbsp;&nbsp;외&nbsp;" + (value.cartItems.length - 1) + "</span>";
-                                    } else {
-                                        order_box += "<span style='font-size: 20px; font-weight: bold;'>" + value.product.name + "</span>";
-                                    }
-                                        order_box += "<span id='delete_order'>주문 취소</span>"
-                                                    + "<span id='update_order'>배송지 수정</span>"
-                                                + "</div>"
-                                                + "<div style='color: #B0B0B0; font-size: 13px;'>배송지</div>"
-                                                + "<div style='font-size: 14px;'>(" + value.zipcode + ")</div>"
-                                                + "<div style='font-size: 14px;'>" + value.streetAddr + ", " + value.detailAddr + "</div>"
-                                                + "<div style='font-size: 15px; margin-top: 10px;'>총 " + value.qty + "개</div>"
-                                                + "<div style='font-size: 25px; font-weight: bold;'>" + value.price + "원</div>"
-                                            + "</div>"
-                                        + "</div>";
-                        }
-                    });
-                    $("#list_wrapper").html(order_box);
-                }
-            });
-        }
-
-        $(document).on('click', '#update_order', function() {
-            let update_order_box = "";
-            update_order_box += "<div class='new_order_address'>"
-                                    + "<input id='new_zipcode' type='text' style='width: 80px;' readonly>" + "<button id='zipcode'>우편번호</button>" + "<br/>"
-                                    + "<input id='new_address_01' type='text' style='width: 220px;' readonly>" + "<br/>"
-                                    + "<input id='new_address_02' type='text' style='width: 220px;'>"
-                              + "</div>";
-
-            $(this).parent().nextAll().remove();
-            $(this).parent().after(update_order_box);
-
-            let btn = "";
-            btn += "<span id='update_order_submit'>등록</span>"
-                    + "<span id='cancel' style='float: right;color: #FF7500; font-size: 14px; padding: 5px 0px; margin-right: 10px;'>취소</span>";
-
-            $(this).after(btn);
-            $(this).prev().remove();
-            $(this).remove();
-        });
-
-        $(document).on('click', '#update_order_submit', function() {
-            let orderId = $(this).parent().attr("id");
-            let new_zipcode = $("#new_zipcode").val();
-            let new_addr_01 = $("#new_address_01").val();
-            let new_addr_02 = $("#new_address_02").val();
-
-            if (new_zipcode == "" || new_addr_01 == "" || new_addr_02 == "")
-                alert('배송지 정보를 입력해 주세요');
-            else {
-                $.ajax ({
-                    type: 'PUT',
-                    url: '/order/update/' + orderId,
-                    beforeSend: function(xhr) {
-                        var token = getCookie("access_token");
-                        xhr.setRequestHeader("Authorization", "Bearer " + token);
-                    },
-                    data: JSON.stringify (
-                        {
-                            "zipcode" : new_zipcode,
-                            "streetAddr" : new_addr_01,
-                            "detailAddr" : new_addr_02
-                        }
-                    ),
-                    contentType: 'application/json; charset=utf-8',
-                    success: function(data) {
-                        alert('배송지 정보가 수정되었습니다.');
-                        printMyOrder();
-                    }
-                })
-            }
-        });
-
-        $(document).on('click', '#zipcode', function() {
-            new daum.Postcode({
-                oncomplete: function(data) {
-                    var addr = '';
-
-                    if (data.userSelectedType === 'R') {
-                        addr = data.roadAddress;
-                    } else {
-                        addr = data.jibunAddress;
-                    }
-
-                    $('#new_zipcode').val(data.zonecode);
-                    $('#new_address_01').val(addr);
-                    $('#new_address_02').focus();
-                }
-            }).open();
-        });
-
-        $(document).on('click', '#delete_order', function() {
-            let conf = confirm('주문을 취소하시겠습니까?');
-
-            if(conf == true) {
-                let orderId = $(this).parent().attr('id');
-
-                $.ajax ({
-                    type: 'DELETE',
-                    url: '/order/cancel/' + orderId,
-                    beforeSend: function(xhr) {
-                        var token = getCookie("access_token");
-                        xhr.setRequestHeader("Authorization", "Bearer " + token);
-                    },
-                    success: function(data) {
-                        alert('주문을 취소하였습니다.');
-                        printMyOrder();
-                    }
-                })
-            } else if(conf == false) {
-                return;
-            }
-        });
 
         $(document).on('click', '#update_user_info', function() {
             let new_content = "";

@@ -57,7 +57,7 @@
 
     <div style="width: 300px; margin: auto; margin-bottom: 100px;">
         <div style="text-align: center;">
-            <img src="../images/logo.png" class="logo">
+            <img src="../images/m2dm_mini_logo.png" class="logo">
             <div class="context">회원가입</div>
         </div>
         <div>

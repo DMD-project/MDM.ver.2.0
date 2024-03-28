@@ -88,7 +88,7 @@
     <div class="header">
         <nav class="navbar">
             <div class="navbar_logo">
-                <a href="/"><img src="../../images/m2dm.png" style="width: 200px; height: auto;"></a>
+                <a href="/"><img src="../../images/m2dm_main_logo.png" style="width: 200px; height: auto;"></a>
             </div>
             <ul class="navbar_menu">
                 <li><a href="/product/list/view"><b>쇼핑</b></a></li>

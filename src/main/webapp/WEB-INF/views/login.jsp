@@ -69,7 +69,7 @@
 
     <div style="width: 315px; margin: auto; margin-bottom: 100px;">
         <div style="text-align: center;">
-            <img src="../images/logo.png" class="logo">
+            <img src="../images/m2dm_mini_logo.png" class="logo">
             <div>
                 <span style="font-size: 14px; color: #C2C2C2;">SNS계정으로 간편 로그인</span>
                 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"

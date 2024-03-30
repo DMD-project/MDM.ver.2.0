@@ -11,8 +11,7 @@
 
 
 ### 📋 Model Diagram
-
-<img src="https://github.com/1201silver/MDM.ver.2.0/assets/74891039/ddb8dfd2-6352-4341-98fc-6f347b0c23a0" width="450" height="300"/>
+<img src="https://github.com/M2DM-project/M2DM.ver2.0/assets/94455716/f2439a4d-5d70-4eb7-90fc-b0ceb433235a" width="450" />
 
 ### ✉️ Commit Messge Rules.
 Jsp [🌸], Spring [⚙️]를 지켜주세요.

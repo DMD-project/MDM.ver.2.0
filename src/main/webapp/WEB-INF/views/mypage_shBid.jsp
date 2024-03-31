@@ -208,7 +208,7 @@
                     $.each(shBid_arr, function(idx, value) {
                         shBid_box += "<div class='content_box'>"
                                         + "<a href='/secondhand/" + value.secondHand.id + "/view'>"
-                                        + "<img src='" + value.secondHand.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
+                                        + "<img src='../../images/secondhand/" + value.secondHand.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
                                         + "</a>"
                                         + "<div style='display:flex; flex-direction: column; width: 680px;'>"
                                             + "<div id='" + value.secondHand.id + "' class='" + value.id + "'>" + printState(value.bidState, value.id, value.secondHand.selectBidId) + "</div>"

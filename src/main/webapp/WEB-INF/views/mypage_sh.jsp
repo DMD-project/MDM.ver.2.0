@@ -213,11 +213,11 @@
                     $.each(sh_arr, function(idx, value) {
                         sh_box += "<div class='content_box'>"
                                     + "<a href='/secondhand/" + value.id + "/view'>"
-                                    + "<img src='" + value.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
+                                    + "<img src='../../images/secondhand/" + value.imgUrl + "' style='width: 110px; height: 130px; margin-right: 30px;'>"
                                     + "</a>"
                                     + "<div style='display: flex; flex-direction: column; width: 680px;'>"
                                         + "<div id='" + value.id + "' style='height: 27px'>" + printState(value.state) + "</div>"
-                                        + "<a href='/secondhand/" + value.imgUrl + "/view'>"
+                                        + "<a href='/secondhand/" + value.id + "/view'>"
                                         + "<div style='font-size: 20px; font-weight: bold;'>" + value.name + "</div>"
                                         + "</a>"
                                         + "<div id='sh_price' style='font-size: 22px; font-weight: bold; margin-top: 25px;'>" + value.price + "원</div>"

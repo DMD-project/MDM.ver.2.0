@@ -205,13 +205,16 @@
         let cateCode = "";
         $(document).on('click', '#category_btn', function() {
             cateCode = $(this).val();
-            let sortBy = $("#sortSelect option:selected").val();
-
-            printProduct(sortBy, cateCode);
+            location.href = "/product/list/view?cateCode=" + cateCode;
         });
 
         $("#sortSelect").change(function() {
             let sortBy = $("option:selected", this).val();
+            let urlParams = new URL(location.href).searchParams;
+            let cateCode = urlParams.get('cateCode');
+
+            console.log(cateCode);
+
             printProduct(sortBy, cateCode);
         });
 

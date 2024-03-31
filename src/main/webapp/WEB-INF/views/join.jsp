@@ -100,11 +100,12 @@
 
             if (email == "" || password == "")
                 alert('가입 정보를 입력해 주세요.');
-            else if (!validateEmail(email))
+            if (!validateEmail(email))
                 alert('잘못된 이메일 입니다.');
-            else if (!validatePassword(password))
+            if (!validatePassword(password))
                 alert('잘못된 비밀번호 입니다.');
-            else {
+
+            if (validateEmail(email) && validatePassword(password)) {
                 $.ajax ({
                     type: 'POST',
                     url: '/general/signup',
@@ -115,6 +116,10 @@
                         }
                     ),
                     contentType : 'application/json',
+                    error: function(request, status, error) {
+                        if (request.status == 500)
+                            alert('이미 사용중인 이메일 입니다.');
+                    },
                     success: function(data) {
                         alert('회원가입이 성공적으로 이루어졌습니다.\n로그인 페이지로 이동합니다.');
                         location.href="/login";

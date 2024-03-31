@@ -7,7 +7,7 @@
     <style>
         .wrapper {
             background-color: #FFFFFF;
-정            padding: 30px 0 40px 50px;
+            padding: 30px 0 40px 50px;
         }
         .wrapper div {
             color: #616161;
@@ -22,7 +22,7 @@
 <body>
 
     <div class="wrapper">
-        <img src="../../images/m2dm.png" alt="" style="width: 150px; height: auto;">
+        <img src="../../images/m2dm_main_logo.png" alt="" style="width: 150px; height: auto;">
         <div style="margin-bottom: 25px;">
             Worldwide furniture store since 2020 <br/>
             We sell over 1000+ branded products on our website

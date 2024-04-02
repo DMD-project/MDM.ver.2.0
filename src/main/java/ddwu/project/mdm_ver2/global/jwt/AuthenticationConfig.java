@@ -67,9 +67,9 @@ public class AuthenticationConfig {
                                 new AntPathRequestMatcher("/kakao/withdrawal"))
                         .hasRole("USER")
 
-//                        .requestMatchers(new AntPathRequestMatcher("/admin/gp/**"),
-//                                new AntPathRequestMatcher("/admin/product/**"))
-//                        .hasRole("ADMIN")
+                        .requestMatchers(new AntPathRequestMatcher("/admin/gp/**"),
+                                new AntPathRequestMatcher("/admin/product/**"))
+                        .hasRole("ADMIN")
 
                         .requestMatchers(new AntPathRequestMatcher("/**"),
                                 new AntPathRequestMatcher("/login"),

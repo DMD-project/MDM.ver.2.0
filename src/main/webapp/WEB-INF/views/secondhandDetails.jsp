@@ -406,8 +406,8 @@
 
         $(document).on('click', '#update_bid', function() {
             let input_box = "<input type='text' id='new_bid' placeholder='희망가 입력'>"
-            $(this).parent().children("#bid_price").before(input_box);
-            $(this).parent().children("#bid_price").remove();
+            $(this).parent().children("#bid").before(input_box);
+            $(this).parent().children("#bid").remove();
 
             let btn = "";
             btn += "<span id='update_bid_submit' style='margin-top: 5px;'>등록</span>"

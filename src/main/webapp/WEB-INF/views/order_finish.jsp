@@ -58,7 +58,7 @@
 </head>
 <body>
 
-<img src="../../images/logo.png" class="logo"/>
+<img src="../../images/m2dm_mini_logo.png" class="logo"/>
 <div>
     <div>
         <span class="context" style="color: #616161; font-size: 20px; font-weight: bold;">주문이 성공적으로 <span style="color: #FF7500;">완료</span>되었습니다.</span>

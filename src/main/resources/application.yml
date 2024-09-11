@@ -8,11 +8,19 @@ spring:
     database: oracle
     database-platform: org.hibernate.dialect.OracleDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
         jdbc.lob.non_contextual_creation: true
+    redis:
+      host: localhost
+      port: 6379
+
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
 
 logging:
   level:
@@ -25,5 +33,13 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     display-request-duration: true
-    operations-sorter: alpha
+    operations-sorter: method
     tags-sorter: alpha
+
+jwt:
+  secretKey: ${{ secrets.JWT_SECRET }}
+
+kakao:
+  rest-api-key: ${{ secrets.REST_API_KEY }}
+  login-uri: http://localhost:8080/kakao
+  logout-uri: http://localhost:8080/kakao/logout
